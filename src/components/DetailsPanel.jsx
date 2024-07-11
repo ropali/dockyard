@@ -13,7 +13,7 @@ function DetailsPanel({ selectedContainer }) {
 2024-05-18 12:50:38.091 UTC [27] LOG:  database system is shut down`;
 
   return (
-    <div className="p-4 bg-white shadow-sm h-full overflow-x-hidden flex flex-col">
+    <div className="p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
       <div className="flex items-center mb-4">
         <h1 className="text-lg font-bold">{selectedContainer.Names[0].slice(1)}</h1>
         <p className="ml-auto text-sm text-gray-600">Status: {selectedContainer.Status}</p>

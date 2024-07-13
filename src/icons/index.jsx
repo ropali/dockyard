@@ -87,7 +87,6 @@ export function IconDocker(props) {
     return (
         <svg
             viewBox="0 0 640 512"
-            fill="currentColor"
             height="1em"
             width="1em"
             {...props}

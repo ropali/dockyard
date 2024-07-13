@@ -2,7 +2,7 @@ import React from 'react';
 
 function DetailsPanel({ selectedContainer }) {
   if (!selectedContainer) {
-    return <div className="text-gray-600 p-4">Select a container to see more details</div>;
+    return <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">Select a container to see more details</div>;
   }
 
   const logs = `2024-05-18 12:45:38.003 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
@@ -19,12 +19,12 @@ function DetailsPanel({ selectedContainer }) {
         <p className="ml-auto text-sm text-gray-600">Status: {selectedContainer.Status}</p>
       </div>
       <div className="flex mb-4">
-        <button className="mx-1 px-4 py-2 bg-blue-500 text-white rounded">WEB</button>
-        <button className="mx-1 px-4 py-2 bg-blue-500 text-white rounded">EXEC</button>
-        <button className="mx-1 px-4 py-2 bg-blue-500 text-white rounded">START</button>
-        <button className="mx-1 px-4 py-2 bg-blue-500 text-white rounded">RESTART</button>
-        <button className="mx-1 px-4 py-2 bg-red-500 text-white rounded">REMOVE</button>
-        <button className="mx-1 px-4 py-2 bg-gray-500 text-white rounded">INFO</button>
+        <button className="mx-1 btn btn-primary btn-sm">WEB</button>
+        <button className="mx-1 btn btn-primary btn-sm">EXEC</button>
+        <button className="mx-1 btn btn-primary btn-sm">START</button>
+        <button className="mx-1 btn btn-primary btn-sm">RESTART</button>
+        <button className="mx-1 btn btn-error btn-sm">REMOVE</button>
+        <button className="mx-1 btn btn-warning btn-sm">INFO</button>
       </div>
       <div className="flex mb-4 border-b">
         <button className="mr-4 pb-2 border-b-2 border-blue-500">LOGS</button>

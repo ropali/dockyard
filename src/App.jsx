@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
-import Card from './components/Card';
 import DetailsPanel from './components/DetailsPanel';
 import ContainersList from './components/Containers/ContainersList';
 
@@ -13,11 +12,11 @@ const mockContainersData = data.containers;
 function App() {
   const [selectedContainer, setSelectedContainer] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(true);
 
   const filteredContainers = mockContainersData.filter(container => {
     const matchesSearchQuery = container.Names[0].toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesShowAll = showAll || container.Status.toLocaleLowerCase() === 'running';
+    const matchesShowAll = showAll || container.State.toLocaleLowerCase() === 'running';
     return matchesSearchQuery && matchesShowAll;
   });
 

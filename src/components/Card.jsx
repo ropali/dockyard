@@ -1,7 +1,7 @@
 
 
 const Card = ({ container, onClick }) => {
-    const statusColor = container.State === 'Exited' ? 'bg-red-500' : 'bg-green-500';
+    const statusColor = container.Status.includes("Exited") ? 'bg-red-500' : 'bg-green-500';
 
     return (
         <div

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 function DetailsPanel({ selectedContainer }) {
   if (!selectedContainer) {
@@ -11,6 +11,16 @@ function DetailsPanel({ selectedContainer }) {
 2024-05-18 12:50:38.091 UTC [27] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.010 s, sync=0.801 s, total=0.825 s; sync files=0, longest=0.800 s, average=0.800 s; distance=0 kB, estimate=0 kB; lsn=0/1C806020, redo lsn=0/1C806020
 2024-05-18 12:50:38.091 UTC [27] LOG:  shutting down
 2024-05-18 12:50:38.091 UTC [27] LOG:  database system is shut down`;
+
+  useEffect(() => {
+
+  }, [])
+
+  function getInfo() {
+    invoke('fetch_container_info', { cId: selectedContainer.Id }).then((info) => {
+      console.log(info);
+    })
+  }
 
   return (
     <div className="p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">

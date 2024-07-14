@@ -1,24 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import DetailsPanel from './components/DetailsPanel';
 import ContainersList from './components/Containers/ContainersList';
-
+import { invoke } from '@tauri-apps/api/tauri'
 import data from './data.json';
 
 const mockContainersData = data.containers;
 
 
 function App() {
+  const [containers, setContainers] = useState([])
   const [selectedContainer, setSelectedContainer] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAll, setShowAll] = useState(true);
 
-  const filteredContainers = mockContainersData.filter(container => {
+  const filteredContainers = containers.filter(container => {
     const matchesSearchQuery = container.Names[0].toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesShowAll = showAll || container.State.toLocaleLowerCase() === 'running';
+    const matchesShowAll = showAll || container.Status.toLocaleLowerCase().includes("up");
     return matchesSearchQuery && matchesShowAll;
   });
+
+  useEffect(() => {
+
+    invoke('fetch_containers').then((containers) => {
+      setContainers(containers)
+    })
+
+  }, [])
+  
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">

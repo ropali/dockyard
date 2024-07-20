@@ -592,7 +592,7 @@ checksum = "bd0c93bb4b0c6d9b77f4435b0ae98c24d17f1c45b2ff844c6151a07256ca923b"
 name = "docker_dex"
 version = "0.0.0"
 dependencies = [
- "rs-docker",
+ "rust_dock",
  "serde",
  "serde_json",
  "tauri",
@@ -2285,10 +2285,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7a66a03ae7c801facd77a29370b4faec201768915ac14a721ba36f20bc9c209b"
 
 [[package]]
-name = "rs-docker"
-version = "0.0.60"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d5e01199607ca72f620bb4c27b5e3c0ab68d71e0c5c176ce874aa342a07f9be"
+name = "rust_dock"
+version = "0.1.0"
 dependencies = [
  "futures",
  "hyper",

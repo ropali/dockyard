@@ -1,6 +1,12 @@
 import { invoke } from '@tauri-apps/api';
 import React, { useState, useEffect } from 'react';
 
+import { data } from '@patternfly/react-log-viewer/patternfly-docs/content/extensions/react-log-viewer/examples/./realTestData'
+
+
+import LogsViewer from './LogsViewer';
+
+
 function DetailsPanel({ selectedContainer }) {
   const [activeTab, setActiveTab] = useState('LOGS');
 
@@ -10,12 +16,7 @@ function DetailsPanel({ selectedContainer }) {
     return <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">Select a container to see more details</div>;
   }
 
-  const logs = `2024-05-18 12:45:38.003 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2024-05-18 12:45:38.009 UTC [1] LOG:  database system was shut down at 2024-05-18 09:20:41 UTC
-2024-05-18 12:50:38.003 UTC [27] LOG:  checkpoint starting: shutdown immediate
-2024-05-18 12:50:38.091 UTC [27] LOG:  checkpoint complete: wrote 0 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.010 s, sync=0.801 s, total=0.825 s; sync files=0, longest=0.800 s, average=0.800 s; distance=0 kB, estimate=0 kB; lsn=0/1C806020, redo lsn=0/1C806020
-2024-05-18 12:50:38.091 UTC [27] LOG:  shutting down
-2024-05-18 12:50:38.091 UTC [27] LOG:  database system is shut down`;
+  const logs = data.data;
 
   // FIXME: Rendered more hooks than during the previous render
   // useEffect(() => {
@@ -34,7 +35,7 @@ function DetailsPanel({ selectedContainer }) {
   const renderContent = () => {
     switch (activeTab) {
       case 'LOGS':
-        return <pre className="whitespace-pre-wrap">{logs}</pre>;
+        return <LogsViewer logs={logs}/>
       case 'STATS':
         return <div>Stats content here</div>;
       case 'INFO':
@@ -45,7 +46,7 @@ function DetailsPanel({ selectedContainer }) {
   };
 
   return (
-    <div className="p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
+    <div className="dark p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
       <div className="flex items-center mb-4">
         <h1 className="text-lg font-bold">{selectedContainer.Names[0].slice(1)}</h1>
         <p className="ml-auto text-sm text-gray-600">Status: {selectedContainer.Status}</p>
@@ -63,7 +64,7 @@ function DetailsPanel({ selectedContainer }) {
         <button className={`mr-4 pb-2 ${activeTab === 'STATS' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('STATS')}>STATS</button>
         <button className={`pb-2 ${activeTab === 'INFO' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('INFO')}>INFO</button>
       </div>
-      <div className="flex-1 overflow-auto bg-black text-white p-2 rounded">
+      <div className="flex-1 overflow-auto text-white p-2 rounded">
         {renderContent()}
       </div>
     </div>

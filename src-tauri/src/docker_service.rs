@@ -1,10 +1,10 @@
 
-extern crate rs_docker;
+extern crate rust_dock;
 
-use rs_docker::container::{Container, ContainerInfo};
-use rs_docker::Docker;
-use rs_docker::image::Image;
-use rs_docker::version::Version;
+use rust_dock::container::{Container, ContainerInfo};
+use rust_dock::Docker;
+use rust_dock::image::Image;
+use rust_dock::version::Version;
 
 
 pub trait ContainerState {

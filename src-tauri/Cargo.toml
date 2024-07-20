@@ -14,8 +14,10 @@ tauri-build = { version = "1", features = [] }
 tauri = { version = "1", features = ["shell-open"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-rs-docker = "0.0.60"
+# rs-docker = "0.0.60"
+rust_dock = { path = "/home/ropali/Workspaces/rust-dock/" }
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
+

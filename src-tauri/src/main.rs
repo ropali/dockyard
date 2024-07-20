@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use rs_docker::{
+use rust_dock::{
     container::{Container, ContainerInfo},
     version::Version,
 };
@@ -28,7 +28,6 @@ fn fetch_containers() -> Vec<Container> {
 
 #[tauri::command]
 fn fetch_container_info(state: tauri::State<AppState>, c_id: String) -> ContainerInfo {
-    print!("---ID {}", c_id);
     let container = state.containers.iter().find(|c| c.Id == c_id).expect("Can't find container withd Id {c_id}");
 
     return docker_service::get_container_info(container);

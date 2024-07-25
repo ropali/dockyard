@@ -16,6 +16,8 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 # rs-docker = "0.0.60"
 rust_dock = { path = "/home/ropali/Workspaces/rust-dock/" }
+tokio = { version = "1.7.0", features = ["rt", "rt-multi-thread", "macros"] }
+
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

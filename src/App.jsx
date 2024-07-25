@@ -4,9 +4,7 @@ import Navbar from './components/Navbar';
 import DetailsPanel from './components/DetailsPanel';
 import ContainersList from './components/Containers/ContainersList';
 import { invoke } from '@tauri-apps/api/tauri'
-import data from './data.json';
 
-const mockContainersData = data.containers;
 
 
 function App() {
@@ -21,14 +19,16 @@ function App() {
     return matchesSearchQuery && matchesShowAll;
   });
 
+
   useEffect(() => {
 
     invoke('fetch_containers').then((containers) => {
       setContainers(containers)
     })
 
+
   }, [])
-  
+
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">

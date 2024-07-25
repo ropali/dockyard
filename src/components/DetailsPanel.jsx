@@ -1,7 +1,6 @@
 import { invoke } from '@tauri-apps/api';
 import React, { useState, useEffect } from 'react';
-
-import { data } from '@patternfly/react-log-viewer/patternfly-docs/content/extensions/react-log-viewer/examples/./realTestData'
+import { listen } from '@tauri-apps/api/event'
 
 
 import LogsViewer from './LogsViewer';
@@ -12,24 +11,38 @@ function DetailsPanel({ selectedContainer }) {
 
   const [info, setInfo] = useState("")
 
-  if (!selectedContainer) {
-    return <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">Select a container to see more details</div>;
-  }
+  const [logs, setLogs] = useState([]);
 
-  const logs = data.data;
+  useEffect(() => {
+    if (selectedContainer) {
+      setLogs([]); // Clear logs before subscribing
 
-  // FIXME: Rendered more hooks than during the previous render
-  // useEffect(() => {
-  //   if (selectedContainer) {
-  //     // Fetch container info only if a container is selected
-  //     getInfo();
-  //   }
-  // }, [selectedContainer]);
+      const unlisten = listen('log_chunk', (event) => {
+        console.log("log_chunk", event.payload);
+
+        const sanitizedLog = sanitizeLog(event.payload);
+        setLogs((prevLogs) => [...prevLogs, sanitizedLog]);
+      });
+
+      invoke('stream_docker_logs', { containerId: selectedContainer.Id });
+
+      return () => {
+        unlisten.then(f => f());
+      };
+    }
+    
+  }, [selectedContainer]);
+  
 
   function getInfo() {
     invoke('fetch_container_info', { cId: selectedContainer.Id }).then((info) => {
       setInfo(info)
     });
+  }
+
+  function sanitizeLog(log) {
+    // Remove control characters and non-printable characters
+    return log.replace(/[\x00-\x1F\x7F]/g, "");
   }
 
   const renderContent = () => {
@@ -44,6 +57,10 @@ function DetailsPanel({ selectedContainer }) {
         return null;
     }
   };
+
+  if(!selectedContainer) {
+    return <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">Select a container to see more details</div>
+  }
 
   return (
     <div className="dark p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">

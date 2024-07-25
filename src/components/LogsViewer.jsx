@@ -9,6 +9,7 @@ import { Toolbar, ToolbarContent, ToolbarItem, Checkbox, ToolbarGroup, Tooltip }
 const LogsViewer = ({ logs }) => {
     const [isTextWrapped, setIsTextWrapped] = React.useState(false);
 
+
     const rightAlignedToolbarGroup = (
         <React.Fragment>
             <ToolbarGroup variant="icon-button-group">
@@ -30,10 +31,11 @@ const LogsViewer = ({ logs }) => {
 
     return (
         <LogViewer
-            data={logs}
+            data={logs.join("\n")}
             theme="dark"
             isTextWrapped={isTextWrapped}
             height="100%"
+            scrollToRow={logs.length}
             toolbar={
                 <Toolbar>
                     <ToolbarContent>

@@ -2,8 +2,8 @@ import { invoke } from '@tauri-apps/api';
 import React, { useState, useEffect } from 'react';
 import { listen } from '@tauri-apps/api/event'
 
-
 import LogsViewer from './LogsViewer';
+import { IconDocker } from '../icons';
 
 
 function DetailsPanel({ selectedContainer }) {
@@ -30,9 +30,9 @@ function DetailsPanel({ selectedContainer }) {
         unlisten.then(f => f());
       };
     }
-    
+
   }, [selectedContainer]);
-  
+
 
   function getInfo() {
     invoke('fetch_container_info', { cId: selectedContainer.Id }).then((info) => {
@@ -48,7 +48,7 @@ function DetailsPanel({ selectedContainer }) {
   const renderContent = () => {
     switch (activeTab) {
       case 'LOGS':
-        return <LogsViewer logs={logs}/>
+        return <LogsViewer logs={logs} />
       case 'STATS':
         return <div>Stats content here</div>;
       case 'INFO':
@@ -58,8 +58,14 @@ function DetailsPanel({ selectedContainer }) {
     }
   };
 
-  if(!selectedContainer) {
-    return <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">Select a container to see more details</div>
+  if (!selectedContainer) {
+    return <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col md:items-center md:justify-center">
+      
+      <div>
+        <IconDocker className="size-20 opacity-75" fill=""/>
+      </div>
+      Select a container to see more details
+    </div>
   }
 
   return (

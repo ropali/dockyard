@@ -47,7 +47,7 @@ function App() {
                 onContainerClick={setSelectedContainer}
               />
             </div>
-            <div className="w-2/3 bg-gray-200 p-2 ml-1 overflow-y-auto">
+            <div className={`w-full bg-gray-200 ml-1 overflow-y-auto ${selectedContainer ? 'bg-white' : 'bg-gray-200'}`}>
               <DetailsPanel selectedContainer={selectedContainer} />
             </div>
           </div>

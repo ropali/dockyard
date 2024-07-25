@@ -111,3 +111,49 @@ export function IconBxCog(props) {
         </svg>
     );
 }
+
+
+export function IconWrapText(props) {
+    return (
+        <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            height="1em"
+            width="1em"
+            {...props}
+        >
+            <path d="M21 7.167H3a1 1 0 010-2h18a1 1 0 010 2zm-12 10H3a1 1 0 110-2h6a1 1 0 010 2z" />
+            <path d="M18.5 17.167H15a1 1 0 010-2h3.5a1.5 1.5 0 000-3H3a1 1 0 010-2h15.5a3.5 3.5 0 110 7z" />
+            <path d="M14.999 18.833a.995.995 0 01-.639-.231l-2-1.666a1 1 0 010-1.538l2-1.667a1 1 0 011.28 1.538l-1.078.898 1.078.897a1 1 0 01-.641 1.769z" />
+        </svg>
+    );
+}
+
+export function IconArrowDownCircleFill(props) {
+    return (
+        <svg
+            fill="currentColor"
+            viewBox="0 0 16 16"
+            height="1em"
+            width="1em"
+            {...props}
+        >
+            <path d="M16 8A8 8 0 110 8a8 8 0 0116 0zM8.5 4.5a.5.5 0 00-1 0v5.793L5.354 8.146a.5.5 0 10-.708.708l3 3a.5.5 0 00.708 0l3-3a.5.5 0 00-.708-.708L8.5 10.293V4.5z" />
+        </svg>
+    );
+}
+
+
+export function IconArrowUpCircleFill(props) {
+    return (
+        <svg
+            fill="currentColor"
+            viewBox="0 0 16 16"
+            height="1em"
+            width="1em"
+            {...props}
+        >
+            <path d="M16 8A8 8 0 100 8a8 8 0 0016 0zm-7.5 3.5a.5.5 0 01-1 0V5.707L5.354 7.854a.5.5 0 11-.708-.708l3-3a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 5.707V11.5z" />
+        </svg>
+    );
+}

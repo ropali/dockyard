@@ -20,6 +20,8 @@ function ContainersList({ containers, onContainerClick, searchQuery, setSearchQu
                     />
                 ))}
             </div>
+
+            
         </div>
     )
 }

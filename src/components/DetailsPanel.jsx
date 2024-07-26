@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { listen } from '@tauri-apps/api/event'
 
 import LogsViewer from './LogsViewer';
-import { IconDocker } from '../icons';
+import { IconDocker, IconBxTrashAlt, IconPlayCircle, IconBxTerminal, IconRestart, IconWeb } from '../icons';
 
 
 function DetailsPanel({ selectedContainer }) {
@@ -49,10 +49,11 @@ function DetailsPanel({ selectedContainer }) {
     switch (activeTab) {
       case 'LOGS':
         return <LogsViewer logs={logs} />
-      case 'STATS':
-        return <div>Stats content here</div>;
+
       case 'INFO':
         return <div>{info}</div>;
+      case 'STATS':
+        return <div>Stats content here</div>;
       default:
         return null;
     }
@@ -60,9 +61,9 @@ function DetailsPanel({ selectedContainer }) {
 
   if (!selectedContainer) {
     return <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col md:items-center md:justify-center">
-      
+
       <div>
-        <IconDocker className="size-20 opacity-75" fill=""/>
+        <IconDocker className="size-20 opacity-75" fill="" />
       </div>
       Select a container to see more details
     </div>
@@ -75,22 +76,46 @@ function DetailsPanel({ selectedContainer }) {
         <p className="ml-auto text-sm text-gray-600">Status: {selectedContainer.Status}</p>
       </div>
       <div className="flex mb-4">
-        <button className="mx-1 btn btn-primary btn-sm">WEB</button>
-        <button className="mx-1 btn btn-primary btn-sm">EXEC</button>
-        <button className="mx-1 btn btn-primary btn-sm">START</button>
-        <button className="mx-1 btn btn-primary btn-sm">RESTART</button>
-        <button className="mx-1 btn btn-error btn-sm">REMOVE</button>
-        <button className="mx-1 btn btn-warning btn-sm" onClick={getInfo}>INFO</button>
+        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Web">
+          <button className="btn btn-square btn-sm mr-3"  >
+            <IconWeb className="size-5" />
+          </button>
+        </div>
+        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Open Terminal">
+          <button className="btn btn-square btn-sm mr-3">
+            <IconBxTerminal className="size-5" />
+          </button>
+        </div>
+
+        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Start">
+          <button className="btn btn-square btn-sm mr-3">
+            <IconPlayCircle className="size-5" />
+          </button>
+        </div>
+
+        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Restart">
+          <button className="btn btn-square btn-sm mr-3">
+            <IconRestart className="size-5" />
+          </button>
+        </div>
+
+        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
+          <button className="btn btn-square btn-sm btn-error mr-3">
+            <IconBxTrashAlt className="size-5" />
+
+          </button>
+        </div>
+
       </div>
       <div className="flex mb-4 border-b">
         <button className={`mr-4 pb-2 ${activeTab === 'LOGS' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('LOGS')}>LOGS</button>
+        <button className={`pb-2 mr-4 ${activeTab === 'INFO' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('INFO')}>INFO</button>
         <button className={`mr-4 pb-2 ${activeTab === 'STATS' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('STATS')}>STATS</button>
-        <button className={`pb-2 ${activeTab === 'INFO' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('INFO')}>INFO</button>
       </div>
       <div className="flex-1 overflow-auto text-white p-2 rounded">
         {renderContent()}
       </div>
-    </div>
+    </div >
   );
 }
 

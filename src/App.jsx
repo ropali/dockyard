@@ -5,6 +5,10 @@ import DetailsPanel from './components/DetailsPanel';
 import ContainersList from './components/Containers/ContainersList';
 import { invoke } from '@tauri-apps/api/tauri'
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 
 function App() {
@@ -15,9 +19,8 @@ function App() {
 
   const filteredContainers = containers.filter(container => {
     const matchesSearchQuery = container.Names[0].toLowerCase().includes(searchQuery.toLowerCase());
-    console.log("--CC", container.Status);
     let matchesFilter;
-  
+
     switch (containerFilter.toLowerCase()) {
       case 'all':
         matchesFilter = true;
@@ -31,7 +34,7 @@ function App() {
       default:
         matchesFilter = true;
     }
-  
+
     return matchesSearchQuery && matchesFilter;
   });
 
@@ -51,6 +54,7 @@ function App() {
       <Sidebar className="w-64 flex-shrink-0" />
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* <Navbar /> */}
+        <ToastContainer />
         <main className="flex p-5 bg-gray-100 flex-1 overflow-hidden mb-2">
           <div className="h-full w-full mt-4 flex rounded-lg overflow-hidden">
             <div className="w-1/3 bg-gray-200 p-2 overflow-y-auto">
@@ -58,7 +62,7 @@ function App() {
                 containers={filteredContainers}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
-                
+
                 onContainerClick={setSelectedContainer}
                 onContainerFilterChange={(value) => setContainerFilter(value)}
               />

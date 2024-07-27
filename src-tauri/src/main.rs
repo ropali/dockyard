@@ -13,16 +13,25 @@ mod docker_service;
 
 struct AppState {
     containers: Vec<Container>,
-    // docker: Docker
 }
 
 impl AppState {
     fn default() -> Self {
         return AppState {
             containers: docker_service::get_containers(),
-            // docker: Docker::connect(addr)
         };
     }
+}
+
+fn get_docker() -> Docker {
+    let docker = match Docker::connect("unix:///var/run/docker.sock") {
+        Ok(docker) => docker,
+        Err(e) => {
+            panic!("{}", e);
+        }
+    };
+
+    return docker;
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -56,7 +65,6 @@ async fn stream_docker_logs(
 
     let (sender, mut receiver) = mpsc::channel(100);
 
-
     tokio::spawn(async move {
         if let Err(err) = docker.stream_container_logs(&container_id, sender).await {
             eprintln!("Error streaming logs: {}", err);
@@ -74,10 +82,41 @@ async fn stream_docker_logs(
     Ok(())
 }
 
-// the payload type must implement `Serialize` and `Clone`.
-#[derive(Clone, serde::Serialize)]
-struct Payload {
-    message: String,
+#[tauri::command]
+fn container_operation(_: tauri::State<AppState>, c_id: String, op_type: String) -> String {
+
+    let mut d = get_docker();
+
+    let res = match op_type.as_str() {
+        "delete" => match d.delete_container(&c_id) {
+            Ok(res) => &format!("Succeed: {}", res.to_string()),
+            Err(e) => &format!("Failed to delete container: {}", e.to_string()), 
+            
+        },
+        "start" => match d.start_container(&c_id) {
+            Ok(res) => &format!("Succeed: {}", res.to_string()),
+            Err(e) => &format!("Failed to delete container: {}", e.to_string()), 
+            
+        },
+        "restart" =>  {
+            let _ = match d.stop_container(&c_id) {
+                Ok(res) => &format!("Succeed: {}", res.to_string()),
+                Err(e) => &format!("Failed to delete container: {}", e.to_string())
+            };
+
+            let res = match d.start_container(&c_id) {
+                Ok(res) => &format!("Succeed: {}", res.to_string()),
+                Err(e) => &format!("Failed to delete container: {}", e.to_string())
+            };
+
+            return res.to_string();
+            
+        },
+        _ => "Invalid operation type",
+    };
+
+
+    return res.to_string();
 }
 
 fn main() {
@@ -89,7 +128,8 @@ fn main() {
             fetch_containers,
             fetch_version,
             fetch_container_info,
-            stream_docker_logs
+            stream_docker_logs,
+            container_operation
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

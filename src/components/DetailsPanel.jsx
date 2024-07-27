@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { listen } from '@tauri-apps/api/event'
 
 import LogsViewer from './LogsViewer';
-import { IconDocker, IconBxTrashAlt, IconPlayCircle, IconBxTerminal, IconRestart, IconWeb } from '../icons';
-
+import { IconDocker, IconBxTrashAlt, IconPlayCircle, IconBxTerminal, IconRestart, IconWeb, IconCircleStop } from '../icons';
+import { toast } from 'react-toastify';
 
 function DetailsPanel({ selectedContainer }) {
   const [activeTab, setActiveTab] = useState('LOGS');
@@ -18,7 +18,6 @@ function DetailsPanel({ selectedContainer }) {
       setLogs([]); // Clear logs before subscribing
 
       const unlisten = listen('log_chunk', (event) => {
-        console.log("log_chunk", event.payload);
 
         const sanitizedLog = sanitizeLog(event.payload);
         setLogs((prevLogs) => [...prevLogs, sanitizedLog]);
@@ -43,6 +42,14 @@ function DetailsPanel({ selectedContainer }) {
   function sanitizeLog(log) {
     // Remove control characters and non-printable characters
     return log.replace(/[\x00-\x1F\x7F]/g, "");
+  }
+
+  function containerOperation(actionType) {
+    invoke('container_operation', { cId: selectedContainer.Id, opType: actionType }).then((res) => {
+      toast(res)
+    }).then((e) => {
+      toast.error(e)
+    });
   }
 
   const renderContent = () => {
@@ -77,30 +84,47 @@ function DetailsPanel({ selectedContainer }) {
       </div>
       <div className="flex mb-4">
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Web">
-          <button className="btn btn-square btn-sm mr-3"  >
+          <button className="btn btn-square btn-sm mr-3"
+            onClick={() => containerOperation("web")}
+          >
             <IconWeb className="size-5" />
           </button>
         </div>
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Open Terminal">
-          <button className="btn btn-square btn-sm mr-3">
+          <button className="btn btn-square btn-sm mr-3"
+            onClick={() => containerOperation("exec")}
+          >
             <IconBxTerminal className="size-5" />
           </button>
         </div>
 
-        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Start">
-          <button className="btn btn-square btn-sm mr-3">
-            <IconPlayCircle className="size-5" />
-          </button>
+        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip={selectedContainer.Status.toLowerCase().includes("up") ? "Stop" : "Start"}>
+          {selectedContainer.Status.toLowerCase().includes("up") ?
+            <button className="btn btn-square btn-sm mr-3"
+              onClick={() => containerOperation("stop")}
+            >
+              <IconCircleStop className="size-5" />
+            </button>
+            : <button className="btn btn-square btn-sm mr-3"
+              onClick={() => containerOperation("start")}
+            >
+              <IconPlayCircle className="size-5" />
+            </button>
+          }
         </div>
 
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Restart">
-          <button className="btn btn-square btn-sm mr-3">
+          <button className="btn btn-square btn-sm mr-3"
+            onClick={() => containerOperation("restart")}
+          >
             <IconRestart className="size-5" />
           </button>
         </div>
 
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
-          <button className="btn btn-square btn-sm btn-error mr-3">
+          <button className="btn btn-square btn-sm btn-error mr-3"
+            onClick={() => containerOperation("delete")}
+          >
             <IconBxTrashAlt className="size-5" />
 
           </button>

@@ -26,7 +26,7 @@ function ContainersTopBar({ searchQuery, setSearchQuery, onFilterChange }) {
                 <select className="select select-bordered select-sm flex-shrink-0 flex-grow"
                     onChange={(e) => { onFilterChange(e.target.value) }}
                 >
-                    <option selected>All</option>
+                    <option defaultValue={"All"}>All</option>
                     <option>Running</option>
                     <option>Stopped</option>
                 </select>

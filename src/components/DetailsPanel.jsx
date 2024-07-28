@@ -81,7 +81,7 @@ function DetailsPanel({ selectedContainer }) {
         return <JSONPretty id="json-pretty" data={info}></JSONPretty>
 
       case 'STATS':
-        return <div>Stats content here</div>;
+        return <div className='text-black'>Coming Soon...</div>;
       default:
         return null;
     }

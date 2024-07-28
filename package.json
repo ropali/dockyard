@@ -16,6 +16,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.2.1",
+    "react-json-pretty": "^2.2.0",
     "react-table": "^7.8.0",
     "react-toastify": "^10.0.5"
   },

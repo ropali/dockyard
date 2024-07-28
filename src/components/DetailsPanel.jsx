@@ -5,6 +5,10 @@ import { listen } from '@tauri-apps/api/event'
 import LogsViewer from './LogsViewer';
 import { IconDocker, IconBxTrashAlt, IconPlayCircle, IconBxTerminal, IconRestart, IconWeb, IconCircleStop } from '../icons';
 import { toast } from 'react-toastify';
+import JSONPretty from 'react-json-pretty';
+import 'react-json-pretty/themes/acai.css';
+
+
 
 function DetailsPanel({ selectedContainer }) {
   const [activeTab, setActiveTab] = useState('LOGS');
@@ -32,10 +36,17 @@ function DetailsPanel({ selectedContainer }) {
 
   }, [selectedContainer]);
 
+  useEffect(() => {
+    if (activeTab === 'INFO' && selectedContainer) {
+      getInfo();
+    }
+  }, [activeTab, selectedContainer]);
+
 
   function getInfo() {
     invoke('fetch_container_info', { cId: selectedContainer.Id }).then((info) => {
       setInfo(info)
+      console.log(info);
     });
   }
 
@@ -45,7 +56,6 @@ function DetailsPanel({ selectedContainer }) {
   }
 
   const isWeb = () => {
-
     return selectedContainer.Ports.length > 0 && selectedContainer.Ports[0].PublicPort !== null
   }
 
@@ -67,7 +77,9 @@ function DetailsPanel({ selectedContainer }) {
         return <LogsViewer logs={logs} />
 
       case 'INFO':
-        return <div>{info}</div>;
+
+        return <JSONPretty id="json-pretty" data={info}></JSONPretty>
+
       case 'STATS':
         return <div>Stats content here</div>;
       default:

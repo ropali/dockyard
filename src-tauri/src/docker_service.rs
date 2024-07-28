@@ -47,10 +47,10 @@ pub fn get_containers() -> Vec<Container> {
 }
 
 
-pub fn get_container_info(c: &Container) -> ContainerInfo {
+pub fn get_container_info(c: &Container) -> serde_json::Value {
     let mut docker = get_docker();
 
-    match docker.get_container_info(c) {
+    match docker.get_container_info_raw(c) {
         Ok(info) => info,
         Err(e) => { panic!("{}", e) }
     }

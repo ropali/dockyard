@@ -43,7 +43,7 @@ fn fetch_containers() -> Vec<Container> {
 }
 
 #[tauri::command]
-fn fetch_container_info(state: tauri::State<AppState>, c_id: String) -> ContainerInfo {
+fn fetch_container_info(state: tauri::State<AppState>, c_id: String) -> serde_json::Value {
     let container = state
         .containers
         .iter()

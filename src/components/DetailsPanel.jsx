@@ -44,9 +44,18 @@ function DetailsPanel({ selectedContainer }) {
     return log.replace(/[\x00-\x1F\x7F]/g, "");
   }
 
+  const isWeb = () => {
+
+    return selectedContainer.Ports.length > 0 && selectedContainer.Ports[0].PublicPort !== null
+  }
+
   function containerOperation(actionType) {
     invoke('container_operation', { cId: selectedContainer.Id, opType: actionType }).then((res) => {
-      toast(res)
+
+      if (res) {
+        toast(res)
+      }
+
     }).then((e) => {
       toast.error(e)
     });
@@ -85,6 +94,7 @@ function DetailsPanel({ selectedContainer }) {
       <div className="flex mb-4">
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Web">
           <button className="btn btn-square btn-sm mr-3"
+            disabled={!isWeb()}
             onClick={() => containerOperation("web")}
           >
             <IconWeb className="size-5" />

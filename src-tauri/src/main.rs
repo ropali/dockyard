@@ -1,6 +1,8 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::process::{Command, Stdio};
+
 use rust_dock::{
     container::{Container, ContainerInfo},
     version::Version,
@@ -83,38 +85,71 @@ async fn stream_docker_logs(
 }
 
 #[tauri::command]
-fn container_operation(_: tauri::State<AppState>, c_id: String, op_type: String) -> String {
-
+fn container_operation(state: tauri::State<AppState>, c_id: String, op_type: String) -> String {
     let mut d = get_docker();
 
+    let container = state
+        .containers
+        .iter()
+        .find(|c| c.Id == c_id)
+        .expect("Can't find container");
+
+    // TODO: Improve error handling
     let res = match op_type.as_str() {
         "delete" => match d.delete_container(&c_id) {
             Ok(res) => &format!("Succeed: {}", res.to_string()),
-            Err(e) => &format!("Failed to delete container: {}", e.to_string()), 
-            
+            Err(e) => &format!("Failed to delete container: {}", e.to_string()),
         },
         "start" => match d.start_container(&c_id) {
             Ok(res) => &format!("Succeed: {}", res.to_string()),
-            Err(e) => &format!("Failed to delete container: {}", e.to_string()), 
-            
+            Err(e) => &format!("Failed to delete container: {}", e.to_string()),
         },
-        "restart" =>  {
+        "restart" => {
             let _ = match d.stop_container(&c_id) {
                 Ok(res) => &format!("Succeed: {}", res.to_string()),
-                Err(e) => &format!("Failed to delete container: {}", e.to_string())
+                Err(e) => &format!("Failed to delete container: {}", e.to_string()),
             };
 
             let res = match d.start_container(&c_id) {
                 Ok(res) => &format!("Succeed: {}", res.to_string()),
-                Err(e) => &format!("Failed to delete container: {}", e.to_string())
+                Err(e) => &format!("Failed to delete container: {}", e.to_string()),
             };
 
             return res.to_string();
+        }
+        "web" => {
+            let path = format!(
+                "http://0.0.0.0:{}",
+                container.Ports[0].PublicPort.expect("port not available")
+            );
+            match open::that(path.clone()) {
+                Ok(()) => &format!("Opening '{}'.", path),
+                Err(err) => &format!("An error occurred when opening '{}': {}", path, err),
+            }
+        }
+
+        "exec" => {
+            // TODO: Make it platform/os agnostic
+            let container_name = container.Names[0].replace("/", ""); // Replace with your container name
+            let docker_command = format!("docker exec -it {} sh", container_name);
+
+            // Using gnome-terminal to run the docker command
+            let mut command = Command::new("gnome-terminal");
+
+            // -e flag is used to execute the command in gnome-terminal
+            let args = ["--", "bash", "-c", &docker_command];
             
-        },
+            command.args(&args);
+            match command.spawn() {
+                Ok(_) => "",
+                Err(err) => &format!("Cannot run exec command: {}", err.to_string())
+                
+            }
+
+
+        }
         _ => "Invalid operation type",
     };
-
 
     return res.to_string();
 }

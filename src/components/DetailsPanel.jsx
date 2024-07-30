@@ -14,9 +14,13 @@ function DetailsPanel({ selectedContainer }) {
   const [info, setInfo] = useState("");
   const [logs, setLogs] = useState([]);
   const [stats, setStats] = useState([]);
+  const [isContainerRunning, setIsContainerRunning] = useState(false)
 
   useEffect(() => {
     if (selectedContainer) {
+
+      setIsContainerRunning(selectedContainer.Status.toLowerCase().includes("up"))
+
       setLogs([]); // Clear logs before subscribing
 
       const unlisten = listen('log_chunk', (event) => {
@@ -53,6 +57,7 @@ function DetailsPanel({ selectedContainer }) {
     });
   }
 
+  // TODO: Implement stats API
   function getStats() {
     invoke('fetch_container_stats', { cId: selectedContainer.Id }).then((stats) => {
       setStats(stats);
@@ -188,7 +193,7 @@ function DetailsPanel({ selectedContainer }) {
       <div className="flex mb-4">
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Web">
           <button className="btn btn-square btn-sm mr-3"
-            disabled={!isWeb()}
+            disabled={!isWeb() && !isContainerRunning}
             onClick={() => containerOperation("web")}
           >
             <IconWeb className="size-5" />
@@ -196,14 +201,15 @@ function DetailsPanel({ selectedContainer }) {
         </div>
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Open Terminal">
           <button className="btn btn-square btn-sm mr-3"
+          disabled={!isContainerRunning}
             onClick={() => containerOperation("exec")}
           >
             <IconBxTerminal className="size-5" />
           </button>
         </div>
 
-        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip={selectedContainer.Status.toLowerCase().includes("up") ? "Stop" : "Start"}>
-          {selectedContainer.Status.toLowerCase().includes("up") ?
+        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip={isContainerRunning ? "Stop" : "Start"}>
+          {isContainerRunning ?
             <button className="btn btn-square btn-sm mr-3"
               onClick={() => containerOperation("stop")}
             >

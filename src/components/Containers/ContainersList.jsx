@@ -1,9 +1,44 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import ContainersTopBar from "./ContainersTopBar"
 import Card from '../Card'
+import { useContainers } from '../../state/ContainerContext'
 
 
-function ContainersList({ containers, onContainerClick, searchQuery, setSearchQuery, onContainerFilterChange }) {
+function ContainersList() {
+
+    const { containers, loadContainers, setSelectedContainer } = useContainers();
+
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const [containerFilter, setContainerFilter] = useState("all");
+
+    const filteredContainers = containers.filter(container => {
+        const matchesSearchQuery = container.Names[0].toLowerCase().includes(searchQuery.toLowerCase());
+        let matchesFilter;
+
+        switch (containerFilter.toLowerCase()) {
+            case 'all':
+                matchesFilter = true;
+                break;
+            case 'running':
+                matchesFilter = container.Status.toLowerCase().includes('up');
+                break;
+            case 'stopped':
+                matchesFilter = !container.Status.toLowerCase().includes('up');
+                break;
+            default:
+                matchesFilter = true;
+        }
+
+        return matchesSearchQuery && matchesFilter;
+    });
+
+    useEffect(() => {
+
+        loadContainers()
+
+    }, [containers])
+
 
 
     return (
@@ -11,14 +46,14 @@ function ContainersList({ containers, onContainerClick, searchQuery, setSearchQu
             <ContainersTopBar
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
-                onFilterChange={onContainerFilterChange}
+                onFilterChange={(value) => setContainerFilter(value)}
             />
             <div className="flex-1 overflow-y-auto mt-2">
-                {containers.map(container => (
+                {filteredContainers.map(container => (
                     <Card
                         key={container.Id}
                         container={container}
-                        onClick={() => onContainerClick(container)}
+                        onClick={() => setSelectedContainer(container)}
                     />
                 ))}
             </div>

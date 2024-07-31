@@ -8,8 +8,13 @@ import { IconDocker, IconBxTrashAlt, IconPlayCircle, IconBxTerminal, IconRestart
 import { toast } from 'react-toastify';
 import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/themes/acai.css';
+import { useContainers } from '../state/ContainerContext';
 
-function DetailsPanel({ selectedContainer }) {
+
+function DetailsPanel() {
+
+  const { selectedContainer, setSelectedContainer } = useContainers()
+
   const [activeTab, setActiveTab] = useState('LOGS');
   const [info, setInfo] = useState("");
   const [logs, setLogs] = useState([]);
@@ -40,13 +45,28 @@ function DetailsPanel({ selectedContainer }) {
     if (activeTab === 'INFO' && selectedContainer) {
       getInfo();
     }
-  }, [activeTab, selectedContainer]);
 
-  useEffect(() => {
     if (activeTab === 'STATS' && selectedContainer) {
       getStats();
     }
+
   }, [activeTab, selectedContainer]);
+
+
+
+  useEffect(() => {
+    if (selectedContainer) {
+      const intervalId = setInterval(() => {
+        refreshSelectContainer();
+      }, 60000); // 60000 milliseconds = 1 minute
+
+      // Clean up function to clear the interval when the component unmounts
+      // or when selectedContainer changes
+      return () => clearInterval(intervalId);
+    }
+  }, [selectedContainer]);
+
+
 
   function getInfo() {
     invoke('fetch_container_info', { cId: selectedContainer.Id }).then((info) => {
@@ -75,10 +95,22 @@ function DetailsPanel({ selectedContainer }) {
     return selectedContainer.Ports.length > 0 && selectedContainer.Ports[0].PublicPort !== null;
   };
 
+  function refreshSelectContainer() {
+    invoke('get_container', { cId: selectedContainer.Id }).then((res) => {
+
+      if (res) {
+        setSelectedContainer(res)
+      }
+
+    })
+  }
+
   function containerOperation(actionType) {
     invoke('container_operation', { cId: selectedContainer.Id, opType: actionType }).then((res) => {
       if (res) {
         toast(res);
+
+        refreshSelectContainer()
       }
     }).catch((e) => {
       toast.error(e);
@@ -173,7 +205,7 @@ function DetailsPanel({ selectedContainer }) {
     }
   };
 
-  if (!selectedContainer) {
+  if (selectedContainer == null) {
     return (
       <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col md:items-center md:justify-center">
         <div>
@@ -201,7 +233,7 @@ function DetailsPanel({ selectedContainer }) {
         </div>
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Open Terminal">
           <button className="btn btn-square btn-sm mr-3"
-          disabled={!isContainerRunning}
+            disabled={!isContainerRunning}
             onClick={() => containerOperation("exec")}
           >
             <IconBxTerminal className="size-5" />
@@ -225,6 +257,7 @@ function DetailsPanel({ selectedContainer }) {
 
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Restart">
           <button className="btn btn-square btn-sm mr-3"
+            disabled={!isContainerRunning}
             onClick={() => containerOperation("restart")}
           >
             <IconRestart className="size-5" />

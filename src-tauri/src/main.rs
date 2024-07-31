@@ -1,10 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::process::{Command, Stdio};
+use std::process::Command;
 
 use rust_dock::{
-    container::{Container, ContainerInfo},
+    container::Container,
     version::Version,
     Docker,
 };
@@ -40,6 +40,14 @@ fn get_docker() -> Docker {
 #[tauri::command]
 fn fetch_containers() -> Vec<Container> {
     return docker_service::get_containers();
+}
+
+
+#[tauri::command]
+fn get_container(c_id: String) -> Container {
+    let containers = docker_service::get_containers();
+
+    return containers.iter().find(|c| c.Id == c_id).expect("Container not found").clone();
 }
 
 #[tauri::command]
@@ -94,24 +102,29 @@ fn container_operation(state: tauri::State<AppState>, c_id: String, op_type: Str
         .find(|c| c.Id == c_id)
         .expect("Can't find container");
 
+
     // TODO: Improve error handling
     let res = match op_type.as_str() {
         "delete" => match d.delete_container(&c_id) {
-            Ok(res) => &format!("Succeed: {}", res.to_string()),
+            Ok(_) => &format!("Deleted container"),
             Err(e) => &format!("Failed to delete container: {}", e.to_string()),
         },
         "start" => match d.start_container(&c_id) {
-            Ok(res) => &format!("Succeed: {}", res.to_string()),
+            Ok(_) => &format!("Container started"),
+            Err(e) => &format!("Failed to delete container: {}", e.to_string()),
+        },
+        "stop" => match d.stop_container(&c_id) {
+            Ok(_) => &format!("Container stopped"),
             Err(e) => &format!("Failed to delete container: {}", e.to_string()),
         },
         "restart" => {
             let _ = match d.stop_container(&c_id) {
-                Ok(res) => &format!("Succeed: {}", res.to_string()),
+                Ok(_) => &format!("Container restarted"),
                 Err(e) => &format!("Failed to delete container: {}", e.to_string()),
             };
 
             let res = match d.start_container(&c_id) {
-                Ok(res) => &format!("Succeed: {}", res.to_string()),
+                Ok(_) => &format!("Container restarted"),
                 Err(e) => &format!("Failed to delete container: {}", e.to_string()),
             };
 
@@ -138,15 +151,12 @@ fn container_operation(state: tauri::State<AppState>, c_id: String, op_type: Str
 
             // -e flag is used to execute the command in gnome-terminal
             let args = ["--", "bash", "-c", &docker_command];
-            
+
             command.args(&args);
             match command.spawn() {
                 Ok(_) => "",
-                Err(err) => &format!("Cannot run exec command: {}", err.to_string())
-                
+                Err(err) => &format!("Cannot run exec command: {}", err.to_string()),
             }
-
-
         }
         _ => "Invalid operation type",
     };
@@ -164,7 +174,8 @@ fn main() {
             fetch_version,
             fetch_container_info,
             stream_docker_logs,
-            container_operation
+            container_operation,
+            get_container
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

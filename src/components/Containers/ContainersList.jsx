@@ -6,7 +6,7 @@ import { useContainers } from '../../state/ContainerContext'
 
 function ContainersList() {
 
-    const { containers, loadContainers, setSelectedContainer } = useContainers();
+    const { containers, loadContainers, selectedContainer ,setSelectedContainer } = useContainers();
 
     const [searchQuery, setSearchQuery] = useState('');
 

@@ -10,8 +10,6 @@ import { useContainers } from './state/ContainerContext';
 
 
 
-
-
 function App() {
 
   const { selectedContainer } = useContainers();
@@ -29,7 +27,7 @@ function App() {
               <ContainersList />
             </div>
             <div className={`w-full bg-gray-200 ml-1 overflow-hidden	 ${selectedContainer ? 'bg-white' : 'bg-gray-200'}`}>
-              <DetailsPanel selectedContainer={selectedContainer} />
+              <DetailsPanel />
             </div>
 
           </div>

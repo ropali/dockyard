@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import "@patternfly/react-core/dist/styles/base.css";
-import { IconArrowDownCircleFill, IconArrowUpCircleFill } from "../icons";
+import { IconArrowDownCircleFill, IconArrowUpCircleFill } from "../Icons";
 
 import { LogViewer, LogViewerSearch } from '@patternfly/react-log-viewer';
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip } from '@patternfly/react-core';

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ContainersTopBar from "./ContainersTopBar"
-import Card from '../Card'
+import ContainerCard from './ContainerCard'
 import { useContainers } from '../../state/ContainerContext'
 
 
@@ -50,7 +50,7 @@ function ContainersList() {
             />
             <div className="flex-1 overflow-y-auto mt-2">
                 {filteredContainers.map(container => (
-                    <Card
+                    <ContainerCard
                         key={container.Id}
                         container={container}
                         onClick={() => setSelectedContainer(container)}

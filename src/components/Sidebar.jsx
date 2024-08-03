@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
-
-import { IconBxsTachometer, IconContainerTwentyFour, IconStack2, IconDatabaseCheckOutline, IconServerNetworkAlt, IconDocker, IconBxCog } from "../icons"
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { IconBxsTachometer, IconContainerTwentyFour, IconStack2, IconDatabaseCheckOutline, IconServerNetworkAlt, IconDocker, IconBxCog } from "../Icons";
 
 function Sidebar() {
-  const [selectedIcon, setSelectedIcon] = useState(null); // Initialize selected icon to null
-
-  const handleIconClick = (iconId) => {
-    setSelectedIcon(iconId);
-  };
+  const location = useLocation();
 
   return (
     <div className="flex h-screen w-16 flex-col justify-between border-e bg-white z-50">
@@ -21,10 +17,9 @@ function Sidebar() {
         <div className="border-t border-gray-100">
           <div className="px-2">
             <div className="py-4">
-              <a
-                href="#"
-                className={`group relative flex justify-center rounded px-2 py-1.5 ${selectedIcon === 'dashboard' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
-                onClick={() => handleIconClick('dashboard')}
+              <Link
+                to="/dashboard"
+                className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/dashboard' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
               >
                 <IconBxsTachometer className="size-6 opacity-75" />
 
@@ -33,17 +28,15 @@ function Sidebar() {
                 >
                   Dashboard
                 </span>
-              </a>
+              </Link>
             </div>
 
             <ul className="space-y-4 border-t border-gray-100 pt-4">
               <li>
-                <a
-                  href="#"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${selectedIcon === 'containers' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
-                  onClick={() => handleIconClick('containers')}
+                <Link
+                  to="/"
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
                 >
-
                   <IconContainerTwentyFour className="size-6 opacity-75" />
 
                   <span
@@ -51,50 +44,43 @@ function Sidebar() {
                   >
                     Containers
                   </span>
-                </a>
+                </Link>
               </li>
 
               <li>
-                <a
-                  href="#"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${selectedIcon === 'images' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
-                  onClick={() => handleIconClick('images')}
+                <Link
+                  to="/images"
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/images' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
                 >
-
                   <IconStack2 className="size-7 opacity-75" />
                   <span
                     className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible"
                   >
                     Images
                   </span>
-                </a>
+                </Link>
               </li>
 
               <li>
-                <a
-                  href="#"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${selectedIcon === 'volumes' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
-                  onClick={() => handleIconClick('volumes')}
+                <Link
+                  to="/volumes"
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/volumes' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
                 >
                   <IconDatabaseCheckOutline className="size-7 opacity-75" />
 
                   <span
                     className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible"
                   >
-
                     Volumes
                   </span>
-                </a>
+                </Link>
               </li>
 
               <li>
-                <a
-                  href="#"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${selectedIcon === 'networks' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
-                  onClick={() => handleIconClick('networks')}
+                <Link
+                  to="/networks"
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/networks' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
                 >
-
-
                   <IconServerNetworkAlt className="size-7 opacity-75" />
 
                   <span
@@ -102,7 +88,7 @@ function Sidebar() {
                   >
                     Networks
                   </span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -111,11 +97,10 @@ function Sidebar() {
 
       <div className="sticky inset-x-0 bottom-0 bg-white p-2">
         <div className="py-4 border-t border-gray-100">
-          <a
-            href="#"
-            className="group relative flex justify-center rounded px-2 py-1.5 "
+          <Link
+            to="/settings"
+            className="group relative flex justify-center rounded px-2 py-1.5"
           >
-
             <IconBxCog className="size-5 opacity-75" />
 
             <span
@@ -123,7 +108,7 @@ function Sidebar() {
             >
               Settings
             </span>
-          </a>
+          </Link>
         </div>
         <form action="#" className="border-t border-gray-100 p-1">
           <button

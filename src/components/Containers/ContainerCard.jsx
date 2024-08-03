@@ -1,6 +1,6 @@
 
 
-const Card = ({ container, onClick }) => {
+const ContainerCard = ({ container, onClick }) => {
     const statusColor = container.Status.includes("Exited") ? 'bg-red-500' : 'bg-green-500';
 
     return (
@@ -39,4 +39,4 @@ const Card = ({ container, onClick }) => {
     );
 };
 
-export default Card;
+export default ContainerCard;

@@ -2,16 +2,17 @@ import { invoke } from '@tauri-apps/api';
 import React, { useState, useEffect } from 'react';
 import { listen } from '@tauri-apps/api/event';
 
-import LogsViewer from './LogsViewer';
-import StatsChart from './StatsChart';
-import { IconDocker, IconBxTrashAlt, IconPlayCircle, IconBxTerminal, IconRestart, IconWeb, IconCircleStop } from '../icons';
+import LogsViewer from '../LogsViewer';
+import StatsChart from '../StatsChart';
+import { IconDocker, IconBxTrashAlt, IconPlayCircle, IconBxTerminal, IconRestart, IconWeb, IconCircleStop } from '../../Icons';
+
 import { toast } from 'react-toastify';
 import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/themes/acai.css';
-import { useContainers } from '../state/ContainerContext';
+import { useContainers } from '../../state/ContainerContext';
 
 
-function DetailsPanel() {
+function ContainerDetails() {
 
   const { selectedContainer, setSelectedContainer } = useContainers()
 
@@ -284,4 +285,4 @@ function DetailsPanel() {
   );
 }
 
-export default DetailsPanel;
+export default ContainerDetails;

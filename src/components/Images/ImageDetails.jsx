@@ -5,17 +5,20 @@ import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/themes/acai.css';
 import { useImages } from "../../state/ImagesContext"
 
-import { IconDocker, IconBxTrashAlt, IconDownload, IconHistory, IconTag, IconSearch } from '../../Icons';
+import { IconDocker, IconBxTrashAlt, IconDownload, IconCopy, IconTag } from '../../Icons';
 import ImageHistory from './ImageHistory';
+import { copyToClipboard, formatSize } from '../../utils';
+import LogoScreen from '../LogoScreen';
+
 
 function ImageDetails() {
   const { selectedImage, setSelectedImage } = useImages();
-  const [activeTab, setActiveTab] = useState('INFO');
+  const [activeTab, setActiveTab] = useState('INSPECT');
   const [info, setInfo] = useState("");
   const [history, setHistory] = useState([]);
 
   useEffect(() => {
-    if (selectedImage && activeTab === 'INFO') {
+    if (selectedImage && activeTab === 'INSPECT') {
       getInfo();
     }
     if (selectedImage && activeTab === 'HISTORY') {
@@ -158,34 +161,40 @@ function ImageDetails() {
   };
 
   if (selectedImage == null) {
-    return (
-      <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col md:items-center md:justify-center">
-        <div>
-          <IconDocker className="size-20 opacity-75" fill="" />
-        </div>
-        Select an image to see more details
-      </div>
-    );
+    return <LogoScreen message={"Select an image to see more details"}/>
   }
 
   return (
     <div className="dark p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
+      <div className="flex items-center">
+        <h1 className="text-lg font-bold mr-2">{selectedImage.RepoTags[0]}</h1>
+        <button
+          className="hover:bg-gray-200 rounded"
+          onClick={() => copyToClipboard(selectedImage.RepoTags[0])}
+          title="Copy Image Name"
+        >
+          <IconCopy className="w-4 h-4 text-gray-600" />
+        </button>
+        <p className="ml-auto text-sm text-gray-600">Size: {formatSize(selectedImage.Size)}</p>
+      </div>
       <div className="flex items-center mb-4">
-        <h1 className="text-lg font-bold">{selectedImage.RepoTags[0]}</h1>
-        <p className="ml-auto text-sm text-gray-600">Size: {(selectedImage.Size / 1024 / 1024).toFixed(2)} MB</p>
+        <p className="text-sm text-gray-600 mr-2">{selectedImage.Id.slice(7, 19)}</p>
+        <button
+          className="hover:bg-gray-200 rounded"
+          onClick={() => copyToClipboard(selectedImage.Id)}
+          title="Copy full ID"
+        >
+          <IconCopy className="w-4 h-4 text-gray-600" />
+        </button>
       </div>
       <div className="flex mb-4">
-        <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Pull Latest">
-          <button className="btn btn-square btn-sm mr-3" onClick={() => imageOperation("pull")}>
-            <IconDownload className="size-5" />
-          </button>
-        </div>
+
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Tag Image">
           <button className="btn btn-square btn-sm mr-3" onClick={() => imageOperation("tag")}>
             <IconTag className="size-5" />
           </button>
         </div>
-        
+
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
           <button className="btn btn-square btn-sm btn-error mr-3" onClick={() => imageOperation("delete")}>
             <IconBxTrashAlt className="size-5" />

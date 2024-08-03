@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/themes/acai.css';
 import { useContainers } from '../../state/ContainerContext';
+import LogoScreen from '../LogoScreen';
 
 
 function ContainerDetails() {
@@ -207,14 +208,8 @@ function ContainerDetails() {
   };
 
   if (selectedContainer == null) {
-    return (
-      <div className="text-gray-600 p-4 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col md:items-center md:justify-center">
-        <div>
-          <IconDocker className="size-20 opacity-75" fill="" />
-        </div>
-        Select a container to see more details
-      </div>
-    );
+    return <LogoScreen message={"Select a container to see more details"}/>
+    
   }
 
   return (

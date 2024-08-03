@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useImages } from '../../state/ImagesContext'
+import { formatSize } from '../../utils';
 
 
 const ImageHistory = () => {
@@ -13,10 +14,7 @@ const ImageHistory = () => {
         return new Date(timestamp * 1000).toLocaleString();
     };
 
-    const formatSize = (size) => {
-        const sizeInMB = size / 1024 / 1024;
-        return sizeInMB.toFixed(2) + ' MB';
-    };
+    
 
     return (
         <div className="overflow-x-auto h-full">

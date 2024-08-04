@@ -3,11 +3,7 @@
 
 use std::process::Command;
 
-use rust_dock::{
-    container::Container,
-    version::Version,
-    Docker,
-};
+use rust_dock::{container::Container, image::{Image, ImageHistory}, version::Version, Docker};
 use tauri::Manager;
 use tokio::sync::mpsc;
 
@@ -42,12 +38,15 @@ fn fetch_containers() -> Vec<Container> {
     return docker_service::get_containers();
 }
 
-
 #[tauri::command]
 fn get_container(c_id: String) -> Container {
     let containers = docker_service::get_containers();
 
-    return containers.iter().find(|c| c.Id == c_id).expect("Container not found").clone();
+    return containers
+        .iter()
+        .find(|c| c.Id == c_id)
+        .expect("Container not found")
+        .clone();
 }
 
 #[tauri::command]
@@ -101,7 +100,6 @@ fn container_operation(state: tauri::State<AppState>, c_id: String, op_type: Str
         .iter()
         .find(|c| c.Id == c_id)
         .expect("Can't find container");
-
 
     // TODO: Improve error handling
     let res = match op_type.as_str() {
@@ -164,6 +162,28 @@ fn container_operation(state: tauri::State<AppState>, c_id: String, op_type: Str
     return res.to_string();
 }
 
+#[tauri::command]
+fn list_images() -> Vec<Image> {
+    return docker_service::get_images();
+}
+
+#[tauri::command]
+fn image_info(name: String) -> serde_json::Value {
+    return docker_service::inspect_image(&name);
+}
+
+
+#[tauri::command]
+fn image_history(name: String) -> Vec<ImageHistory> {
+    return docker_service::image_history(&name);
+}
+
+#[tauri::command]
+fn delete_image(id: String, force: bool, no_prune: bool) -> String {
+    return docker_service::delete_image(&id, force, no_prune);
+}
+
+
 fn main() {
     let state = AppState::default();
 
@@ -175,7 +195,11 @@ fn main() {
             fetch_container_info,
             stream_docker_logs,
             container_operation,
-            get_container
+            get_container,
+            list_images,
+            image_info,
+            image_history,
+            delete_image
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

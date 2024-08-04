@@ -1,20 +1,34 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useImages } from '../../state/ImagesContext'
-import { formatSize } from '../../utils';
+import { formatSize, formatDate } from '../../utils';
+import { invoke } from '@tauri-apps/api';
+import { toast } from 'react-toastify';
 
 
 const ImageHistory = () => {
 
-    const { getImageHistory } = useImages();
+    const { selectedImage } = useImages();
 
-    const history = getImageHistory()
+    const [history, setHistory] = useState([])
 
 
-    const formatDate = (timestamp) => {
-        return new Date(timestamp * 1000).toLocaleString();
-    };
+    function getHistory() {
+        invoke('image_history', { name: selectedImage.RepoTags[0] }).then((history) => {
+            setHistory(history);
 
-    
+        }).catch((error) => {
+            toast.error("Failed to fetch image history.")
+            console.error("Error fetching image history:", error);
+        });
+    }
+
+
+    useEffect(() => {
+        getHistory()
+
+    }, [selectedImage])
+
+
 
     return (
         <div className="overflow-x-auto h-full">
@@ -30,8 +44,8 @@ const ImageHistory = () => {
                 </thead>
                 <tbody>
                     {history.map((layer, idx) => (
-                        <tr key={layer.Id} className="hover:bg-gray-100">
-                            <td>{idx+1}</td>
+                        <tr key={idx + 1} className="hover:bg-gray-100">
+                            <td>{idx + 1}</td>
                             <td className="whitespace-nowrap ">{formatDate(layer.Created)}</td>
                             <td className="max-w-md truncate" title={layer.CreatedBy}>
                                 {layer.CreatedBy || 'N/A'}

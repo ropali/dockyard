@@ -10,7 +10,11 @@ function ImagesList() {
 
     const [searchQuery, setSearchQuery] = useState('');
 
-    
+    const filteredImages = images.filter(image => {
+        return image.RepoTags[0].toLowerCase().includes(searchQuery.toLowerCase());
+    });
+
+
 
     useEffect(() => {
 
@@ -27,7 +31,7 @@ function ImagesList() {
                 setSearchQuery={setSearchQuery}
             />
             <div className="flex-1 overflow-y-auto mt-2">
-                {images.map(image => (
+                {filteredImages.map(image => (
                     <ImageCard
                         key={image.Id}
                         image={image}

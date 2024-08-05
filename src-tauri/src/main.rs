@@ -3,44 +3,23 @@
 
 use std::process::Command;
 
-use rust_dock::{container::Container, image::{Image, ImageHistory}, version::Version, Docker};
+use rust_dock::{container::Container, image::{Image, ImageHistory}, version::Version};
 use tauri::Manager;
 use tokio::sync::mpsc;
 
-mod docker_service;
+use crate::state::AppState;
 
-struct AppState {
-    containers: Vec<Container>,
-}
+mod state;
 
-impl AppState {
-    fn default() -> Self {
-        return AppState {
-            containers: docker_service::get_containers(),
-        };
-    }
-}
 
-fn get_docker() -> Docker {
-    let docker = match Docker::connect("unix:///var/run/docker.sock") {
-        Ok(docker) => docker,
-        Err(e) => {
-            panic!("{}", e);
-        }
-    };
-
-    return docker;
-}
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn fetch_containers() -> Vec<Container> {
-    return docker_service::get_containers();
+fn fetch_containers(state: tauri::State<AppState>) -> Vec<Container> {
+    state.docker.clone().get_containers(true).expect("")
 }
 
 #[tauri::command]
-fn get_container(c_id: String) -> Container {
-    let containers = docker_service::get_containers();
+fn get_container(state: tauri::State<AppState>, c_id: String) -> Container {
+    let containers = state.docker.clone().get_containers(true).expect("");
 
     return containers
         .iter()
@@ -51,28 +30,23 @@ fn get_container(c_id: String) -> Container {
 
 #[tauri::command]
 fn fetch_container_info(state: tauri::State<AppState>, c_id: String) -> serde_json::Value {
-    let container = state
-        .containers
-        .iter()
-        .find(|c| c.Id == c_id)
-        .expect("Can't find container withd Id {c_id}");
-
-    return docker_service::get_container_info(container);
+    state.docker.clone().get_container_info_raw(&c_id).unwrap()
 }
 
 #[tauri::command]
-fn fetch_version() -> Version {
-    return docker_service::get_version();
+fn fetch_version(state: tauri::State<AppState>) -> Version {
+    state.docker.clone().get_version().expect("")
 }
 
 #[tauri::command]
 async fn stream_docker_logs(
+    state: tauri::State<'_, AppState>,
     app_handle: tauri::AppHandle,
     container_id: String,
 ) -> Result<(), String> {
-    let docker = Docker::connect("unix:///var/run/docker.sock").map_err(|e| e.to_string())?;
-
     let (sender, mut receiver) = mpsc::channel(100);
+
+    let docker = state.docker.clone();
 
     tokio::spawn(async move {
         if let Err(err) = docker.stream_container_logs(&container_id, sender).await {
@@ -93,35 +67,34 @@ async fn stream_docker_logs(
 
 #[tauri::command]
 fn container_operation(state: tauri::State<AppState>, c_id: String, op_type: String) -> String {
-    let mut d = get_docker();
+    let containers = state.docker.clone().get_containers(true).expect("");
 
-    let container = state
-        .containers
+    let container = containers
         .iter()
         .find(|c| c.Id == c_id)
         .expect("Can't find container");
 
     // TODO: Improve error handling
     let res = match op_type.as_str() {
-        "delete" => match d.delete_container(&c_id) {
+        "delete" => match state.docker.clone().delete_container(&c_id) {
             Ok(_) => &format!("Deleted container"),
             Err(e) => &format!("Failed to delete container: {}", e.to_string()),
         },
-        "start" => match d.start_container(&c_id) {
+        "start" => match state.docker.clone().start_container(&c_id) {
             Ok(_) => &format!("Container started"),
             Err(e) => &format!("Failed to delete container: {}", e.to_string()),
         },
-        "stop" => match d.stop_container(&c_id) {
+        "stop" => match state.docker.clone().stop_container(&c_id) {
             Ok(_) => &format!("Container stopped"),
             Err(e) => &format!("Failed to delete container: {}", e.to_string()),
         },
         "restart" => {
-            let _ = match d.stop_container(&c_id) {
+            let _ = match state.docker.clone().stop_container(&c_id) {
                 Ok(_) => &format!("Container restarted"),
                 Err(e) => &format!("Failed to delete container: {}", e.to_string()),
             };
 
-            let res = match d.start_container(&c_id) {
+            let res = match state.docker.clone().start_container(&c_id) {
                 Ok(_) => &format!("Container restarted"),
                 Err(e) => &format!("Failed to delete container: {}", e.to_string()),
             };
@@ -163,24 +136,26 @@ fn container_operation(state: tauri::State<AppState>, c_id: String, op_type: Str
 }
 
 #[tauri::command]
-fn list_images() -> Vec<Image> {
-    return docker_service::get_images();
+fn list_images(state: tauri::State<AppState>) -> Vec<Image> {
+    state.docker.clone().get_images(true).unwrap()
 }
 
 #[tauri::command]
-fn image_info(name: String) -> serde_json::Value {
-    return docker_service::inspect_image(&name);
+fn image_info(state: tauri::State<AppState>, name: String) -> serde_json::Value {
+    state.docker.clone().inspect_image(&name).unwrap()
 }
 
 
 #[tauri::command]
-fn image_history(name: String) -> Vec<ImageHistory> {
-    return docker_service::image_history(&name);
+fn image_history(state: tauri::State<AppState>, name: String) -> Vec<ImageHistory> {
+    state.docker.clone().image_history(&name).unwrap()
 }
 
 #[tauri::command]
-fn delete_image(id: String, force: bool, no_prune: bool) -> String {
-    return docker_service::delete_image(&id, force, no_prune);
+fn delete_image(state: tauri::State<AppState>, id: String, force: bool, no_prune: bool) -> &str {
+    state.docker.clone().delete_image(&id, force, no_prune).unwrap();
+
+    "Deleted Image"
 }
 
 

@@ -5,15 +5,17 @@ import "./index.css";
 
 import { ContainerProvider } from './state/ContainerContext';
 import { ImagesProvider } from "./state/ImagesContext";
+import { VolumesProvider } from "./state/VolumesContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ContainerProvider >
-      <ImagesProvider >
-        <App />
-      </ImagesProvider>
-
-    </ContainerProvider>
+    <VolumesProvider >
+      <ContainerProvider >
+        <ImagesProvider >
+          <App />
+        </ImagesProvider>
+      </ContainerProvider>
+    </VolumesProvider>
 
   </React.StrictMode>,
 );

@@ -8,10 +8,7 @@ import ImageDetails from '../Images/ImageDetails';
 export default function ImagesScreen() {
 
     const {selectedImage } = useImages();
-
-   
-
-
+    
     return (
         <div className="h-full w-full mt-4 flex rounded-lg overflow-hidden">
             <div className="w-1/3 bg-gray-200 p-2 overflow-y-auto">

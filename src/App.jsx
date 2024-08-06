@@ -12,6 +12,7 @@ import ContainersScreen from './components/Screens/ContainersScreen'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ImagesScreen from './components/Screens/ImagesScreen';
+import VolumesScreen from './components/Screens/VolumesScreen';
 
 
 function App() {
@@ -28,8 +29,8 @@ function App() {
               {/* <Route path="/dashboard" element={<Dashboard />} /> */}
               <Route path="/" element={<ContainersScreen />} />
               <Route path="/images" element={<ImagesScreen />} />
-              {/* <Route path="/volumes" element={<Volumes />} />
-              <Route path="/networks" element={<Networks />} /> */}
+              <Route path="/volumes" element={<VolumesScreen />} />
+              {/* <Route path="/networks" element={<Networks />} /> */}
             </Routes>
           </main>
         </div>

@@ -1,7 +1,6 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use tauri::Manager;
 
 use crate::commands::{
     container_operation,
@@ -14,6 +13,8 @@ use crate::commands::{
     image_info,
     list_images,
     stream_docker_logs,
+    list_volumes,
+    inspect_volume
 };
 use crate::state::AppState;
 
@@ -35,7 +36,9 @@ fn main() {
             list_images,
             image_info,
             image_history,
-            delete_image
+            delete_image,
+            list_volumes,
+            inspect_volume
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

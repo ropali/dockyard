@@ -5,7 +5,7 @@ import VolumeCard from "./VolumeCard";
 
 
 export default function VolumesList() {
-    const { volumes, loadVolumes, setSelectedVolume } = useVolumes();
+    const { volumes, loadVolumes, setSelectedVolume, selectedVolume } = useVolumes();
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredVolumes = volumes.filter(volume =>
@@ -28,6 +28,7 @@ export default function VolumesList() {
                         key={volume.Name}
                         volume={volume}
                         onClick={() => setSelectedVolume(volume)}
+                        isSelected={selectedVolume != null && selectedVolume.Name === volume.Name}
                     />
                 ))}
             </div>

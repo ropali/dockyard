@@ -3,16 +3,12 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Sidebar from './components/Sidebar';
 
 import ContainersScreen from './components/Screens/ContainersScreen'
-// import Dashboard from './components/Dashboard';
-// import Images from './components/Images';
-// import Volumes from './components/Volumes';
-// import Networks from './components/Networks';
-
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ImagesScreen from './components/Screens/ImagesScreen';
 import VolumesScreen from './components/Screens/VolumesScreen';
+import NetworkScreen from './components/Screens/NetworkScreen';
 
 
 function App() {
@@ -30,7 +26,7 @@ function App() {
               <Route path="/" element={<ContainersScreen />} />
               <Route path="/images" element={<ImagesScreen />} />
               <Route path="/volumes" element={<VolumesScreen />} />
-              {/* <Route path="/networks" element={<Networks />} /> */}
+              <Route path="/networks" element={<NetworkScreen />} />
             </Routes>
           </main>
         </div>

@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ImagesScreen from './components/Screens/ImagesScreen';
 import VolumesScreen from './components/Screens/VolumesScreen';
 import NetworkScreen from './components/Screens/NetworkScreen';
+import SettingsScreen from './components/Screens/SettingsScreen';
 
 
 function App() {
@@ -22,11 +23,12 @@ function App() {
           <main className="flex p-5 bg-gray-100 flex-1 overflow-hidden mb-2">
             <Routes>
               {/* <Route path="/" element={<Navigate to="/" replace />} /> */}
-              {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+              
               <Route path="/" element={<ContainersScreen />} />
               <Route path="/images" element={<ImagesScreen />} />
               <Route path="/volumes" element={<VolumesScreen />} />
               <Route path="/networks" element={<NetworkScreen />} />
+              <Route path="/settings" element={<SettingsScreen />} />
             </Routes>
           </main>
         </div>

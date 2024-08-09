@@ -8,7 +8,7 @@ const VolumeAttachedContainers = () => {
 
     const { selectedVolume } = useVolumes();
 
-    const [containerList, setcontainerList] = useState([])
+    const [containerList, setContainerList] = useState([])
 
     const { containers, loadContainers } = useContainers()
 
@@ -33,14 +33,14 @@ const VolumeAttachedContainers = () => {
 
 
     useEffect(() => {
-        if (!containers) {
-            loadContainers()
+        // Load containers if not already loaded
+        if (!containers.length) {
+            loadContainers();
+        } else {
+            // Filter containers once they are loaded
+            setContainerList(filterContainersByVolume());
         }
-
-        setcontainerList(filterContainersByVolume())
-
-
-    }, [selectedVolume])
+    }, [selectedVolume, containers, loadContainers]);
 
 
 

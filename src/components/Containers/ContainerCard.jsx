@@ -1,11 +1,14 @@
 
 
-const ContainerCard = ({ container, onClick }) => {
+const ContainerCard = ({ container, onClick, isSelected }) => {
     const statusColor = container.Status.includes("Exited") ? 'bg-red-500' : 'bg-green-500';
 
     return (
         <div
-            className="border p-2 bg-white shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300 cursor-pointer mb-2 relative"
+            className={
+                `p-2 bg-white shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300 cursor-pointer mb-2 relative 
+                ${isSelected ? 'border-l-4 border-blue-500 bg-blue-50' : ''}`
+            }
             onClick={onClick}
         >
             <div className="flex items-center mb-1">

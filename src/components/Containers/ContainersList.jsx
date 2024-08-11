@@ -54,6 +54,7 @@ function ContainersList() {
                         key={container.Id}
                         container={container}
                         onClick={() => setSelectedContainer(container)}
+                        isSelected={selectedContainer != null && selectedContainer.Id === container.Id}
                     />
                 ))}
             </div>

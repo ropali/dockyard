@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ImageCard = ({ image, onClick }) => {
+const ImageCard = ({ image, onClick, isSelected }) => {
     const formatSize = (size) => {
         const sizeInMB = size / 1024 / 1024;
         return sizeInMB.toFixed(1) + ' MB';
@@ -12,7 +12,10 @@ const ImageCard = ({ image, onClick }) => {
 
     return (
         <div
-            className="border p-2 bg-white shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300 cursor-pointer mb-2 relative"
+            className={
+                `p-2 bg-white shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300 cursor-pointer mb-2 relative
+                ${isSelected ? 'border-l-4 border-blue-500 bg-blue-50' : ''}`
+            }
             onClick={onClick}
         >
             <h2 className="text-sm font-semibold mb-1">{image.RepoTags[0]}</h2>

@@ -6,7 +6,7 @@ import ImageCard from './ImageCard'
 
 function ImagesList() {
 
-    const { images, loadImages, setSelectedImage } = useImages();
+    const { images, loadImages, setSelectedImage, selectedImage } = useImages();
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -36,6 +36,7 @@ function ImagesList() {
                         key={image.Id}
                         image={image}
                         onClick={() => setSelectedImage(image)}
+                        isSelected={selectedImage && selectedImage.Id === image.Id}
                     />
                 ))}
             </div>

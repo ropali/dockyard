@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import "@patternfly/react-core/dist/styles/base.css";
-import { IconArrowDownCircleFill, IconArrowUpCircleFill } from "../Icons";
+import { IconTextWrap, IconArrowDownCircle, IconArrowUpCircle } from "../Icons";
 
 import { LogViewer, LogViewerSearch } from '@patternfly/react-log-viewer';
 import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip } from '@patternfly/react-core';
@@ -15,44 +15,28 @@ const LogsViewer = ({ logs }) => {
         <React.Fragment>
             <ToolbarGroup variant="icon-button-group">
                 <ToolbarItem alignSelf='center' spacer="spacerLg">
-                    <Tooltip position="left" content={"Scroll To Top"}>
-                        <div className="form-control mr-2">
-                            <label className="label cursor-pointer" onClick={() => { setScrollTo(1) }}>
-
-                                <IconArrowUpCircleFill className="size-6" fill="#000000" />
-                            </label>
-                        </div>
-
-                    </Tooltip>
-
-                </ToolbarItem>
-
-                <ToolbarItem alignSelf='center' spacer="spacerLg">
-                    <Tooltip position="left" content={"Scroll To Bottom"}>
-                        <div className="form-control mr-2">
-                            <label className="label cursor-pointer" onClick={() => { setScrollTo(logs.length) }}>
-
-                                <IconArrowDownCircleFill className="size-6" fill="#000000" />
-                            </label>
-                        </div>
-
-                    </Tooltip>
-
-                </ToolbarItem>
-
-                <ToolbarItem alignSelf='center' spacer="spacerLg">
-                    <div className="form-control">
-                        <label className="label cursor-pointer">
-                            <span className="label-text mr-2">Wrap Text</span>
-                            <input
-                                type="checkbox"
-                                checked={isTextWrapped}
-                                className="checkbox checkbox-primary checkbox-xs"
-                                onChange={(_event, value) => setIsTextWrapped(!isTextWrapped)}
-                            />
-                        </label>
+                    <div className="join">
+                        <button
+                            className="btn btn-sm join-item tooltip tooltip-left hover:tooltip-open" data-tip="Scroll To Bottom"
+                            onClick={() => setScrollTo(logs.length)}
+                        >
+                            <IconArrowDownCircle />
+                        </button>
+                        <button
+                            className="btn btn-sm join-item tooltip tooltip-left hover:tooltip-open" data-tip="Scroll To Top"
+                            onClick={() => setScrollTo(1)}
+                        >
+                            <IconArrowUpCircle />
+                        </button>
+                        <button className={`btn btn-sm join-item tooltip tooltip-left hover:tooltip-open ${isTextWrapped ? 'btn-primary' : ''}`} data-tip={isTextWrapped ? "Unwrap Text" : "Wrap Text"}
+                            onClick={() => setIsTextWrapped(!isTextWrapped)}
+                        >
+                            <IconTextWrap />
+                        </button>
                     </div>
+
                 </ToolbarItem>
+
 
             </ToolbarGroup>
         </React.Fragment>

@@ -1,14 +1,8 @@
 import React from 'react';
+import { formatDate, formatSize } from "../../utils"
 
 const ImageCard = ({ image, onClick, isSelected }) => {
-    const formatSize = (size) => {
-        const sizeInMB = size / 1024 / 1024;
-        return sizeInMB.toFixed(1) + ' MB';
-    };
 
-    const formatDate = (timestamp) => {
-        return new Date(timestamp * 1000).toLocaleDateString();
-    };
 
     return (
         <div

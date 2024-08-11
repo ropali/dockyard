@@ -1,8 +1,10 @@
 use std::process::Command;
 use rust_dock::container::Container;
 use rust_dock::image::{Image, ImageHistory};
+use rust_dock::network::Network;
 use rust_dock::version::Version;
 use rust_dock::volume::Volume;
+use serde_json::Value;
 use tauri::Manager;
 use tokio::sync::mpsc;
 use crate::state::AppState;
@@ -167,4 +169,19 @@ pub fn list_volumes(state: tauri::State<AppState>) -> Vec<Volume> {
 #[tauri::command]
 pub fn inspect_volume(state: tauri::State<AppState>, name: String) -> Volume {
     state.docker.clone().inspect_volume(&name).unwrap()
+}
+
+
+/// Networks
+
+
+#[tauri::command]
+pub fn list_networks(state: tauri::State<AppState>) -> Vec<Network> {
+    state.docker.clone().get_networks().unwrap()
+}
+
+
+#[tauri::command]
+pub fn inspect_network(state: tauri::State<AppState>, name: String) -> Value {
+    state.docker.clone().inspect_network(&name).unwrap()
 }

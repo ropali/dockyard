@@ -1,15 +1,31 @@
-import react, { useState } from "react";
+import react, { useState, useEffect } from "react";
 import { IconCopy, IconBxTrashAlt } from "../../Icons";
 import JSONPretty from "react-json-pretty";
 import LogoScreen from "../LogoScreen";
 import { copyToClipboard } from "../../utils";
 import { useNetworks } from "../../state/NetworkContext";
-import NetworkAttachedContainers from "./NetworkAttachedContainers";
+import { invoke } from "@tauri-apps/api";
 
 
 export default function NetworkDetails() {
     const { selectedNetwork, setSelectedNetwork } = useNetworks();
     const [activeTab, setActiveTab] = useState('INSPECT');
+
+    const inspectNetwork = () => {
+        if (selectedNetwork) {
+            invoke('inspect_network', { name: selectedNetwork.Name }).then((info) => {
+                setSelectedNetwork(info)
+            });
+        }
+    }
+
+    useEffect(() => {
+        if (selectedNetwork && activeTab === "INSPECT") {
+            inspectNetwork()
+        }
+    }, [activeTab, selectedNetwork])
+
+
 
     if (selectedNetwork == null) {
         return <LogoScreen message={"Select a network to see more details"} />;
@@ -18,9 +34,10 @@ export default function NetworkDetails() {
     const renderContent = () => {
         switch (activeTab) {
             case 'INSPECT':
-                return <JSONPretty id="json-pretty" data={selectedNetwork}></JSONPretty>;
-            case 'CONTAINERS':
-                return <NetworkAttachedContainers />;
+                return <div className="flex-grow overflow-auto">
+                    <JSONPretty id="json-pretty" data={selectedNetwork}></JSONPretty>
+                </div>;
+
             default:
                 return null;
         }
@@ -50,17 +67,16 @@ export default function NetworkDetails() {
                 </button>
             </div>
 
-        
+
             <div className="flex mb-4">
                 <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
-                    <button className="btn btn-square btn-sm btn-error mr-3" onClick={() => {}}>
+                    {/* <button className="btn btn-square btn-sm btn-error mr-3" onClick={() => { }}>
                         <IconBxTrashAlt className="size-5" />
-                    </button>
+                    </button> */}
                 </div>
             </div>
             <div className="flex mb-4 border-b">
                 <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
-                <button className={`mr-4 pb-2 ${activeTab === 'CONTAINERS' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('CONTAINERS')}>CONTAINERS</button>
 
             </div>
             <div className="flex-1 overflow-auto text-black p-2 rounded">

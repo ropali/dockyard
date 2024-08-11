@@ -10,6 +10,7 @@ import ImagesScreen from './components/Screens/ImagesScreen';
 import VolumesScreen from './components/Screens/VolumesScreen';
 import NetworkScreen from './components/Screens/NetworkScreen';
 import SettingsScreen from './components/Screens/SettingsScreen';
+import Dashboard from './components/Screens/Dashboard';
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
           <ToastContainer />
           <main className="flex p-5 bg-gray-100 flex-1 overflow-hidden mb-2">
             <Routes>
-              {/* <Route path="/" element={<Navigate to="/" replace />} /> */}
+              <Route path="/dashboard" element={<Dashboard />} />
               
               <Route path="/" element={<ContainersScreen />} />
               <Route path="/images" element={<ImagesScreen />} />

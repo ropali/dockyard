@@ -14,7 +14,9 @@ use crate::commands::{
     list_images,
     stream_docker_logs,
     list_volumes,
-    inspect_volume
+    inspect_volume,
+    list_networks,
+    inspect_network
 };
 use crate::state::AppState;
 
@@ -38,7 +40,9 @@ fn main() {
             image_history,
             delete_image,
             list_volumes,
-            inspect_volume
+            inspect_volume,
+            list_networks,
+            inspect_network
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

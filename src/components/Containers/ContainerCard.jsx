@@ -6,8 +6,8 @@ const ContainerCard = ({ container, onClick, isSelected }) => {
     return (
         <div
             className={
-                `p-2 bg-white shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300 cursor-pointer mb-2 relative 
-                ${isSelected ? 'border-l-4 border-blue-500 bg-blue-50' : ''}`
+                `p-2 bg-base-100 shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300 cursor-pointer mb-2 relative 
+                ${isSelected ? 'border-l-4 border-primary' : ''}`
             }
             onClick={onClick}
         >
@@ -16,19 +16,19 @@ const ContainerCard = ({ container, onClick, isSelected }) => {
                 <h1 className="text-sm font-semibold">{container.Names[0].slice(1)}</h1>
             </div>
             <div className="mb-1">
-                <p className="text-xs text-gray-600">
+                <p className="text-xs ">
                     <span className="font-medium">ID:</span> {container.Id.slice(0, 7)}
                 </p>
-                <p className="text-xs text-gray-600">
+                <p className="text-xs ">
                     <span className="font-medium">Image:</span> {container.Image.split(':')[0]}
                 </p>
             </div>
             <div className="flex justify-between items-center">
-                <p className="text-xs text-gray-600">
+                <p className="text-xs ">
                     <span className="font-medium">Status:</span> {container.Status.split(' ')[0]}
                 </p>
                 {container.Ports && container.Ports.length > 0 && (
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs ">
                         <span className="font-medium">Ports:</span> {container.Ports[0].PublicPort} &rarr; {container.Ports[0].PrivatePort}
                     </p>
                 )}

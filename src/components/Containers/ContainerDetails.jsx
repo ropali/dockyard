@@ -213,7 +213,7 @@ function ContainerDetails() {
   }
 
   return (
-    <div className="dark p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
+    <div className="dark p-4 bg-base-100 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
       <div className="flex items-center mb-4">
         <h1 className="text-lg font-bold">{selectedContainer.Names[0].slice(1)}</h1>
         <p className="ml-auto text-sm text-gray-600">Status: {selectedContainer.Status}</p>
@@ -268,10 +268,10 @@ function ContainerDetails() {
           </button>
         </div>
       </div>
-      <div className="flex mb-4 border-b">
-        <button className={`mr-4 pb-2 ${activeTab === 'LOGS' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('LOGS')}>LOGS</button>
-        <button className={`pb-2 mr-4 ${activeTab === 'INFO' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('INFO')}>INFO</button>
-        <button className={`mr-4 pb-2 ${activeTab === 'STATS' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('STATS')}>STATS</button>
+      <div className="flex mb-4 border-b border-gray-200">
+        <button className={`mr-4 pb-2 ${activeTab === 'LOGS' ? 'border-b-2 border-primary' : ''}`} onClick={() => setActiveTab('LOGS')}>LOGS</button>
+        <button className={`pb-2 mr-4 ${activeTab === 'INFO' ? 'border-b-2 border-primary' : ''}`} onClick={() => setActiveTab('INFO')}>INFO</button>
+        <button className={`mr-4 pb-2 ${activeTab === 'STATS' ? 'border-b-2 border-primary' : ''}`} onClick={() => setActiveTab('STATS')}>STATS</button>
       </div>
       <div className="flex-1 overflow-auto text-black p-2 rounded">
         {renderContent()}

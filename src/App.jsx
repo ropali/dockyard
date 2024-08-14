@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 
@@ -15,16 +15,29 @@ import Dashboard from './components/Screens/Dashboard';
 
 function App() {
 
+  const loadTheme = () => {
+    let theme = localStorage.getItem("theme") || 'light';
+
+    document.documentElement.setAttribute('data-theme', theme);
+
+  }
+
+  useEffect(() => {
+    loadTheme()
+
+  }, [])
+
+
   return (
     <Router>
-      <div className="flex h-screen w-screen overflow-hidden">
+      <div className="flex h-screen w-screen overflow-hidden bg-base-100">
         <Sidebar className="w-64 flex-shrink-0" />
         <div className="flex-1 flex flex-col overflow-hidden">
           <ToastContainer />
-          <main className="flex p-5 bg-gray-100 flex-1 overflow-hidden mb-2">
+          <main className="flex p-5 bg-base-200 flex-1 overflow-hidden mb-2">
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
-              
+
               <Route path="/" element={<ContainersScreen />} />
               <Route path="/images" element={<ImagesScreen />} />
               <Route path="/volumes" element={<VolumesScreen />} />

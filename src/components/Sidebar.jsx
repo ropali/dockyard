@@ -6,7 +6,7 @@ function Sidebar() {
   const location = useLocation();
 
   return (
-    <div className="flex h-screen w-16 flex-col justify-between border-e bg-white z-50">
+    <div className="flex h-screen w-16 flex-col justify-between border-e bg-base-100 z-50">
       <div>
         <div className="inline-flex size-16 items-center justify-center">
           <span className="grid size-10 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
@@ -95,7 +95,7 @@ function Sidebar() {
         </div>
       </div>
 
-      <div className="sticky inset-x-0 bottom-0 bg-white p-2">
+      <div className="sticky inset-x-0 bottom-0 bg-base-100 p-2">
         <div className="py-4 border-t border-gray-100">
           <Link
             to="/settings"

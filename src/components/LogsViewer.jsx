@@ -13,7 +13,7 @@ const LogsViewer = ({ logs }) => {
 
     const rightAlignedToolbarGroup = (
         <React.Fragment>
-            <ToolbarGroup variant="icon-button-group">
+            <ToolbarGroup variant="icon-button-group" className='bg-base-100'>
                 <ToolbarItem alignSelf='center' spacer="spacerLg">
                     <div className="join">
                         <button
@@ -52,9 +52,9 @@ const LogsViewer = ({ logs }) => {
             scrollToRow={scrollTo}
             toolbar={
                 <Toolbar>
-                    <ToolbarContent>
+                    <ToolbarContent className='bg-base-100'>
                         <ToolbarItem>
-                            <LogViewerSearch placeholder="Search" className="text-black" />
+                            <LogViewerSearch placeholder="Search" className="text-black bg-base-100 border-primary" />
                         </ToolbarItem>
                         <ToolbarGroup align={{ default: 'alignRight' }}>{rightAlignedToolbarGroup}</ToolbarGroup>
 

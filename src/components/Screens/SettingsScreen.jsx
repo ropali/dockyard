@@ -1,14 +1,77 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { capitalizeFirstLetter } from '../../utils';
 
 const SettingsScreen = () => {
+
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  const changeTheme = (newTheme) => {
+    setTheme(newTheme);
+
+    localStorage.setItem("theme", newTheme.toLowerCase());
+
+    document.documentElement.setAttribute('data-theme', newTheme.toLowerCase());
+
+
+  };
+
+  useEffect(() => {
+
+  }, [theme])
+
+
+  const themes = [
+    "light",
+    "dark",
+    "cupcake",
+    "bumblebee",
+    "emerald",
+    "corporate",
+    "synthwave",
+    "retro",
+    "cyberpunk",
+    "valentine",
+    "halloween",
+    "garden",
+    "forest",
+    "aqua",
+    "lofi",
+    "pastel",
+    "fantasy",
+    "wireframe",
+    "black",
+    "luxury",
+    "dracula",
+    "cmyk",
+    "autumn",
+    "business",
+    "acid",
+    "lemonade",
+    "night",
+    "coffee",
+    "winter",
+    "dim",
+    "nord",
+    "sunset",
+  ]
+
   return (
-    <div className="bg-gray-100 p-8 h-screen w-full flex justify-center">
+    <div className="bg-base-100 p-8 h-screen w-full flex justify-center">
       <div className="max-w-5xl w-full max-h-full overflow-y-auto">
         <h1 className="text-3xl font-bold mb-8">Settings</h1>
-        
+
         <div className="grid grid-cols-2 gap-8">
           <SettingsGroup title="General">
-            <SettingsItem label="Theme" type="select" options={['Light', 'Dark', 'System']} />
+            <div className="mb-4 flex items-center">
+              <label className="font-medium w-1/3">Theme</label>
+              <div className="w-2/3">
+
+                <select className="select w-full max-w-xs" onChange={(e) => changeTheme(e.target.value)}>
+                  {themes.map(option => <option key={option}>{capitalizeFirstLetter(option)}</option>)}
+                </select>
+              </div>
+            </div>
+
             <SettingsItem label="Language" type="select" options={['English', 'Spanish', 'French']} />
             <SettingsItem label="Auto-start on login" type="toggle" />
           </SettingsGroup>
@@ -19,7 +82,7 @@ const SettingsScreen = () => {
             <SettingsItem label="Enable experimental features" type="toggle" />
           </SettingsGroup>
 
-          
+
           <SettingsGroup title="Security">
             <SettingsItem label="TLS Verification" type="toggle" />
             <SettingsItem label="Certificates Path" type="input" placeholder="/path/to/certs" />
@@ -44,13 +107,13 @@ const SettingsScreen = () => {
           <SettingsGroup title="Updates">
             <SettingsItem label="Auto-Update" type="toggle" />
             <div className="mb-4">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded">Check for Updates</button>
+              <button className="btn btn-info">Check for Updates</button>
             </div>
           </SettingsGroup>
 
           <SettingsGroup title="Advanced">
             <SettingsItem label="Docker Daemon Options" type="input" placeholder="--experimental --log-level=debug" />
-            <SettingsItem label="Restart Docker" type="button" />
+            <button className="btn btn-error">Restart Docker</button>
           </SettingsGroup>
         </div>
       </div>
@@ -62,7 +125,7 @@ const SettingsGroup = ({ title, children }) => {
   return (
     <div className="">
       <h2 className="text-xl font-semibold mb-4">{title}</h2>
-      <div className="bg-gray-200 rounded-lg p-6">
+      <div className="bg-base-200 rounded-lg p-6">
         {children}
       </div>
     </div>
@@ -74,20 +137,26 @@ const SettingsItem = ({ label, type, options, placeholder, min, max, unit }) => 
     switch (type) {
       case 'select':
         return (
-          <select className="w-full p-2 bg-white rounded border border-gray-300">
+          <select className="select w-full max-w-xs">
             {options.map(option => <option key={option}>{option}</option>)}
           </select>
         );
       case 'toggle':
-        return <input type="checkbox" className="form-checkbox h-5 w-5 text-blue-600" />;
+        return <input type="checkbox" className="checkbox" />;
       case 'input':
-        return <input type="text" className="w-full p-2 bg-white rounded border border-gray-300" placeholder={placeholder} />;
+        return <input type="text" className="input input-bordered w-full max-w-xs" placeholder={placeholder} />;
       case 'range':
         return (
-          <div className="flex items-center">
-            <input type="range" min={min} max={max} className="w-full mr-2" />
-            <span>{unit}</span>
-          </div>
+          <>
+            <input type="range" min={min} max={max} value="25" className="range" step={unit} />
+            <div className="flex w-full justify-between px-2 text-xs">
+              <span>|</span>
+              <span>|</span>
+              <span>|</span>
+              <span>|</span>
+              <span>|</span>
+            </div>
+          </>
         );
       case 'button':
         return (

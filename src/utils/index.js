@@ -10,3 +10,8 @@ export const formatSize = (size) => {
 export const formatDate = (timestamp) => {
     return new Date(timestamp * 1000).toLocaleString();
 };
+
+
+export function capitalizeFirstLetter(str) {
+    return str[0].toUpperCase() + str.slice(1);
+}

@@ -6,8 +6,8 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarEleme
 
 const Dashboard = () => {
     return (
-        <div className="bg-gray-100 p-8 h-screen overflow-y-auto">
-            <h1 className="text-4xl font-bold mb-8 text-gray-800">Docker Dashboard</h1>
+        <div className="bg-base-100 p-8 h-screen overflow-y-auto">
+            <h1 className="text-4xl font-bold mb-8 ">Dashboard</h1>
 
             <div className="grid grid-cols-12 gap-8">
                 <OverviewSection />
@@ -30,8 +30,8 @@ const OverviewSection = () => {
     ];
 
     return (
-        <div className="col-span-12 bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-700">Overview</h2>
+        <div className="col-span-12 bg-base-200 p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-semibold mb-6">Overview</h2>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                 {data.map((item, index) => (
                     <OverviewCard key={index} title={item.name} value={item.value} color={item.color} />
@@ -42,8 +42,8 @@ const OverviewSection = () => {
 };
 
 const OverviewCard = ({ title, value, color }) => (
-    <div className="bg-white p-4 rounded-lg shadow-md border-l-4 transition-all hover:shadow-xl" style={{ borderColor: color }}>
-        <h3 className="text-lg font-medium text-gray-600">{title}</h3>
+    <div className="bg-base-300 p-4 rounded-lg shadow-md border-l-4 transition-all hover:shadow-xl" style={{ borderColor: color }}>
+        <h3 className="text-lg font-medium ">{title}</h3>
         <p className="text-3xl font-bold mt-2" style={{ color }}>{value}</p>
     </div>
 );
@@ -79,8 +79,8 @@ const ContainerStatsSection = () => {
     };
 
     return (
-        <div className="col-span-6 bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-700">Container Stats</h2>
+        <div className="col-span-6 bg-base-200 p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-semibold mb-6 ">Container Stats</h2>
             <div className="space-y-6">
                 <div className="h-64">
                     <Line data={cpuData} options={options} />
@@ -110,13 +110,13 @@ const VolumeUsageSection = () => {
     };
 
     return (
-        <div className="col-span-3 bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-700">Volume Usage</h2>
+        <div className="col-span-3 bg-base-200 p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-semibold mb-6 ">Volume Usage</h2>
             <div className="h-64">
                 <Doughnut data={data} options={options} />
             </div>
             <div className="mt-4 text-center">
-                <p className="text-lg font-medium text-gray-700">67% Used</p>
+                <p className="text-lg font-medium ">67% Used</p>
             </div>
         </div>
     );
@@ -147,8 +147,8 @@ const NetworkStatusSection = () => {
     };
 
     return (
-        <div className="col-span-3 bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-700">Network Status</h2>
+        <div className="col-span-3 bg-base-200 p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-semibold mb-6 ">Network Status</h2>
             <div className="h-64">
                 <Line data={data} options={options} />
             </div>
@@ -166,8 +166,8 @@ const RecentLogsSection = () => {
     ];
 
     return (
-        <div className="col-span-12 bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-700">Recent Logs</h2>
+        <div className="col-span-12 bg-base-200 p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-semibold mb-6 ">Recent Logs</h2>
             <div className="bg-gray-900 text-white p-4 rounded-lg h-64 overflow-y-auto">
                 {logs.map((log, index) => (
                     <LogItem key={index} {...log} />
@@ -196,8 +196,8 @@ const ResourceUsageSection = () => {
     };
 
     return (
-        <div className="col-span-12 bg-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-700">Resource Usage</h2>
+        <div className="col-span-12 bg-base-200 p-6 rounded-xl shadow-lg">
+            <h2 className="text-2xl font-semibold mb-6 ">Resource Usage</h2>
             <div className="h-64">
                 <Line data={data} options={options} />
             </div>
@@ -214,7 +214,7 @@ const LogItem = ({ timestamp, message, type }) => {
 
     return (
         <div className="mb-2">
-            <span className="font-mono text-sm text-gray-400">{timestamp}</span>{' '}
+            <span className="font-mono text-sm ">{timestamp}</span>{' '}
             <span className={typeColors[type] || 'text-white'}>{message}</span>
         </div>
     );

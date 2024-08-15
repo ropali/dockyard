@@ -5,6 +5,7 @@ import { invoke } from '@tauri-apps/api';
 import { toast } from 'react-toastify';
 
 
+
 const ImageHistory = () => {
 
     const { selectedImage } = useImages();
@@ -28,11 +29,11 @@ const ImageHistory = () => {
 
     }, [selectedImage])
 
-
+   
 
     return (
         <div className="overflow-x-auto h-full">
-            <table className="table table-sm w-full">
+            <table className="table table-sm w-full bg-base-100 text-base">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -44,18 +45,18 @@ const ImageHistory = () => {
                 </thead>
                 <tbody>
                     {history.map((layer, idx) => (
-                        <tr key={idx + 1} className="hover:bg-gray-100">
-                            <td>{idx + 1}</td>
-                            <td className="whitespace-nowrap ">{formatDate(layer.Created)}</td>
-                            <td className="max-w-md truncate" title={layer.CreatedBy}>
+                        <tr key={idx + 1} className="text-base-content">
+                            <td className="text-base">{idx + 1}</td>
+                            <td className="whitespace-nowrap text-base">{formatDate(layer.Created)}</td>
+                            <td className="max-w-md truncate text-base" title={layer.CreatedBy}>
                                 {layer.CreatedBy || 'N/A'}
                             </td>
-                            <td className='min-w-12'>{formatSize(layer.Size)}</td>
+                            <td className='min-w-12 text-base'>{formatSize(layer.Size)}</td>
                             <td>
                                 {layer.Tags && layer.Tags.length > 0 ? (
                                     <div className="flex flex-wrap gap-1">
                                         {layer.Tags.map((tag, i) => (
-                                            <span key={i} className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">
+                                            <span key={i} className="badge badge-primary">
                                                 {tag}
                                             </span>
                                         ))}

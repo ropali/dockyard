@@ -27,7 +27,7 @@ export default function VolumeDetails() {
     };
 
     return (
-        <div className="dark p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
+        <div className="dark p-4 bg-base-100 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
             <div className="flex items-center mb-4">
                 <h1 className="text-lg font-bold mr-2">{selectedVolume.Name}</h1>
                 <button
@@ -35,18 +35,18 @@ export default function VolumeDetails() {
                     onClick={() => copyToClipboard(selectedVolume.Name)}
                     title="Copy Name"
                 >
-                    <IconCopy className="w-4 h-4 text-gray-600" />
+                    <IconCopy className="w-4 h-4 text-base-content" />
                 </button>
                 
             </div>
             
 
             <div className="flex items-center">
-                <p className="text-sm text-gray-600 mr-2">Created At: {selectedVolume.CreatedAt}</p>
+                <p className="text-sm text-base-content mr-2">Created At: {selectedVolume.CreatedAt}</p>
                 
             </div>
             <div className="flex items-center mb-4">
-                <p className="text-sm text-gray-600 mr-2">Driver: {selectedVolume.Driver}</p>
+                <p className="text-sm text-base-content mr-2">Driver: {selectedVolume.Driver}</p>
                 
             </div>
 
@@ -57,12 +57,12 @@ export default function VolumeDetails() {
                     </button>
                 </div> */}
             </div>
-            <div className="flex mb-4 border-b">
-                <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
-                <button className={`mr-4 pb-2 ${activeTab === 'CONTAINERS' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('CONTAINERS')}>CONTAINERS</button>
+            <div className="flex mb-4 border-b border-base-content">
+                <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-400' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
+                <button className={`mr-4 pb-2 ${activeTab === 'CONTAINERS' ? 'border-b-2 border-base-400' : ''}`} onClick={() => setActiveTab('CONTAINERS')}>CONTAINERS</button>
 
             </div>
-            <div className="flex-1 overflow-auto text-black p-2 rounded">
+            <div className="flex-1 overflow-auto  p-2 rounded">
                 {renderContent()}
             </div>
 

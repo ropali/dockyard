@@ -44,26 +44,26 @@ export default function NetworkDetails() {
     };
 
     return (
-        <div className="dark p-4 bg-white shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
+        <div className="dark p-4 bg-base-100 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
             <div className="flex items-center ">
                 <h1 className="text-lg font-bold mr-2">{selectedNetwork.Name}</h1>
                 <button
-                    className="hover:bg-gray-200 rounded"
+                    className="rounded"
                     onClick={() => copyToClipboard(selectedNetwork.Name)}
                     title="Copy Name"
                 >
-                    <IconCopy className="w-4 h-4 text-gray-600" />
+                    <IconCopy className="w-4 h-4 " />
                 </button>
 
             </div>
             <div className="flex items-center mb-4">
-                <p className="text-sm text-gray-600 mr-2">{selectedNetwork.Id.slice(7, 19)}</p>
+                <p className="text-sm  mr-2">{selectedNetwork.Id.slice(7, 19)}</p>
                 <button
-                    className="hover:bg-gray-200 rounded"
+                    className="rounded"
                     onClick={() => copyToClipboard(selectedNetwork.Id)}
                     title="Copy full ID"
                 >
-                    <IconCopy className="w-4 h-4 text-gray-600" />
+                    <IconCopy className="w-4 h-4 " />
                 </button>
             </div>
 
@@ -75,8 +75,8 @@ export default function NetworkDetails() {
                     </button> */}
                 </div>
             </div>
-            <div className="flex mb-4 border-b">
-                <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
+            <div className="flex mb-4 border-b border-base-content">
+                <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
 
             </div>
             <div className="flex-1 overflow-auto text-black p-2 rounded">

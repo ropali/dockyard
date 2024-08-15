@@ -14,12 +14,12 @@ function Sidebar() {
           </span>
         </div>
 
-        <div className="border-t border-gray-100">
+        <div className="border-t border-base-content">
           <div className="px-2">
             <div className="py-4">
               <Link
                 to="/dashboard"
-                className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/dashboard' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
+                className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/dashboard' ? 'text-base-content bg-base-200' : 'text-gray-500'}`}
               >
                 <IconBxsTachometer className="size-6 opacity-75" />
 
@@ -31,11 +31,11 @@ function Sidebar() {
               </Link>
             </div>
 
-            <ul className="space-y-4 border-t border-gray-100 pt-4">
+            <ul className="space-y-4 border-t border-base-content pt-4">
               <li>
                 <Link
                   to="/"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/' ? 'text-base-content bg-base-200' : 'text-gray-500'}`}
                 >
                   <IconContainerTwentyFour className="size-6 opacity-75" />
 
@@ -50,7 +50,7 @@ function Sidebar() {
               <li>
                 <Link
                   to="/images"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/images' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/images' ? 'text-base-content bg-base-200' : 'text-gray-500'}`}
                 >
                   <IconStack2 className="size-7 opacity-75" />
                   <span
@@ -64,7 +64,7 @@ function Sidebar() {
               <li>
                 <Link
                   to="/volumes"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/volumes' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/volumes' ? 'text-base-content bg-base-200' : 'text-gray-500'}`}
                 >
                   <IconDatabaseCheckOutline className="size-7 opacity-75" />
 
@@ -79,7 +79,7 @@ function Sidebar() {
               <li>
                 <Link
                   to="/networks"
-                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/networks' ? 'text-blue-700 bg-blue-50' : 'text-gray-500'}`}
+                  className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/networks' ? 'text-base-content bg-base-200' : 'text-gray-500'}`}
                 >
                   <IconServerNetworkAlt className="size-7 opacity-75" />
 
@@ -96,7 +96,7 @@ function Sidebar() {
       </div>
 
       <div className="sticky inset-x-0 bottom-0 bg-base-100 p-2">
-        <div className="py-4 border-t border-gray-100">
+        <div className="py-4 border-t border-base-content">
           <Link
             to="/settings"
             className="group relative flex justify-center rounded px-2 py-1.5"
@@ -110,7 +110,7 @@ function Sidebar() {
             </span>
           </Link>
         </div>
-        <form action="#" className="border-t border-gray-100 p-1">
+        <form action="#" className="border-t border-base-content p-1">
           <button
             type="submit"
             className="group relative flex w-full justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"

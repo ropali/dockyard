@@ -67,7 +67,7 @@ const SettingsScreen = () => {
               <div className="w-2/3">
 
                 <select className="select w-full max-w-xs" onChange={(e) => changeTheme(e.target.value)}>
-                  {themes.map(option => <option key={option}>{capitalizeFirstLetter(option)}</option>)}
+                  {themes.map(option => <option defaulValue={option} key={option}>{capitalizeFirstLetter(option)}</option>)}
                 </select>
               </div>
             </div>

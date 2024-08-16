@@ -134,7 +134,7 @@ function ImageDetails() {
           </div> */}
 
           <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
-            <button className="btn btn-square btn-sm btn-error mr-3" onClick={() => document.getElementById('delete_image_modal').showModal()}>
+            <button className="btn btn-square btn-sm hover:btn-error mr-3" onClick={() => document.getElementById('delete_image_modal').showModal()}>
               <IconBxTrashAlt className="size-5" />
             </button>
           </div>

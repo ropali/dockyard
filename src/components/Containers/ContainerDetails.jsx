@@ -261,7 +261,7 @@ function ContainerDetails() {
         </div>
 
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
-          <button className="btn btn-square btn-sm btn-error mr-3"
+          <button className="btn btn-square btn-sm hover:btn-error mr-3"
             onClick={() => containerOperation("delete")}
           >
             <IconBxTrashAlt className="size-5" />

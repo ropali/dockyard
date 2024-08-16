@@ -33,7 +33,11 @@ function App() {
       <div className="flex h-screen w-screen overflow-hidden bg-base-100">
         <Sidebar className="w-64 flex-shrink-0" />
         <div className="flex-1 flex flex-col overflow-hidden">
-          <ToastContainer />
+          <ToastContainer
+            theme="dark"
+            position="bottom-right"
+            toastClassName="bg-base-100 text-base-content"
+          />
           <main className="flex p-5 bg-base-200 flex-1 overflow-hidden mb-2">
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />

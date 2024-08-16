@@ -8,7 +8,7 @@ const ImageCard = ({ image, onClick, isSelected }) => {
         <div
             className={
                 `p-2 bg-base-100 shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300 cursor-pointer mb-2 relative
-                ${isSelected ? 'border-l-4 border-primary' : ''}`
+                ${isSelected ? 'border-l-4 border-base-content' : ''}`
             }
             onClick={onClick}
         >

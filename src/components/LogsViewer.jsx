@@ -53,8 +53,8 @@ const LogsViewer = ({ logs }) => {
             toolbar={
                 <Toolbar>
                     <ToolbarContent className='bg-base-100'>
-                        <ToolbarItem>
-                            <LogViewerSearch placeholder="Search" className="text-black bg-base-100 border-primary" />
+                        <ToolbarItem className='border-base-content'>
+                            <LogViewerSearch placeholder="Search" className="text-base-content bg-base-100 border-base-content" />
                         </ToolbarItem>
                         <ToolbarGroup align={{ default: 'alignRight' }}>{rightAlignedToolbarGroup}</ToolbarGroup>
 

@@ -139,9 +139,9 @@ function ImageDetails() {
             </button>
           </div>
         </div>
-        <div className="flex mb-4 border-b border-gray-500">
-          <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
-          <button className={`pb-2 mr-4 ${activeTab === 'HISTORY' ? 'border-b-2 border-blue-500' : ''}`} onClick={() => setActiveTab('HISTORY')}>HISTORY</button>
+        <div className="flex mb-4 border-b border-base-content">
+          <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
+          <button className={`pb-2 mr-4 ${activeTab === 'HISTORY' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('HISTORY')}>HISTORY</button>
         </div>
         <div className="flex-1 overflow-auto text-black p-2 rounded">
           {renderContent()}

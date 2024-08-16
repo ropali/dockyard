@@ -7,17 +7,20 @@ const SettingsScreen = () => {
 
   const changeTheme = (newTheme) => {
     setTheme(newTheme);
-
     localStorage.setItem("theme", newTheme.toLowerCase());
-
     document.documentElement.setAttribute('data-theme', newTheme.toLowerCase());
-
-
   };
 
   useEffect(() => {
 
-  }, [theme])
+    const storedTheme = localStorage.getItem("theme");
+
+    if (storedTheme) {
+      setTheme(storedTheme);
+      document.documentElement.setAttribute('data-theme', storedTheme);
+    }
+
+  }, [])
 
 
   const themes = [
@@ -66,8 +69,16 @@ const SettingsScreen = () => {
               <label className="font-medium w-1/3">Theme</label>
               <div className="w-2/3">
 
-                <select className="select w-full max-w-xs" onChange={(e) => changeTheme(e.target.value)}>
-                  {themes.map(option => <option defaulValue={option} key={option}>{capitalizeFirstLetter(option)}</option>)}
+                <select
+                  className="select w-full max-w-xs"
+                  value={theme}
+                  onChange={(e) => changeTheme(e.target.value)}
+                >
+                  {themes.map(option => (
+                    <option key={option} value={option}>
+                      {capitalizeFirstLetter(option)}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

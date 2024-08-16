@@ -4,7 +4,7 @@ function VolumeCard({ volume, onClick, isSelected }) {
     return (
         <div
             className={`bg-base-100 shadow-sm rounded-md p-4 mb-4 cursor-pointer hover:bg-base-200 transition-colors duration-200 relative
-                ${isSelected ? 'border-l-4 border-primary' : ''}`}
+                ${isSelected ? 'border-l-4 border-base-content' : ''}`}
             onClick={onClick}
         >
             <h2 className="text-sm font-semibold mb-1 truncate pr-6">{volume.Name}</h2>

@@ -12,7 +12,7 @@ export default function NetworkScreen() {
             <div className="w-1/3 bg-base-300 p-2 overflow-y-auto">
                 <NetworkList />
             </div>
-            <div className={`w-full h-full bg-base-300 ml-1 overflow-hidden ${selectedVolume ? 'bg-white' : 'bg-gray-200'}`}>
+            <div className={`w-full h-full bg-base-300 ml-1 overflow-hidden ${selectedVolume ? 'bg-base-100' : 'bg-base-400'}`}>
                 <NetworkDetails />
             </div>
         </div>

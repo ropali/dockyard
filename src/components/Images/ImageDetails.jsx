@@ -139,7 +139,7 @@ function ImageDetails() {
             </button>
           </div>
         </div>
-        <div className="flex mb-4 border-b border-base-content">
+        <div className="flex mb-4 border-b border-base-300">
           <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
           <button className={`pb-2 mr-4 ${activeTab === 'HISTORY' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('HISTORY')}>HISTORY</button>
         </div>

@@ -6,15 +6,15 @@ function Sidebar() {
   const location = useLocation();
 
   return (
-    <div className="flex h-screen w-16 flex-col justify-between border-e-current bg-base-100 z-50">
+    <div className="flex h-screen w-16 flex-col justify-between bg-base-100 z-50">
       <div>
         <div className="inline-flex size-16 items-center justify-center">
-          <span className="grid size-10 place-content-center rounded-lg bg-base-content text-xs text-gray-600">
+          <span className="grid size-10 place-content-center rounded-lg bg-base-300 text-xs text-base-100">
             DD
           </span>
         </div>
 
-        <div className="border-t border-base-content">
+        <div className="border-t border-base-300">
           <div className="px-2">
             <div className="py-4">
               <Link
@@ -23,15 +23,11 @@ function Sidebar() {
               >
                 <IconBxsTachometer className="size-6 opacity-75" />
 
-                {/* <span
-                  className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible"
-                >
-                  Dashboard
-                </span> */}
+                
               </Link>
             </div>
 
-            <ul className="space-y-4 border-t border-base-content pt-4">
+            <ul className="space-y-4 border-t border-base-300 pt-4">
               <li>
                 <Link
                   to="/"
@@ -39,11 +35,6 @@ function Sidebar() {
                 >
                   <IconContainerTwentyFour className="size-6 opacity-75" />
 
-                  {/* <span
-                    className="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-gray-900 px-2 py-1.5 text-xs font-medium text-white group-hover:visible index-1111"
-                  >
-                    Containers
-                  </span> */}
                 </Link>
               </li>
 
@@ -82,7 +73,7 @@ function Sidebar() {
       </div>
 
       <div className="sticky inset-x-0 bottom-0 bg-base-100 p-2">
-        <div className="py-4 border-t border-base-content">
+        <div className="py-4 border-t border-base-300">
           <Link
             to="/settings"
             className="group relative flex justify-center rounded px-2 py-1.5 tooltip tooltip-right hover:tooltip-open" data-tip="Settings"
@@ -92,7 +83,7 @@ function Sidebar() {
             
           </Link>
         </div>
-        <form action="#" className="border-t border-base-content p-1">
+        <form action="#" className="border-t border-base-300 p-1">
           <button
             type="submit"
             className="group relative flex w-full justify-center rounded-lg px-2 py-1.5 text-sm text-gray-500  hover:text-gray-700 tooltip tooltip-right hover:tooltip-open" data-tip="Online"

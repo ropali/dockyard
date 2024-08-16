@@ -268,7 +268,7 @@ function ContainerDetails() {
           </button>
         </div>
       </div>
-      <div className="flex mb-4 border-b border-base-content">
+      <div className="flex mb-4 border-b border-base-300">
         <button className={`mr-4 pb-2 ${activeTab === 'LOGS' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('LOGS')}>LOGS</button>
         <button className={`pb-2 mr-4 ${activeTab === 'INFO' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('INFO')}>INFO</button>
         <button className={`mr-4 pb-2 ${activeTab === 'STATS' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('STATS')}>STATS</button>

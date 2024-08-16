@@ -44,7 +44,7 @@ export default function NetworkDetails() {
     };
 
     return (
-        <div className="dark p-4 bg-base-100 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
+        <div className="dark p-4 bg-base-100 shadow-sm rounded-sm h-full overflow-x-hidden flex flex-col">
             <div className="flex items-center ">
                 <h1 className="text-lg font-bold mr-2">{selectedNetwork.Name}</h1>
                 <button
@@ -75,7 +75,7 @@ export default function NetworkDetails() {
                     </button> */}
                 </div>
             </div>
-            <div className="flex mb-4 border-b border-base-content">
+            <div className="flex mb-4 border-b border-base-300">
                 <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
 
             </div>

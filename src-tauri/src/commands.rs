@@ -1,5 +1,5 @@
 use crate::state::AppState;
-use bollard::container::{ListContainersOptions, LogsOptions};
+use bollard::container::{ListContainersOptions, LogsOptions, Stats, StatsOptions};
 use bollard::image::{ListImagesOptions, RemoveImageOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use bollard::network::InspectNetworkOptions;
@@ -169,6 +169,30 @@ pub async fn container_operation(
     res
 }
 
+#[tauri::command]
+pub async fn container_stats(
+    state: tauri::State<'_, AppState>,
+    app_handle: tauri::AppHandle,
+    c_id: String,
+) -> Result<(), String> {
+    let options = Some(StatsOptions {
+        stream: true,
+        one_shot: false,
+    });
+
+    let stream = &mut state.docker.stats(&c_id, options);
+
+    while let Some(Ok(stats)) = stream.next().await {
+        println!("{:?}", stats);
+        app_handle
+            .emit_all("stats", stats)
+            .expect("Failed to emit stats data");
+    }
+
+    Ok(())
+}
+
+/// Images
 #[tauri::command]
 pub async fn list_images(state: tauri::State<'_, AppState>) -> Result<Vec<ImageSummary>, String> {
     let options = Some(ListImagesOptions {

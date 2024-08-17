@@ -31,11 +31,12 @@ function ContainerDetails() {
       setLogs([]); // Clear logs before subscribing
 
       const unlisten = listen('log_chunk', (event) => {
+        
         const sanitizedLog = sanitizeLog(event.payload);
         setLogs((prevLogs) => [...prevLogs, sanitizedLog]);
       });
 
-      invoke('stream_docker_logs', { containerId: selectedContainer.Id });
+      invoke('stream_docker_logs', { containerName: selectedContainer.Names[0].replace("/", "") });
 
       return () => {
         unlisten.then(f => f());
@@ -108,7 +109,7 @@ function ContainerDetails() {
   }
 
   function containerOperation(actionType) {
-    invoke('container_operation', { cId: selectedContainer.Id, opType: actionType }).then((res) => {
+    invoke('container_operation', { containerName: selectedContainer.Names[0].replace("/", ""), opType: actionType }).then((res) => {
       if (res) {
         toast(res);
 

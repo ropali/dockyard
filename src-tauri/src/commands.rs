@@ -1,187 +1,278 @@
-use std::process::Command;
-use rust_dock::container::Container;
-use rust_dock::image::{Image, ImageHistory};
-use rust_dock::network::Network;
-use rust_dock::version::Version;
-use rust_dock::volume::Volume;
-use serde_json::Value;
-use tauri::Manager;
-use tokio::sync::mpsc;
 use crate::state::AppState;
+use bollard::container::{ListContainersOptions, LogsOptions};
+use bollard::image::{ListImagesOptions, RemoveImageOptions};
+use bollard::models::{ContainerInspectResponse, ContainerSummary};
+use bollard::network::InspectNetworkOptions;
+use bollard::secret::{
+    HistoryResponseItem, ImageDeleteResponseItem, ImageInspect, ImageSummary, Network, Volume,
+    VolumeListResponse,
+};
+use futures_util::stream::StreamExt;
+use futures_util::stream::TryStreamExt;
+use std::collections::HashMap;
+use std::default::Default;
+use std::process::Command;
+use tauri::Manager;
 
 #[tauri::command]
-pub fn fetch_containers(state: tauri::State<AppState>) -> Vec<Container> {
-    state.docker.clone().get_containers(true).expect("")
-}
-
-
-#[tauri::command]
-pub fn get_container(state: tauri::State<AppState>, c_id: String) -> Container {
-    let containers = state.docker.clone().get_containers(true).expect("");
-
-    return containers
-        .iter()
-        .find(|c| c.Id == c_id)
-        .expect("Container not found")
-        .clone();
-}
-
-#[tauri::command]
-pub fn fetch_container_info(state: tauri::State<AppState>, c_id: String) -> serde_json::Value {
-    state.docker.clone().get_container_info_raw(&c_id).unwrap()
-}
-
-#[tauri::command]
-pub fn fetch_version(state: tauri::State<AppState>) -> Version {
-    state.docker.clone().get_version().expect("")
-}
-
-
-
-#[tauri::command]
-pub fn container_operation(state: tauri::State<AppState>, c_id: String, op_type: String) -> String {
-    let containers = state.docker.clone().get_containers(true).expect("");
-
-    let container = containers
-        .iter()
-        .find(|c| c.Id == c_id)
-        .expect("Can't find container");
-
-    // TODO: Improve error handling
-    let res = match op_type.as_str() {
-        "delete" => match state.docker.clone().delete_container(&c_id) {
-            Ok(_) => &format!("Deleted container"),
-            Err(e) => &format!("Failed to delete container: {}", e.to_string()),
-        },
-        "start" => match state.docker.clone().start_container(&c_id) {
-            Ok(_) => &format!("Container started"),
-            Err(e) => &format!("Failed to delete container: {}", e.to_string()),
-        },
-        "stop" => match state.docker.clone().stop_container(&c_id) {
-            Ok(_) => &format!("Container stopped"),
-            Err(e) => &format!("Failed to delete container: {}", e.to_string()),
-        },
-        "restart" => {
-            let _ = match state.docker.clone().stop_container(&c_id) {
-                Ok(_) => &format!("Container restarted"),
-                Err(e) => &format!("Failed to delete container: {}", e.to_string()),
-            };
-
-            let res = match state.docker.clone().start_container(&c_id) {
-                Ok(_) => &format!("Container restarted"),
-                Err(e) => &format!("Failed to delete container: {}", e.to_string()),
-            };
-
-            return res.to_string();
-        }
-        "web" => {
-            let path = format!(
-                "http://0.0.0.0:{}",
-                container.Ports[0].PublicPort.expect("port not available")
-            );
-            match open::that(path.clone()) {
-                Ok(()) => &format!("Opening '{}'.", path),
-                Err(err) => &format!("An error occurred when opening '{}': {}", path, err),
-            }
-        }
-
-        "exec" => {
-            // TODO: Make it platform/os agnostic
-            let container_name = container.Names[0].replace("/", ""); // Replace with your container name
-            let docker_command = format!("docker exec -it {} sh", container_name);
-
-            // Using gnome-terminal to run the docker command
-            let mut command = Command::new("gnome-terminal");
-
-            // -e flag is used to execute the command in gnome-terminal
-            let args = ["--", "bash", "-c", &docker_command];
-
-            command.args(&args);
-            match command.spawn() {
-                Ok(_) => "",
-                Err(err) => &format!("Cannot run exec command: {}", err.to_string()),
-            }
-        }
-        _ => "Invalid operation type",
+pub async fn fetch_containers(
+    state: tauri::State<'_, AppState>,
+) -> Result<Vec<ContainerSummary>, String> {
+    let opts = ListContainersOptions::<String> {
+        all: true,
+        ..Default::default()
     };
 
-    return res.to_string();
+    state
+        .docker
+        .clone()
+        .list_containers(Some(opts))
+        .await
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn list_images(state: tauri::State<AppState>) -> Vec<Image> {
-    state.docker.clone().get_images(true).unwrap()
+pub async fn get_container(
+    state: tauri::State<'_, AppState>,
+    c_id: String,
+) -> Result<ContainerSummary, String> {
+    let mut list_container_filters = HashMap::new();
+    list_container_filters.insert(String::from("id"), vec![c_id]);
+
+    let opts = ListContainersOptions::<String> {
+        all: false,
+        filters: list_container_filters,
+        ..Default::default()
+    };
+
+    state
+        .docker
+        .clone()
+        .list_containers(Some(opts))
+        .await
+        .map_err(|e| e.to_string())?
+        .into_iter()
+        .next()
+        .ok_or_else(|| "Container not found".to_string())
 }
 
 #[tauri::command]
-pub fn image_info(state: tauri::State<AppState>, name: String) -> serde_json::Value {
-    state.docker.clone().inspect_image(&name).unwrap()
+pub async fn fetch_container_info(
+    state: tauri::State<'_, AppState>,
+    c_id: String,
+) -> Result<ContainerInspectResponse, String> {
+    state
+        .docker
+        .clone()
+        .inspect_container(c_id.as_str(), None)
+        .await
+        .map_err(|e| e.to_string())
 }
-
-
-#[tauri::command]
-pub fn image_history(state: tauri::State<AppState>, name: String) -> Vec<ImageHistory> {
-    state.docker.clone().image_history(&name).unwrap()
-}
-
-#[tauri::command]
-pub fn delete_image(state: tauri::State<AppState>, id: String, force: bool, no_prune: bool) -> &str {
-    state.docker.clone().delete_image(&id, force, no_prune).unwrap();
-    "Deleted Image"
-}
-
 
 #[tauri::command]
 pub async fn stream_docker_logs(
     state: tauri::State<'_, AppState>,
     app_handle: tauri::AppHandle,
-    container_id: String,
+    container_name: String,
 ) -> Result<(), String> {
-    let (sender, mut receiver) = mpsc::channel(100);
+    let mut stream = state.docker.logs::<String>(
+        &container_name,
+        Some(LogsOptions {
+            follow: true,
+            stdout: true,
+            stderr: false,
+            ..Default::default()
+        }),
+    );
 
-    let docker = state.docker.clone();
-
-    tokio::spawn(async move {
-        if let Err(err) = docker.stream_container_logs(&container_id, sender).await {
-            eprintln!("Error streaming logs: {}", err);
-        }
-    });
-
-    tokio::spawn(async move {
-        while let Some(log_chunk) = receiver.recv().await {
-            app_handle
-                .emit_all("log_chunk", log_chunk)
-                .expect("Failed to emit log chunk");
-        }
-    });
+    while let Some(msg) = stream.next().await {
+        app_handle
+            .emit_all("log_chunk", msg.unwrap().to_string())
+            .expect("Failed to emit log chunk");
+    }
 
     Ok(())
+}
+
+#[tauri::command]
+pub async fn container_operation(
+    state: tauri::State<'_, AppState>,
+    container_name: String,
+    op_type: String,
+) -> Result<String, String> {
+    let docker = state.docker.clone();
+
+    let mut list_container_filters = std::collections::HashMap::new();
+    list_container_filters.insert(String::from("name"), vec![container_name.clone()]);
+
+    let opts = ListContainersOptions::<String> {
+        all: true,
+        filters: list_container_filters,
+        ..Default::default()
+    };
+
+    let container = docker
+        .list_containers(Some(opts))
+        .await
+        .map_err(|e| e.to_string())?
+        .into_iter()
+        .next()
+        .ok_or_else(|| "Container not found".to_string())?;
+
+    let res = match op_type.as_str() {
+        "delete" => match docker.remove_container(&container_name, None).await {
+            Ok(_) => Ok("Deleted container".to_string()),
+            Err(e) => Err(format!("Failed to delete container: {}", e.to_string())),
+        },
+        "start" => match docker
+            .start_container::<String>(&container_name, None)
+            .await
+        {
+            Ok(_) => Ok("Container started".to_string()),
+            Err(e) => Err(format!("Failed to start container: {}", e.to_string())),
+        },
+        "stop" => match docker.stop_container(&container_name, None).await {
+            Ok(_) => Ok("Container stopped".to_string()),
+            Err(e) => Err(format!("Failed to stop container: {}", e.to_string())),
+        },
+        "restart" => match docker.restart_container(&container_name, None).await {
+            Ok(_) => Ok("Container restarted".to_string()),
+            Err(e) => Err(format!("Failed to restart container: {}", e.to_string())),
+        },
+        "web" => {
+            let path = format!(
+                "http://0.0.0.0:{}",
+                container.ports.unwrap()[0]
+                    .public_port
+                    .ok_or_else(|| "Port not available".to_string())?
+            );
+            match open::that(path.clone()) {
+                Ok(_) => Ok(format!("Opening '{}'.", path)),
+                Err(err) => Err(format!("Failed to open '{}': {}", path, err)),
+            }
+        }
+        "exec" => {
+            let docker_command = format!("docker exec -it {} sh", container_name);
+
+            let mut command = std::process::Command::new("gnome-terminal");
+            let args = ["--", "bash", "-c", &docker_command];
+
+            command.args(&args);
+            match command.spawn() {
+                Ok(_) => Ok("Exec command executed".to_string()),
+                Err(err) => Err(format!("Cannot run exec command: {}", err.to_string())),
+            }
+        }
+        _ => Err("Invalid operation type".to_string()),
+    };
+
+    res
+}
+
+#[tauri::command]
+pub async fn list_images(state: tauri::State<'_, AppState>) -> Result<Vec<ImageSummary>, String> {
+    let options = Some(ListImagesOptions {
+        all: true,
+        ..Default::default()
+    });
+
+    state
+        .docker
+        .list_images::<String>(options)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn image_info(
+    state: tauri::State<'_, AppState>,
+    name: String,
+) -> Result<ImageInspect, String> {
+    state
+        .docker
+        .inspect_image(&name)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn image_history(
+    state: tauri::State<'_, AppState>,
+    name: String,
+) -> Result<Vec<HistoryResponseItem>, String> {
+    state
+        .docker
+        .image_history(&name)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn delete_image(
+    state: tauri::State<'_, AppState>,
+    image_name: String,
+    force: bool,
+    no_prune: bool,
+) -> Result<Vec<ImageDeleteResponseItem>, String> {
+    let remove_options = Some(RemoveImageOptions {
+        force,
+        noprune: no_prune,
+        ..Default::default()
+    });
+
+    state
+        .docker
+        .remove_image(&image_name, remove_options, None)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 /// Volumes
 
 #[tauri::command]
-pub fn list_volumes(state: tauri::State<AppState>) -> Vec<Volume> {
-    state.docker.clone().get_volumes().unwrap()
+pub async fn list_volumes(state: tauri::State<'_, AppState>) -> Result<VolumeListResponse, String> {
+    state
+        .docker
+        .list_volumes::<String>(None)
+        .await
+        .map_err(|e| e.to_string())
 }
-
 
 #[tauri::command]
-pub fn inspect_volume(state: tauri::State<AppState>, name: String) -> Volume {
-    state.docker.clone().inspect_volume(&name).unwrap()
+pub async fn inspect_volume(
+    state: tauri::State<'_, AppState>,
+    name: String,
+) -> Result<Volume, String> {
+    state
+        .docker
+        .inspect_volume(&name)
+        .await
+        .map_err(|e| e.to_string())
 }
-
 
 /// Networks
 
-
 #[tauri::command]
-pub fn list_networks(state: tauri::State<AppState>) -> Vec<Network> {
-    state.docker.clone().get_networks().unwrap()
+pub async fn list_networks(state: tauri::State<'_, AppState>) -> Result<Vec<Network>, String> {
+    state
+        .docker
+        .list_networks::<String>(None)
+        .await
+        .map_err(|e| e.to_string())
 }
 
-
 #[tauri::command]
-pub fn inspect_network(state: tauri::State<AppState>, name: String) -> Value {
-    state.docker.clone().inspect_network(&name).unwrap()
+pub async fn inspect_network(
+    state: tauri::State<'_, AppState>,
+    name: String,
+) -> Result<Network, String> {
+    let config = InspectNetworkOptions {
+        verbose: true,
+        scope: "global",
+    };
+    state
+        .docker
+        .inspect_network(&name, Some(config))
+        .await
+        .map_err(|e| e.to_string())
 }

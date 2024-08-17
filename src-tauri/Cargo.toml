@@ -15,11 +15,12 @@ tauri = { version = "1", features = ["shell-open"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 # rs-docker = "0.0.60"
-rust_dock = { path = "/home/ropali/Workspaces/rust-dock/" }
+#rust_dock = { path = "/home/ropali/Workspaces/rust-dock/" }
 tokio = { version = "1.7.0", features = ["rt", "rt-multi-thread", "macros"] }
 
 open = { version = "5.3.0"}
-
+bollard = "0.17.0"
+futures-util = "0.3.30"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

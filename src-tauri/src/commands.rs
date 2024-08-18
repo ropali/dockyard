@@ -1,4 +1,4 @@
-use crate::state::AppState;
+use crate::state::{self, AppState};
 use bollard::container::{ListContainersOptions, LogsOptions, Stats, StatsOptions};
 use bollard::image::{ListImagesOptions, RemoveImageOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
@@ -12,6 +12,7 @@ use futures_util::stream::TryStreamExt;
 use std::collections::HashMap;
 use std::default::Default;
 use std::process::Command;
+use std::sync::atomic::Ordering;
 use tauri::Manager;
 
 #[tauri::command]
@@ -182,8 +183,14 @@ pub async fn container_stats(
 
     let stream = &mut state.docker.stats(&c_id, options);
 
+    state.cancel_stats.store(false, Ordering::Relaxed);
+
     while let Some(Ok(stats)) = stream.next().await {
-        println!("{:?}", stats);
+        
+        if state.cancel_stats.load(Ordering::Relaxed) {
+            break;  // Stop emitting events if the flag is set
+        }
+
         app_handle
             .emit_all("stats", stats)
             .expect("Failed to emit stats data");
@@ -191,6 +198,13 @@ pub async fn container_stats(
 
     Ok(())
 }
+
+
+#[tauri::command]
+pub fn cancel_stats(state: tauri::State<'_, AppState>) {
+    state.cancel_stats.store(true, Ordering::Relaxed);
+}
+
 
 /// Images
 #[tauri::command]

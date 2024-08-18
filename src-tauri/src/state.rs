@@ -1,7 +1,10 @@
+use std::sync::{atomic::AtomicBool, Arc};
+
 use bollard::Docker;
 
 pub struct AppState {
     pub docker: Docker,
+    pub cancel_stats: Arc<AtomicBool>, // add the cancel flag
 }
 
 impl AppState {
@@ -13,7 +16,8 @@ impl AppState {
             }
         };
         AppState {
-            docker
+            docker,
+            cancel_stats: Arc::new(AtomicBool::new(false))
         }
     }
 }

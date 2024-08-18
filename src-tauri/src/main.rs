@@ -6,7 +6,7 @@ use crate::commands::{
     container_operation, container_stats, delete_image, fetch_container_info, fetch_containers,
     get_container, image_history, image_info, inspect_network, inspect_volume, list_images,
     list_networks, list_volumes, stream_docker_logs,
-    cancel_stats
+    cancel_stream
 };
 use crate::state::AppState;
 mod commands;
@@ -33,7 +33,7 @@ fn main() {
             list_networks,
             inspect_network,
             container_stats,
-            cancel_stats
+            cancel_stream
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

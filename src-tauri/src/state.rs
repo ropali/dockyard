@@ -4,7 +4,8 @@ use bollard::Docker;
 
 pub struct AppState {
     pub docker: Docker,
-    pub cancel_stats: Arc<AtomicBool>, // add the cancel flag
+    pub cancel_stats: Arc<AtomicBool>,
+    pub cancel_logs: Arc<AtomicBool>,
 }
 
 impl AppState {
@@ -17,7 +18,8 @@ impl AppState {
         };
         AppState {
             docker,
-            cancel_stats: Arc::new(AtomicBool::new(false))
+            cancel_stats: Arc::new(AtomicBool::new(false)),
+            cancel_logs: Arc::new(AtomicBool::new(false))
         }
     }
 }

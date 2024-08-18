@@ -1,5 +1,5 @@
-use crate::state::{self, AppState};
-use bollard::container::{ListContainersOptions, LogsOptions, Stats, StatsOptions};
+use crate::state::AppState;
+use bollard::container::{ListContainersOptions, LogsOptions, StatsOptions};
 use bollard::image::{ListImagesOptions, RemoveImageOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use bollard::network::InspectNetworkOptions;
@@ -8,10 +8,8 @@ use bollard::secret::{
     VolumeListResponse,
 };
 use futures_util::stream::StreamExt;
-use futures_util::stream::TryStreamExt;
 use std::collections::HashMap;
 use std::default::Default;
-use std::process::Command;
 use std::sync::atomic::Ordering;
 use tauri::Manager;
 
@@ -76,6 +74,9 @@ pub async fn stream_docker_logs(
     app_handle: tauri::AppHandle,
     container_name: String,
 ) -> Result<(), String> {
+
+    state.cancel_logs.store(false, Ordering::Relaxed);
+
     let mut stream = state.docker.logs::<String>(
         &container_name,
         Some(LogsOptions {
@@ -87,8 +88,15 @@ pub async fn stream_docker_logs(
     );
 
     while let Some(msg) = stream.next().await {
+        
+        if state.cancel_logs.load(Ordering::Relaxed) {
+            break;
+        }
+
+        let log = msg.unwrap().to_string();
+
         app_handle
-            .emit_all("log_chunk", msg.unwrap().to_string())
+            .emit_all("log_chunk", log)
             .expect("Failed to emit log chunk");
     }
 
@@ -201,8 +209,13 @@ pub async fn container_stats(
 
 
 #[tauri::command]
-pub fn cancel_stats(state: tauri::State<'_, AppState>) {
-    state.cancel_stats.store(true, Ordering::Relaxed);
+pub fn cancel_stream(state: tauri::State<'_, AppState>, stream_type: String) {
+    match stream_type.as_ref() {
+        "stats" => state.cancel_stats.store(true, Ordering::Relaxed),
+        "logs" => state.cancel_logs.store(true, Ordering::Relaxed),
+        _ => {}
+    };
+    
 }
 
 

@@ -6,7 +6,7 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 function StatsChart({ title, data, options }) {
   return (
-    <div className="chart-container">
+    <div className="chart-container text-base-content">
       <h3>{title}</h3>
       <Line data={data} options={options} />
     </div>

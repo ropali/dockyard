@@ -15,13 +15,16 @@ function ContainerStats({ selectedContainer }) {
       invoke('container_stats', { cId: selectedContainer.Id });
 
       return () => {
+
         unlistenStats.then(f => f());
       };
     }
   }, [selectedContainer]);
 
   if (stats.length === 0) {
-    return <div>Loading stats...</div>;
+    return <div className="flex h-full w-full items-center justify-center">
+      <span className="loading loading-dots loading-lg bg-base-content"></span>
+    </div>;
   }
 
   const cpuData = {
@@ -53,13 +56,13 @@ function ContainerStats({ selectedContainer }) {
     datasets: [
       {
         label: 'Block Write (MB)',
-        data: stats.map((stat) => stat.blkio_stats.io_service_bytes_recursive.find(io => io.op === 'write').value / (1024 * 1024)),
+        data: stats.map((stat) => stat.blkio_stats.io_service_bytes_recursive?.find(io => io.op === 'write').value / (1024 * 1024)),
         borderColor: 'rgb(54, 162, 235)',
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
       },
       {
         label: 'Block Read (MB)',
-        data: stats.map((stat) => stat.blkio_stats.io_service_bytes_recursive.find(io => io.op === 'read').value / (1024 * 1024)),
+        data: stats.map((stat) => stat.blkio_stats.io_service_bytes_recursive?.find(io => io.op === 'read').value / (1024 * 1024)),
         borderColor: 'rgb(255, 206, 86)',
         backgroundColor: 'rgba(255, 206, 86, 0.2)',
       },
@@ -71,13 +74,13 @@ function ContainerStats({ selectedContainer }) {
     datasets: [
       {
         label: 'Network Sent (KB)',
-        data: stats.map((stat) => stat.networks.eth0.tx_bytes / 1024),
+        data: stats.map((stat) => stat.networks?.eth0.tx_bytes / 1024),
         borderColor: 'rgb(75, 192, 192)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
       },
       {
         label: 'Network Received (KB)',
-        data: stats.map((stat) => stat.networks.eth0.rx_bytes / 1024),
+        data: stats.map((stat) => stat.networks?.eth0.rx_bytes / 1024),
         borderColor: 'rgb(153, 102, 255)',
         backgroundColor: 'rgba(153, 102, 255, 0.2)',
       },
@@ -91,7 +94,7 @@ function ContainerStats({ selectedContainer }) {
         position: 'top',
       },
       title: {
-        display: true,
+        display: false,
         text: 'Container Stats',
       },
     },

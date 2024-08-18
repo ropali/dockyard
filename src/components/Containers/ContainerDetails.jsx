@@ -11,7 +11,7 @@ import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/themes/acai.css';
 import { useContainers } from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';
-
+import ContainerStats from './ContainerStats';
 
 function ContainerDetails() {
 
@@ -30,15 +30,18 @@ function ContainerDetails() {
 
       setLogs([]); // Clear logs before subscribing
 
-      const unlisten = listen('log_chunk', (event) => {
+      const unlistenLogs = listen('log_chunk', (event) => {
+
         const sanitizedLog = sanitizeLog(event.payload);
         setLogs((prevLogs) => [...prevLogs, sanitizedLog]);
       });
 
-      invoke('stream_docker_logs', { containerId: selectedContainer.Id });
+      
+
+      invoke('stream_docker_logs', { containerName: selectedContainer.Names[0].replace("/", "") });
 
       return () => {
-        unlisten.then(f => f());
+        unlistenLogs.then(f => f());
       };
     }
   }, [selectedContainer]);
@@ -48,9 +51,7 @@ function ContainerDetails() {
       getInfo();
     }
 
-    if (activeTab === 'STATS' && selectedContainer) {
-      getStats();
-    }
+    
 
   }, [activeTab, selectedContainer]);
 
@@ -79,15 +80,7 @@ function ContainerDetails() {
     });
   }
 
-  // TODO: Implement stats API
-  function getStats() {
-    invoke('fetch_container_stats', { cId: selectedContainer.Id }).then((stats) => {
-      setStats(stats);
-      console.log("Fetched container stats:", stats);
-    }).catch((error) => {
-      console.error("Error fetching container stats:", error);
-    });
-  }
+
 
   function sanitizeLog(log) {
     return log.replace(/[\x00-\x1F\x7F]/g, "");
@@ -108,7 +101,7 @@ function ContainerDetails() {
   }
 
   function containerOperation(actionType) {
-    invoke('container_operation', { cId: selectedContainer.Id, opType: actionType }).then((res) => {
+    invoke('container_operation', { containerName: selectedContainer.Names[0].replace("/", ""), opType: actionType }).then((res) => {
       if (res) {
         toast(res);
 
@@ -126,90 +119,15 @@ function ContainerDetails() {
       case 'INFO':
         return <JSONPretty id="json-pretty" data={info}></JSONPretty>;
       case 'STATS':
-        const cpuData = {
-          labels: stats.map(stat => stat.timestamp),
-          datasets: [
-            {
-              label: 'CPU Usage (%)',
-              data: stats.map(stat => stat.cpuUsage),
-              borderColor: 'rgb(75, 192, 192)',
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            },
-          ],
-        };
-        const memoryData = {
-          labels: stats.map(stat => stat.timestamp),
-          datasets: [
-            {
-              label: 'Memory Usage (MB)',
-              data: stats.map(stat => stat.memoryUsage),
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            },
-          ],
-        };
-        const blockIOData = {
-          labels: stats.map(stat => stat.timestamp),
-          datasets: [
-            {
-              label: 'Block Write (MB)',
-              data: stats.map(stat => stat.blockWrite),
-              borderColor: 'rgb(54, 162, 235)',
-              backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            },
-            {
-              label: 'Block Read (MB)',
-              data: stats.map(stat => stat.blockRead),
-              borderColor: 'rgb(255, 206, 86)',
-              backgroundColor: 'rgba(255, 206, 86, 0.2)',
-            },
-          ],
-        };
-        const networkData = {
-          labels: stats.map(stat => stat.timestamp),
-          datasets: [
-            {
-              label: 'Network Sent (KB)',
-              data: stats.map(stat => stat.networkSent),
-              borderColor: 'rgb(75, 192, 192)',
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            },
-            {
-              label: 'Network Received (KB)',
-              data: stats.map(stat => stat.networkReceived),
-              borderColor: 'rgb(153, 102, 255)',
-              backgroundColor: 'rgba(153, 102, 255, 0.2)',
-            },
-          ],
-        };
-        const options = {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: 'top',
-            },
-            title: {
-              display: true,
-              text: '',
-            },
-          },
-        };
-        return (
-          <div className="stats-container grid grid-cols-2 gap-4">
-            <StatsChart title="CPU Usage" data={cpuData} options={options} />
-            <StatsChart title="Memory Usage" data={memoryData} options={options} />
-            <StatsChart title="Block I/O" data={blockIOData} options={options} />
-            <StatsChart title="Network I/O" data={networkData} options={options} />
-          </div>
-        );
+        return <ContainerStats selectedContainer={selectedContainer} />;
       default:
         return null;
     }
   };
 
   if (selectedContainer == null) {
-    return <LogoScreen message={"Select a container to see more details"}/>
-    
+    return <LogoScreen message={"Select a container to see more details"} />
+
   }
 
   return (

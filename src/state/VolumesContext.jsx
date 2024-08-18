@@ -9,7 +9,9 @@ export function VolumesProvider({ children }) {
 
     const loadVolumes = useCallback(() => {
         invoke('list_volumes').then((volumes) => {
-            setVolumes(volumes);
+            console.log("--S", volumes.Volumes);
+            
+            setVolumes(volumes.Volumes);
         });
 
     }, []);

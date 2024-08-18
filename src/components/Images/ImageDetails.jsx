@@ -51,13 +51,15 @@ function ImageDetails() {
     const forceDelete = modal.querySelector('input[name="forceDelete"]').checked;
     const noPrune = modal.querySelector('input[name="noPrune"]').checked;
 
-    invoke("delete_image", { id: selectedImage.Id, force: forceDelete, noPrune: noPrune }).then((res) => {
+    invoke("delete_image", { imageName: selectedImage.RepoTags[0], force: forceDelete, noPrune: noPrune }).then((res) => {
+      
       toast.success(res)
 
       setSelectedImage(null)
       loadImages()
 
     }).then((err) => {
+      
       toast.error(err)
     });
     modal.close();

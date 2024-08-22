@@ -14,6 +14,7 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 - **Network Management**: Create and manage Docker networks.
 - **Log Viewer**: Integrated log viewer for real-time container logs with PatternFly support.
 - **Fast Performance**: Built with Rust for speed and reliability.
+- **Multi Themes**: Many themes to choose from.
 
 ## Screenshots
 

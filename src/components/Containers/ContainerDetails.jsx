@@ -36,7 +36,7 @@ function ContainerDetails() {
         setLogs((prevLogs) => [...prevLogs, sanitizedLog]);
       });
 
-      
+
 
       invoke('stream_docker_logs', { containerName: selectedContainer.Names[0].replace("/", "") });
 
@@ -51,7 +51,7 @@ function ContainerDetails() {
       getInfo();
     }
 
-    
+
 
   }, [activeTab, selectedContainer]);
 
@@ -65,7 +65,10 @@ function ContainerDetails() {
 
       // Clean up function to clear the interval when the component unmounts
       // or when selectedContainer changes
-      return () => clearInterval(intervalId);
+      return () => {
+        clearInterval(intervalId);
+        invoke('cancel_stream', { streamType: "logs" });
+      };
     }
   }, [selectedContainer]);
 

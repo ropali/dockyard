@@ -15,7 +15,7 @@ function ContainerStats({ selectedContainer }) {
       invoke('container_stats', { cId: selectedContainer.Id });
 
       return () => {
-
+        invoke('cancel_stream', {streamType: "stats"});  // Set the cancel flag when unmounting
         unlistenStats.then(f => f());
       };
     }

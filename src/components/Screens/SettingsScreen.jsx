@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { capitalizeFirstLetter } from '../../utils';
 
-import { Store } from "tauri-plugin-store-api";
 import { reteriveValue, storeValue } from '../../utils/storage';
-
+import { ALL_THEMES, DEFAULT_THEME } from '../../constants';
 
 const SettingsScreen = () => {
 
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [theme, setTheme] = useState(DEFAULT_THEME);
 
   const changeTheme = async (newTheme) => {
     setTheme(newTheme);
@@ -33,40 +32,6 @@ const SettingsScreen = () => {
   }, [])
 
 
-  const themes = [
-    "light",
-    "dark",
-    "cupcake",
-    "bumblebee",
-    "emerald",
-    "corporate",
-    "synthwave",
-    "retro",
-    "cyberpunk",
-    "valentine",
-    "halloween",
-    "garden",
-    "forest",
-    "aqua",
-    "lofi",
-    "pastel",
-    "fantasy",
-    "wireframe",
-    "black",
-    "luxury",
-    "dracula",
-    "cmyk",
-    "autumn",
-    "business",
-    "acid",
-    "lemonade",
-    "night",
-    "coffee",
-    "winter",
-    "dim",
-    "nord",
-    "sunset",
-  ]
 
   return (
     <div className="bg-base-100 p-8 h-screen w-full flex justify-center">
@@ -84,7 +49,7 @@ const SettingsScreen = () => {
                   value={theme}
                   onChange={(e) => changeTheme(e.target.value)}
                 >
-                  {themes.map(option => (
+                  {ALL_THEMES.map(option => (
                     <option key={option} value={option}>
                       {capitalizeFirstLetter(option)}
                     </option>

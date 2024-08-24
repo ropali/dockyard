@@ -1,17 +1,10 @@
-use crate::state::AppState;
-use bollard::container::{ListContainersOptions, LogsOptions, StatsOptions};
-use bollard::image::{ListImagesOptions, RemoveImageOptions};
-use bollard::models::{ContainerInspectResponse, ContainerSummary};
-use bollard::network::InspectNetworkOptions;
-use bollard::secret::{
-    HistoryResponseItem, ImageDeleteResponseItem, ImageInspect, ImageSummary, Network, Volume,
-    VolumeListResponse,
-};
-use futures_util::stream::StreamExt;
 use std::collections::HashMap;
-use std::default::Default;
 use std::sync::atomic::Ordering;
+use bollard::container::{ListContainersOptions, LogsOptions, StatsOptions};
+use bollard::models::{ContainerInspectResponse, ContainerSummary};
+use futures_util::StreamExt;
 use tauri::Manager;
+use crate::state::AppState;
 
 #[tauri::command]
 pub async fn fetch_containers(
@@ -88,7 +81,7 @@ pub async fn stream_docker_logs(
     );
 
     while let Some(msg) = stream.next().await {
-        
+
         if state.cancel_logs.load(Ordering::Relaxed) {
             break;
         }
@@ -194,7 +187,7 @@ pub async fn container_stats(
     state.cancel_stats.store(false, Ordering::Relaxed);
 
     while let Some(Ok(stats)) = stream.next().await {
-        
+
         if state.cancel_stats.load(Ordering::Relaxed) {
             break;  // Stop emitting events if the flag is set
         }
@@ -205,125 +198,4 @@ pub async fn container_stats(
     }
 
     Ok(())
-}
-
-
-#[tauri::command]
-pub fn cancel_stream(state: tauri::State<'_, AppState>, stream_type: String) {
-    match stream_type.as_ref() {
-        "stats" => state.cancel_stats.store(true, Ordering::Relaxed),
-        "logs" => state.cancel_logs.store(true, Ordering::Relaxed),
-        _ => {}
-    };
-    
-}
-
-
-/// Images
-#[tauri::command]
-pub async fn list_images(state: tauri::State<'_, AppState>) -> Result<Vec<ImageSummary>, String> {
-    let options = Some(ListImagesOptions {
-        all: true,
-        ..Default::default()
-    });
-
-    state
-        .docker
-        .list_images::<String>(options)
-        .await
-        .map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-pub async fn image_info(
-    state: tauri::State<'_, AppState>,
-    name: String,
-) -> Result<ImageInspect, String> {
-    state
-        .docker
-        .inspect_image(&name)
-        .await
-        .map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-pub async fn image_history(
-    state: tauri::State<'_, AppState>,
-    name: String,
-) -> Result<Vec<HistoryResponseItem>, String> {
-    state
-        .docker
-        .image_history(&name)
-        .await
-        .map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-pub async fn delete_image(
-    state: tauri::State<'_, AppState>,
-    image_name: String,
-    force: bool,
-    no_prune: bool,
-) -> Result<Vec<ImageDeleteResponseItem>, String> {
-    let remove_options = Some(RemoveImageOptions {
-        force,
-        noprune: no_prune,
-        ..Default::default()
-    });
-
-    state
-        .docker
-        .remove_image(&image_name, remove_options, None)
-        .await
-        .map_err(|e| e.to_string())
-}
-
-/// Volumes
-
-#[tauri::command]
-pub async fn list_volumes(state: tauri::State<'_, AppState>) -> Result<VolumeListResponse, String> {
-    state
-        .docker
-        .list_volumes::<String>(None)
-        .await
-        .map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-pub async fn inspect_volume(
-    state: tauri::State<'_, AppState>,
-    name: String,
-) -> Result<Volume, String> {
-    state
-        .docker
-        .inspect_volume(&name)
-        .await
-        .map_err(|e| e.to_string())
-}
-
-/// Networks
-
-#[tauri::command]
-pub async fn list_networks(state: tauri::State<'_, AppState>) -> Result<Vec<Network>, String> {
-    state
-        .docker
-        .list_networks::<String>(None)
-        .await
-        .map_err(|e| e.to_string())
-}
-
-#[tauri::command]
-pub async fn inspect_network(
-    state: tauri::State<'_, AppState>,
-    name: String,
-) -> Result<Network, String> {
-    let config = InspectNetworkOptions {
-        verbose: true,
-        scope: "global",
-    };
-    state
-        .docker
-        .inspect_network(&name, Some(config))
-        .await
-        .map_err(|e| e.to_string())
 }

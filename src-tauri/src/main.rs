@@ -1,22 +1,19 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use crate::commands::{
-    cancel_stream, container_operation, container_stats, delete_image, fetch_container_info,
-    fetch_containers, get_container, image_history, image_info, inspect_network, inspect_volume,
-    list_images, list_networks, list_volumes,
-    stream_docker_logs,
-};
+
 use crate::state::AppState;
 use crate::utils::storage::setup_storage;
 use tauri::Manager;
+use crate::commands::container::{container_operation, container_stats, fetch_container_info, fetch_containers, get_container, stream_docker_logs};
+use crate::commands::extra::cancel_stream;
+use crate::commands::image::{delete_image, image_history, image_info, list_images};
+use crate::commands::network::{inspect_network, list_networks};
+use crate::commands::volume::{inspect_volume, list_volumes};
 
-mod commands;
 mod state;
 mod utils;
-
-
-
+mod commands;
 
 fn main() {
     let state = AppState::default();

@@ -1,24 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import { capitalizeFirstLetter } from '../../utils';
 
+import { Store } from "tauri-plugin-store-api";
+import { reteriveValue, storeValue } from '../../utils/storage';
+
+
 const SettingsScreen = () => {
 
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
-  const changeTheme = (newTheme) => {
+  const store = new Store("dockyard.bin");
+
+
+  const changeTheme = async (newTheme) => {
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme.toLowerCase());
+    
     document.documentElement.setAttribute('data-theme', newTheme.toLowerCase());
+
+    await storeValue("theme", newTheme.toLowerCase());
+    
   };
 
-  useEffect(() => {
-
-    const storedTheme = localStorage.getItem("theme");
-
+  const loadDefaultTheme = async () => {
+    const storedTheme = await reteriveValue("theme");
+    
     if (storedTheme) {
       setTheme(storedTheme);
       document.documentElement.setAttribute('data-theme', storedTheme);
     }
+  }
+
+  useEffect(() => {
+    loadDefaultTheme()
 
   }, [])
 
@@ -88,7 +101,7 @@ const SettingsScreen = () => {
 
           <SettingsGroup title="Docker">
             <SettingsItem label="Docker Socket Path" type="input" placeholder="/var/run/docker.sock" />
-        
+
           </SettingsGroup>
 
 
@@ -99,7 +112,7 @@ const SettingsScreen = () => {
             </div>
           </SettingsGroup>
 
-          
+
         </div>
       </div>
     </div>

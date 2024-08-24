@@ -96,14 +96,8 @@ const SettingsScreen = () => {
 
           </SettingsGroup>
 
-          <SettingsGroup title="Docker">
-            <SettingsItem label="Docker Socket Path" type="input" placeholder="/var/run/docker.sock" />
-
-          </SettingsGroup>
-
-
+          
           <SettingsGroup title="Updates">
-            <SettingsItem label="Auto-Update" type="toggle" />
             <div className="mb-4">
               <button className="btn btn-info">Check for Updates</button>
             </div>

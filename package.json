@@ -13,7 +13,6 @@
     "@headlessui/react": "^2.1.2",
     "@patternfly/react-log-viewer": "^5.2.0",
     "@tauri-apps/api": "^1",
-    "chart.js": "^4.4.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",

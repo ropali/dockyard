@@ -10,7 +10,6 @@ import ImagesScreen from './components/Screens/ImagesScreen';
 import VolumesScreen from './components/Screens/VolumesScreen';
 import NetworkScreen from './components/Screens/NetworkScreen';
 import SettingsScreen from './components/Screens/SettingsScreen';
-import Dashboard from './components/Screens/Dashboard';
 
 
 function App() {
@@ -40,7 +39,6 @@ function App() {
           />
           <main className="flex p-5 bg-base-200 flex-1 overflow-hidden mb-2">
             <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
 
               <Route path="/" element={<ContainersScreen />} />
               <Route path="/images" element={<ImagesScreen />} />

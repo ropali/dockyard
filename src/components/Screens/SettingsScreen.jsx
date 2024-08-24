@@ -9,9 +9,6 @@ const SettingsScreen = () => {
 
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
-  const store = new Store("dockyard.bin");
-
-
   const changeTheme = async (newTheme) => {
     setTheme(newTheme);
     

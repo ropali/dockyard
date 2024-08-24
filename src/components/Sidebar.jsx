@@ -10,7 +10,7 @@ function Sidebar() {
       <div>
         <div className="inline-flex size-16 items-center justify-center">
           <span className="grid size-10 place-content-center rounded-lg tooltip tooltip-right hover:tooltip-open" data-tip="Dockyard - Beatiful, Simple & Fast Docker Client">
-            <img src="/circle_logo.png" alt="" srcset="" />
+            <img src="/circle_logo.png" alt="" srcSet="" />
           </span>
         </div>
 

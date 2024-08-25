@@ -23,6 +23,8 @@ function ContainerDetails() {
   const [stats, setStats] = useState([]);
   const [isContainerRunning, setIsContainerRunning] = useState(false)
 
+  const [loadingButton, setLoadingButton] = useState(null)
+
   useEffect(() => {
     if (selectedContainer) {
 
@@ -104,14 +106,17 @@ function ContainerDetails() {
   }
 
   function containerOperation(actionType) {
+    setLoadingButton(actionType)
     invoke('container_operation', { containerName: selectedContainer.Names[0].replace("/", ""), opType: actionType }).then((res) => {
       if (res) {
-        toast(res);
+        toast.success(res);
 
         refreshSelectContainer()
       }
     }).catch((e) => {
       toast.error(e);
+    }).finally(() => {
+      setLoadingButton(null)
     });
   }
 
@@ -145,7 +150,7 @@ function ContainerDetails() {
             disabled={!isWeb() && !isContainerRunning}
             onClick={() => containerOperation("web")}
           >
-            <IconWeb className="size-5" />
+            {loadingButton == 'web' ? <span className="loading loading-bars loading-xs"></span> : <IconWeb className="size-5" />}
           </button>
         </div>
         <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Open Terminal">
@@ -153,7 +158,7 @@ function ContainerDetails() {
             disabled={!isContainerRunning}
             onClick={() => containerOperation("exec")}
           >
-            <IconBxTerminal className="size-5" />
+            {loadingButton == 'exec' ? <span className="loading loading-bars loading-xs"></span> : <IconBxTerminal className="size-5" />}
           </button>
         </div>
 
@@ -162,12 +167,12 @@ function ContainerDetails() {
             <button className="btn btn-square btn-sm mr-3"
               onClick={() => containerOperation("stop")}
             >
-              <IconCircleStop className="size-5" />
+              {loadingButton == 'stop' ? <span className="loading loading-bars loading-xs"></span> : <IconCircleStop className="size-5" />}
             </button>
             : <button className="btn btn-square btn-sm mr-3"
               onClick={() => containerOperation("start")}
             >
-              <IconPlayCircle className="size-5" />
+              {loadingButton == 'start' ? <span className="loading loading-bars loading-xs"></span> : <IconPlayCircle className="size-5" />}
             </button>
           }
         </div>
@@ -177,7 +182,7 @@ function ContainerDetails() {
             disabled={!isContainerRunning}
             onClick={() => containerOperation("restart")}
           >
-            <IconRestart className="size-5" />
+            { loadingButton == 'restart' ? <span className="loading loading-bars loading-xs"></span> : <IconRestart className="size-5" />}
           </button>
         </div>
 
@@ -185,7 +190,7 @@ function ContainerDetails() {
           <button className="btn btn-square btn-sm hover:btn-error mr-3"
             onClick={() => containerOperation("delete")}
           >
-            <IconBxTrashAlt className="size-5" />
+            { loadingButton == 'delete' ? <span className="loading loading-bars loading-xs"></span> : <IconBxTrashAlt className="size-5" />}
           </button>
         </div>
       </div>

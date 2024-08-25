@@ -5,7 +5,7 @@ import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/themes/acai.css';
 import { useImages } from "../../state/ImagesContext"
 
-import { IconBxTrashAlt, IconCopy, IconTag } from '../../Icons';
+import { IconBxExport, IconBxTrashAlt, IconCopy, IconTag } from '../../Icons';
 import ImageHistory from './ImageHistory';
 import { copyToClipboard, formatSize } from '../../utils';
 import LogoScreen from '../LogoScreen';
@@ -52,18 +52,31 @@ function ImageDetails() {
     const noPrune = modal.querySelector('input[name="noPrune"]').checked;
 
     invoke("delete_image", { imageName: selectedImage.RepoTags[0], force: forceDelete, noPrune: noPrune }).then((res) => {
-      
+
       toast.success(res)
 
       setSelectedImage(null)
       loadImages()
 
     }).then((err) => {
-      
+
       toast.error(err)
     });
     modal.close();
   }
+
+  const exportImage = () => {
+    invoke("export_image", { imageName: selectedImage.RepoTags[0] }).then((res) => {
+
+      toast.success(res)
+
+    }).then((err) => {
+
+      toast.error(err)
+    });
+
+  }
+
 
   if (selectedImage == null) {
     return <LogoScreen message={"Select an image to see more details"} />
@@ -128,12 +141,12 @@ function ImageDetails() {
           </button>
         </div>
         <div className="flex mb-4">
-          {/* TODO: Add more operations */}
-          {/* <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Tag Image">
-            <button className="btn btn-square btn-sm mr-3" onClick={() => imageOperation("tag")}>
-              <IconTag className="size-5" />
+
+          <div className="tooltip tooltip-bottom hover:tooltip-open z-10" data-tip="Export">
+            <button className="btn btn-square btn-sm mr-3" onClick={() => exportImage()}>
+              <IconBxExport className="size-5" />
             </button>
-          </div> */}
+          </div>
 
           <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
             <button className="btn btn-square btn-sm hover:btn-error mr-3" onClick={() => document.getElementById('delete_image_modal').showModal()}>

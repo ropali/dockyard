@@ -1,3 +1,5 @@
+use std::io::ErrorKind;
+use std::path::PathBuf;
 use crate::state::AppState;
 use crate::utils::storage::get_user_home_dir;
 use bollard::image::{ListImagesOptions, RemoveImageOptions};
@@ -70,7 +72,8 @@ pub async fn export_image(state: tauri::State<'_, AppState>, image_name: String)
 
     let path = format!("{home_dir}/{image_name}.tar.gz");
 
-    let file_result = File::create_new(path.clone()).await;
+
+    let file_result = File::create_new::<&str>(path.as_ref()).await;
     match file_result {
         Ok(mut file) => {
             // Proceed with writing to the file
@@ -82,8 +85,12 @@ pub async fn export_image(state: tauri::State<'_, AppState>, image_name: String)
         }
         Err(err) => {
             // Handle the error: log it, return an error message, etc.
-            eprintln!("Error opening file: {}", err);
-            Err(String::from(format!("Failed to open target file: {path}")))
+            let kind = err.kind();
+            match kind {
+                ErrorKind::PermissionDenied => Err(String::from(format!("Permission denied to open target file: {path}"))),
+                ErrorKind::AlreadyExists => Err(String::from(format!("Target file already exist at {path}"))),
+                _ => Err(String::from(format!("Failed to open target file: {path}")))
+            }
         }
     }
 }

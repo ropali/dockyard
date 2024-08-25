@@ -1,11 +1,10 @@
-use std::io::Read;
+use crate::state::AppState;
+use crate::utils::storage::get_user_home_dir;
 use bollard::image::{ListImagesOptions, RemoveImageOptions};
 use bollard::models::{HistoryResponseItem, ImageDeleteResponseItem, ImageInspect, ImageSummary};
 use futures_util::StreamExt;
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
-use crate::state::AppState;
-use crate::utils::storage::get_user_home_dir;
 
 #[tauri::command]
 pub async fn list_images(state: tauri::State<'_, AppState>) -> Result<Vec<ImageSummary>, String> {
@@ -68,7 +67,7 @@ pub async fn delete_image(
 #[tauri::command]
 pub async fn export_image(state: tauri::State<'_, AppState>, image_name: String) -> Result<String, String> {
     let home_dir = get_user_home_dir().unwrap();
-    
+
     let path = format!("{home_dir}/{image_name}.tar.gz");
 
     let file_result = File::create_new(path.clone()).await;
@@ -79,12 +78,12 @@ pub async fn export_image(state: tauri::State<'_, AppState>, image_name: String)
             while let Some(response) = stream.next().await {
                 file.write_all(&response.unwrap()).await.unwrap();
             }
-            Ok(String::from(format!("Image exported at {}", path)))
+            Ok(String::from(format!("Image exported at {}", path.clone())))
         }
         Err(err) => {
             // Handle the error: log it, return an error message, etc.
             eprintln!("Error opening file: {}", err);
-            Err(String::from("Failed to open target file"))
+            Err(String::from(format!("Failed to open target file: {path}")))
         }
     }
 }

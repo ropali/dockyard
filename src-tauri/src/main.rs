@@ -13,9 +13,11 @@ use crate::commands::volume::{inspect_volume, list_volumes};
 mod state;
 mod utils;
 mod commands;
+mod constants;
 
 fn main() {
     let state = AppState::default();
+
 
     tauri::Builder::default()
         .manage(state)

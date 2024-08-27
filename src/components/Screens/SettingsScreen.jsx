@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { capitalizeFirstLetter } from '../../utils';
 
 import { reteriveValue, storeValue } from '../../utils/storage';
-import { ALL_THEMES, DEFAULT_THEME } from '../../constants';
+import { ALL_THEMES, DEFAULT_THEME, DOCKER_TERMINAL } from '../../constants';
 
 const SettingsScreen = () => {
 
@@ -61,6 +61,10 @@ const SettingsScreen = () => {
 
           </SettingsGroup>
 
+          <SettingsGroup title="Docker">
+            <SettingsItem label="Terminal Program" type="input" placeholder="gnome-terminal" storageKey={DOCKER_TERMINAL} />
+          </SettingsGroup>
+
           
           <SettingsGroup title="Updates">
             <div className="mb-4">
@@ -86,7 +90,20 @@ const SettingsGroup = ({ title, children }) => {
   );
 };
 
-const SettingsItem = ({ label, type, options, placeholder, min, max, unit }) => {
+
+const SettingsItem = ({ label, type, options, placeholder, min, max, unit, storageKey = null }) => {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputBlur = async () => {
+    if (storageKey) {
+      await storeValue(storageKey, inputValue);
+    }
+  };
+
   const renderInput = () => {
     switch (type) {
       case 'select':
@@ -98,7 +115,16 @@ const SettingsItem = ({ label, type, options, placeholder, min, max, unit }) => 
       case 'toggle':
         return <input type="checkbox" className="checkbox" />;
       case 'input':
-        return <input type="text" className="input input-bordered w-full max-w-xs" placeholder={placeholder} />;
+        return (
+          <input
+            type="text"
+            className="input input-bordered w-full max-w-xs"
+            placeholder={placeholder}
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+          />
+        );
       case 'range':
         return (
           <>
@@ -128,5 +154,6 @@ const SettingsItem = ({ label, type, options, placeholder, min, max, unit }) => 
     </div>
   );
 };
+
 
 export default SettingsScreen;

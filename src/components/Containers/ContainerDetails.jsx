@@ -182,7 +182,7 @@ function ContainerDetails() {
             disabled={!isContainerRunning}
             onClick={() => containerOperation("restart")}
           >
-            { loadingButton == 'restart' ? <span className="loading loading-bars loading-xs"></span> : <IconRestart className="size-5" />}
+            {loadingButton == 'restart' ? <span className="loading loading-bars loading-xs"></span> : <IconRestart className="size-5" />}
           </button>
         </div>
 
@@ -190,7 +190,7 @@ function ContainerDetails() {
           <button className="btn btn-square btn-sm hover:btn-error mr-3"
             onClick={() => containerOperation("delete")}
           >
-            { loadingButton == 'delete' ? <span className="loading loading-bars loading-xs"></span> : <IconBxTrashAlt className="size-5" />}
+            {loadingButton == 'delete' ? <span className="loading loading-bars loading-xs"></span> : <IconBxTrashAlt className="size-5" />}
           </button>
         </div>
       </div>

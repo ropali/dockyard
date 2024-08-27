@@ -1,6 +1,6 @@
 import { Store } from "tauri-plugin-store-api";
 
-const store = new Store("dockyard.bin");
+const store = new Store("/home/ropali/.dockyard/store.bin");
 
 
 export const storeValue = async (key, value) => {

@@ -1,10 +1,9 @@
-use std::io::ErrorKind;
-use std::path::PathBuf;
 use crate::state::AppState;
 use crate::utils::storage::get_user_home_dir;
 use bollard::image::{ListImagesOptions, RemoveImageOptions};
 use bollard::models::{HistoryResponseItem, ImageDeleteResponseItem, ImageInspect, ImageSummary};
 use futures_util::StreamExt;
+use std::io::ErrorKind;
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 

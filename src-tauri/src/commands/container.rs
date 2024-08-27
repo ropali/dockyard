@@ -1,10 +1,15 @@
-use std::collections::HashMap;
-use std::sync::atomic::Ordering;
+use crate::constants::DOCKER_TERMINAL_APP;
+use crate::state::AppState;
+use crate::utils::find_terminal;
+use crate::utils::storage::get_storage_path;
 use bollard::container::{ListContainersOptions, LogsOptions, StatsOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
+use std::collections::HashMap;
+use std::env;
+use std::sync::atomic::Ordering;
 use tauri::Manager;
-use crate::state::AppState;
+use tauri_plugin_store::StoreBuilder;
 
 #[tauri::command]
 pub async fn fetch_containers(
@@ -67,7 +72,6 @@ pub async fn stream_docker_logs(
     app_handle: tauri::AppHandle,
     container_name: String,
 ) -> Result<(), String> {
-
     state.cancel_logs.store(false, Ordering::Relaxed);
 
     let mut stream = state.docker.logs::<String>(
@@ -81,7 +85,6 @@ pub async fn stream_docker_logs(
     );
 
     while let Some(msg) = stream.next().await {
-
         if state.cancel_logs.load(Ordering::Relaxed) {
             break;
         }
@@ -99,6 +102,7 @@ pub async fn stream_docker_logs(
 #[tauri::command]
 pub async fn container_operation(
     state: tauri::State<'_, AppState>,
+    app_handle: tauri::AppHandle,
     container_name: String,
     op_type: String,
 ) -> Result<String, String> {
@@ -154,14 +158,17 @@ pub async fn container_operation(
             }
         }
         "exec" => {
+
+            let term_app = find_terminal().unwrap();
+
             let docker_command = format!("docker exec -it {} sh", container_name);
 
-            let mut command = std::process::Command::new("gnome-terminal");
+            let mut command = std::process::Command::new(term_app);
             let args = ["--", "bash", "-c", &docker_command];
 
             command.args(&args);
             match command.spawn() {
-                Ok(_) => Ok("Exec command executed".to_string()),
+                Ok(_) => Ok(format!("Opening terminal inside '{container_name}'")),
                 Err(err) => Err(format!("Cannot run exec command: {}", err.to_string())),
             }
         }
@@ -187,9 +194,8 @@ pub async fn container_stats(
     state.cancel_stats.store(false, Ordering::Relaxed);
 
     while let Some(Ok(stats)) = stream.next().await {
-
         if state.cancel_stats.load(Ordering::Relaxed) {
-            break;  // Stop emitting events if the flag is set
+            break; // Stop emitting events if the flag is set
         }
 
         app_handle

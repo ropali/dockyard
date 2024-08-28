@@ -10,21 +10,21 @@ import ImagesScreen from './components/Screens/ImagesScreen';
 import VolumesScreen from './components/Screens/VolumesScreen';
 import NetworkScreen from './components/Screens/NetworkScreen';
 import SettingsScreen from './components/Screens/SettingsScreen';
-
+import { useSettings } from './state/SettingsContext';
 
 function App() {
+  const { settings } = useSettings();
 
   const loadTheme = () => {
-    let theme = localStorage.getItem("theme") || 'light';
-
-    document.documentElement.setAttribute('data-theme', theme);
+    
+    document.documentElement.setAttribute('data-theme', settings?.theme);
 
   }
 
   useEffect(() => {
     loadTheme()
 
-  }, [])
+  }, [settings?.theme])
 
 
   return (

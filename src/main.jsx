@@ -7,18 +7,21 @@ import { ContainerProvider } from './state/ContainerContext';
 import { ImagesProvider } from "./state/ImagesContext";
 import { VolumesProvider } from "./state/VolumesContext";
 import { NetworksProvider } from "./state/NetworkContext";
+import { SettingsProvider } from "./state/SettingsContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <VolumesProvider >
-      <ContainerProvider >
-        <ImagesProvider >
-          <NetworksProvider>
-            <App />
-          </NetworksProvider>
-        </ImagesProvider>
-      </ContainerProvider>
-    </VolumesProvider>
+    <SettingsProvider>
+      <VolumesProvider >
+        <ContainerProvider >
+          <ImagesProvider >
+            <NetworksProvider>
+              <App />
+            </NetworksProvider>
+          </ImagesProvider>
+        </ContainerProvider>
+      </VolumesProvider>
+    </SettingsProvider>
 
   </React.StrictMode>,
 );

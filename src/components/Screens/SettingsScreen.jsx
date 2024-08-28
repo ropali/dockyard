@@ -3,23 +3,28 @@ import { capitalizeFirstLetter } from '../../utils';
 
 import { reteriveValue, storeValue } from '../../utils/storage';
 import { ALL_THEMES, DEFAULT_THEME, DOCKER_TERMINAL } from '../../constants';
+import { useSettings } from '../../state/SettingsContext';
 
 const SettingsScreen = () => {
 
   const [theme, setTheme] = useState(DEFAULT_THEME);
 
+  const { settings, setSettingsValue } = useSettings();
+
   const changeTheme = async (newTheme) => {
     setTheme(newTheme);
-    
+
     document.documentElement.setAttribute('data-theme', newTheme.toLowerCase());
 
-    await storeValue("theme", newTheme.toLowerCase());
-    
+    await setSettingsValue("theme", newTheme.toLowerCase());
+
   };
 
   const loadDefaultTheme = async () => {
-    const storedTheme = await reteriveValue("theme");
+    console.log("--S", settings);
     
+    const storedTheme = settings?.theme;
+
     if (storedTheme) {
       setTheme(storedTheme);
       document.documentElement.setAttribute('data-theme', storedTheme);
@@ -65,7 +70,7 @@ const SettingsScreen = () => {
             <SettingsItem label="Terminal Program" type="input" placeholder="gnome-terminal" storageKey={DOCKER_TERMINAL} />
           </SettingsGroup>
 
-          
+
           <SettingsGroup title="Updates">
             <div className="mb-4">
               <button className="btn btn-info">Check for Updates</button>

@@ -6,7 +6,7 @@ use bollard::container::{ListContainersOptions, LogsOptions, StatsOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
 use std::collections::HashMap;
-use std::env;
+use std::{array, env};
 use std::sync::atomic::Ordering;
 use tauri::Manager;
 use tauri_plugin_store::StoreBuilder;
@@ -145,37 +145,79 @@ pub async fn container_operation(
             Ok(_) => Ok("Container restarted".to_string()),
             Err(e) => Err(format!("Failed to restart container: {}", e.to_string())),
         },
-        "web" => {
-            let path = format!(
-                "http://0.0.0.0:{}",
-                container.ports.unwrap()[0]
-                    .public_port
-                    .ok_or_else(|| "Port not available".to_string())?
-            );
-            match open::that(path.clone()) {
-                Ok(_) => Ok(format!("Opening '{}'.", path)),
-                Err(err) => Err(format!("Failed to open '{}': {}", path, err)),
-            }
-        }
-        "exec" => {
-
-            let term_app = find_terminal().unwrap();
-
-            let docker_command = format!("docker exec -it {} sh", container_name);
-
-            let mut command = std::process::Command::new(term_app);
-            let args = ["--", "bash", "-c", &docker_command];
-
-            command.args(&args);
-            match command.spawn() {
-                Ok(_) => Ok(format!("Opening terminal inside '{container_name}'")),
-                Err(err) => Err(format!("Cannot run exec command: {}", err.to_string())),
-            }
-        }
+        "web" => open_container_url(container),
+        "exec" => open_container_shell(app_handle, container_name),
         _ => Err("Invalid operation type".to_string()),
     };
 
     res
+}
+
+fn open_container_url(container: ContainerSummary) -> Result<String, String> {
+    let path = format!(
+        "http://0.0.0.0:{}",
+        container.ports.unwrap()[0]
+            .public_port
+            .ok_or_else(|| "Port not available".to_string())?
+    );
+    match open::that(path.clone()) {
+        Ok(_) => Ok(format!("Opening '{}'.", path)),
+        Err(err) => Err(format!("Failed to open '{}': {}", path, err)),
+    }
+}
+
+fn open_container_shell(app_handle: tauri::AppHandle, container_name: String) -> Result<String, String> {
+
+    let term_commands_prefix: HashMap<String, String> = HashMap::from([
+        ("gnome-terminal".to_owned(), "--".to_owned()),
+        ("alacritty".to_owned(), "-e".to_owned()),
+        ("xterm".to_owned(), "-e".to_owned()),
+        ("terminator".to_owned(), "-x".to_owned()),
+        ("konsole".to_owned(), "-e".to_owned()),
+    ]);
+
+
+    let term_app;
+
+    let mut store = StoreBuilder::new(app_handle.clone(), get_storage_path()).build();
+
+    // Attempt to load the store, if it's saved already.
+    store.load().expect("Failed to load store from disk");
+
+    let stored_val = store.get(DOCKER_TERMINAL_APP);
+    
+    if stored_val.is_some_and(|val| val != "") {
+        term_app = stored_val.unwrap().to_string().replace("\"", "");
+    }
+    else{
+        term_app = find_terminal().unwrap();
+    }
+    
+    let mut docker_commands = vec!["docker".to_owned(), "exec".to_owned(), "-it".to_owned(), container_name.to_owned(), "sh".to_owned()];
+
+    let mut command = std::process::Command::new(term_app.clone());
+
+    let mut args: Vec<String> = vec![];
+
+    let term_arg = term_commands_prefix.get(&term_app).unwrap().replace("\"", "");
+
+    args.push(term_arg.to_owned());
+    args.append(&mut docker_commands);
+
+
+    command.args(&args);
+    
+    match command.spawn() {
+        Ok(_) => Ok(format!("Opening terminal inside '{container_name}'")),
+        Err(err) => {
+            match err.kind() {
+                std::io::ErrorKind::NotFound => Err(format!("cannot use '{}' to open terminal. Change it in settings.", term_app)),
+                
+                _ => Err(format!("Cannot run exec command: {}", err.kind().to_string())),
+            }
+
+        },
+    }
 }
 
 #[tauri::command]

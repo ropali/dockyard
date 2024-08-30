@@ -99,6 +99,19 @@ const SettingsGroup = ({ title, children }) => {
 const SettingsItem = ({ label, type, options, placeholder, min, max, unit, storageKey = null }) => {
   const [inputValue, setInputValue] = useState('');
 
+  useEffect(() => {
+    const loadStoredValue = async () => {
+      if (storageKey) {
+        const storedValue = await reteriveValue(storageKey);
+        if (storedValue) {
+          setInputValue(storedValue);
+        }
+      }
+    };
+
+    loadStoredValue();
+  }, [storageKey]);
+
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
@@ -159,6 +172,5 @@ const SettingsItem = ({ label, type, options, placeholder, min, max, unit, stora
     </div>
   );
 };
-
 
 export default SettingsScreen;

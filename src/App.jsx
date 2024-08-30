@@ -11,13 +11,14 @@ import VolumesScreen from './components/Screens/VolumesScreen';
 import NetworkScreen from './components/Screens/NetworkScreen';
 import SettingsScreen from './components/Screens/SettingsScreen';
 import { useSettings } from './state/SettingsContext';
+import { DEFAULT_THEME } from './constants';
 
 function App() {
   const { settings } = useSettings();
 
   const loadTheme = () => {
     
-    document.documentElement.setAttribute('data-theme', settings?.theme);
+    document.documentElement.setAttribute('data-theme', settings?.theme || DEFAULT_THEME);
 
   }
 

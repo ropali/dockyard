@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use tauri::{App, Manager, Wry};
 use tauri_plugin_store::{with_store, StoreCollection};
 
-use crate::constants::{STORAGE_NAME};
+use crate::constants::STORAGE_NAME;
 
 
 pub fn get_user_home_dir() -> Option<String> {
@@ -15,11 +15,10 @@ pub fn get_user_home_dir() -> Option<String> {
 }
 
 pub fn get_storage_path() -> PathBuf {
-    let home_dir = get_user_home_dir().unwrap();
-
+    
     let mut path = PathBuf::new();
 
-    path.push(format!("{}/.dockyard/{STORAGE_NAME}", home_dir));
+    path.push(format!(".{STORAGE_NAME}"));
 
     path
 }

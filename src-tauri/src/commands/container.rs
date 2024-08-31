@@ -177,12 +177,13 @@ fn open_container_shell(app_handle: tauri::AppHandle, container_name: String) ->
     ]);
 
 
-    let term_app;
 
     let mut store = StoreBuilder::new(app_handle.clone(), get_storage_path()).build();
 
     // Attempt to load the store, if it's saved already.
-    store.load().expect("Failed to load store from disk");
+    store.load().map_err(|_| "Failed to load store from disk")?;
+
+    let term_app;
 
     let stored_val = store.get(DOCKER_TERMINAL_APP);
     
@@ -193,19 +194,22 @@ fn open_container_shell(app_handle: tauri::AppHandle, container_name: String) ->
         term_app = find_terminal().unwrap();
     }
     
-    let mut docker_commands = vec!["docker".to_owned(), "exec".to_owned(), "-it".to_owned(), container_name.to_owned(), "sh".to_owned()];
+    let docker_commands = vec![
+        "docker".to_owned(),
+        "exec".to_owned(),
+        "-it".to_owned(),
+        container_name.to_owned(),
+        "sh".to_owned(),
+    ];
 
     let mut command = std::process::Command::new(term_app.clone());
 
-    let mut args: Vec<String> = vec![];
 
-    let term_arg = term_commands_prefix.get(&term_app).unwrap().replace("\"", "");
+    let term_arg = term_commands_prefix
+        .get(term_app.as_str())
+        .ok_or_else(|| format!("Terminal application '{}' not supported", term_app))?;
 
-    args.push(term_arg.to_owned());
-    args.append(&mut docker_commands);
-
-
-    command.args(&args);
+    command.args(std::iter::once(term_arg.to_owned()).chain(docker_commands));
     
     match command.spawn() {
         Ok(_) => Ok(format!("Opening terminal inside '{container_name}'")),

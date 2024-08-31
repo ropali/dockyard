@@ -77,6 +77,5 @@ jobs:
         with:
           files: release_builds/*
           tag_name: ${{ github.ref_name }}  # Uses the tag name from the push event
-          release_name: ${{ github.ref_name }}  # Sets the release name to the tag name
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

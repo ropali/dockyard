@@ -1,0 +1,66 @@
+name: Build and Release Dockyard
+
+on:
+  push:
+    branches:
+      - release
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # Use the Node.js version compatible with your project
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+          profile: minimal
+
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli
+
+      - name: Build the Tauri app for Linux
+        run: npm run tauri build
+
+      - name: Package the app
+        run: |
+          mkdir dist
+          cp src-tauri/target/release/bundle/deb/*.deb ./dist/
+          # You can include other packaging formats if needed
+          cp src-tauri/target/release/bundle/appimage/*.AppImage ./dist/
+
+      - name: Upload the build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dockyard-build
+          path: dist/*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dockyard-build
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

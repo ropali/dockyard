@@ -52,7 +52,7 @@ jobs:
       - name: Package the app
         run: |
           mkdir release_builds
-          cp src-tauri/target/release/bundle/* ./release_builds/
+          cp -r src-tauri/target/release/bundle/* ./release_builds/
           
 
       - name: Upload the build artifacts

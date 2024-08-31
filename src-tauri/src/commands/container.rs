@@ -6,7 +6,6 @@ use bollard::container::{ListContainersOptions, LogsOptions, StatsOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
 use std::collections::HashMap;
-use std::{array, env};
 use std::sync::atomic::Ordering;
 use tauri::Manager;
 use tauri_plugin_store::StoreBuilder;

@@ -1,24 +1,40 @@
-# Dockyard - Beautifull, Fast & Simple Docker Client
-
+<h1 align="center">
+  <img src="https://i.ibb.co/j6DWMDy/Dockyard-banner-2.jpg" />
+</h1>
+<p>
 Dockyard is a modern, fast, and user-friendly Docker client designed to simplify container management on Linux. Built with Rust + Tauri and React.js, Dockyard offers a sleek interface and powerful features, making it easier than ever to work with Docker containers.
+</p>
 
-![Dockyard banner](https://i.ibb.co/j6DWMDy/Dockyard-banner-2.jpg)
+
+
+<div align="center">
+
+[![Linux Support](https://img.shields.io/badge/linux-1793D1?style=flat&logo=linux&logoColor=white)](https://github.com/lzdyes/douyin-downloader/releases)
+
+</div>
+
+
+
+
+
 
 
 ## Key Features
 
 - **Intuitive UI**: A clean and simple interface designed for both beginners and advanced users.
 - **Real-time Stats**: Monitor container stats in real-time with beautiful charts and graphs.
-- **Container Management**: Easily create, start, stop, and remove containers with just a few clicks.
-- **Volume Management**: Manage Docker volumes efficiently, including viewing attached containers.
-- **Network Management**: Create and manage Docker networks.
+- **Container Management**: Easily start, stop, and remove containers with just a few clicks.
+- **Terminal inside container**: Open shell inside the docker container using your favourite terminal app.
 - **Log Viewer**: Integrated log viewer for real-time container logs with PatternFly support.
 - **Fast Performance**: Built with Rust for speed and reliability.
 - **Multi Themes**: Many themes to choose from.
 
 ## Screenshots
 
-![Dockyard Dashboard](https://i.ibb.co/3R5NttL/image.png)
+![Containers](https://i.ibb.co/3R5NttL/image.png)
+![Stats](https://i.ibb.co/G2GVsz1/image.png)
+![Different Theme](https://i.ibb.co/SVkLjY5/image.png)
+
 
 
 
@@ -27,9 +43,9 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 ### Prerequisites
 
 - Linux (currently supported only on Linux-based systems)
-- Docker installed and running
-- Node.js (for development and building from source)
-- Rust (for building from source)
+- Docker >=27.1.1 installed and running
+- Node.js >= v20.11.1 (for development and building from source)
+- Rust >= 1.79.0 (for building from source)
 
 ### Install Dockyard
 
@@ -84,11 +100,7 @@ npm run tauri dev
 
 Dockyard is designed to be simple and intuitive. Once installed, launch the application and start managing your Docker containers, volumes, and networks. 
 
-### Example Tasks
 
-- **Start a Container**: Go to the "Containers" tab, select a container, and click "Start."
-- **View Logs**: Select a running container and view its logs in real-time in the "Logs" tab.
-- **Monitor Stats**: Go to the "Stats" tab to see live performance metrics for your containers.
 
 ## Contributing
 
@@ -101,7 +113,7 @@ We welcome contributions from the community! To get started:
 5. Push to the branch (`git push origin feature/YourFeature`).
 6. Open a Pull Request.
 
-For more details, check out our [Contributing Guidelines](CONTRIBUTING.md).
+
 
 ## Development Setup
 
@@ -117,8 +129,8 @@ To set up a development environment:
 
 - **Windows and macOS Support**: Extend Dockyard to support more operating systems.
 - **Advanced Container Management**: Add features like container resource limits and custom network configurations.
-- **Improved Logging**: Enhance the log viewer with search and filtering capabilities.
-- **Plugin System**: Allow third-party plugins to extend Dockyard’s functionality.
+- **Adavanced image management**: Add more operations related to image management.
+
 
 ## License
 
@@ -132,9 +144,9 @@ Dockyard is licensed under the [MIT License](LICENSE).
 
 ## Community
 
-Join the Dockyard community on [Discord](#) or follow us on [Twitter](#) for updates and discussions.
+Follow me on [Twitter/X](https://twitter.com/ropali_munshi) for updates and discussions.
 
 ## Support
 
-If you encounter any issues, please report them on our [GitHub Issues](https://github.com/ropali/dockyard/issues) page.
+If you encounter any issues, please report them on [GitHub Issues](https://github.com/ropali/dockyard/issues) page.
 

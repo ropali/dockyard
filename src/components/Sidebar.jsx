@@ -10,13 +10,13 @@ function Sidebar() {
       <div>
         <div className="inline-flex size-16 items-center justify-center">
           <span className="grid size-10 place-content-center rounded-lg tooltip tooltip-right hover:tooltip-open" data-tip="Dockyard - Beatiful, Simple & Fast Docker Client">
-            <img src="/circle_logo.png" alt="" srcset="" />
+            <img src="/circle_logo.png" alt="" srcSet="" />
           </span>
         </div>
 
         <div className="border-t border-base-300">
           <div className="px-2">
-            <div className="py-4">
+            {/* <div className="py-4">
               <Link
                 to="/dashboard"
                 className={`group relative flex justify-center rounded px-2 py-1.5 ${location.pathname === '/dashboard' ? 'text-base-content bg-base-200' : 'text-gray-500'} tooltip tooltip-right hover:tooltip-open`} data-tip="Dashboard"
@@ -25,9 +25,9 @@ function Sidebar() {
 
                 
               </Link>
-            </div>
+            </div> */}
 
-            <ul className="space-y-4 border-t border-base-300 pt-4">
+            <ul className="space-y-4 border-base-300 pt-4">
               <li>
                 <Link
                   to="/"

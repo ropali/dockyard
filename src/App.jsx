@@ -10,22 +10,22 @@ import ImagesScreen from './components/Screens/ImagesScreen';
 import VolumesScreen from './components/Screens/VolumesScreen';
 import NetworkScreen from './components/Screens/NetworkScreen';
 import SettingsScreen from './components/Screens/SettingsScreen';
-import Dashboard from './components/Screens/Dashboard';
-
+import { useSettings } from './state/SettingsContext';
+import { DEFAULT_THEME } from './constants';
 
 function App() {
+  const { settings } = useSettings();
 
   const loadTheme = () => {
-    let theme = localStorage.getItem("theme") || 'light';
-
-    document.documentElement.setAttribute('data-theme', theme);
+    
+    document.documentElement.setAttribute('data-theme', settings?.theme || DEFAULT_THEME);
 
   }
 
   useEffect(() => {
     loadTheme()
 
-  }, [])
+  }, [settings?.theme])
 
 
   return (
@@ -40,7 +40,6 @@ function App() {
           />
           <main className="flex p-5 bg-base-200 flex-1 overflow-hidden mb-2">
             <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
 
               <Route path="/" element={<ContainersScreen />} />
               <Route path="/images" element={<ImagesScreen />} />

@@ -6,7 +6,7 @@
     "distDir": "../dist"
   },
   "package": {
-    "productName": "docker_dex",
+    "productName": "dockyard",
     "version": "0.0.0"
   },
   "tauri": {
@@ -15,6 +15,9 @@
       "shell": {
         "all": false,
         "open": true
+      },
+      "fs": {
+        "all": true
       }
     },
     "windows": [

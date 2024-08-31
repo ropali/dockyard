@@ -645,7 +645,7 @@
   resolved "https://registry.yarnpkg.com/@tanstack/virtual-core/-/virtual-core-3.8.1.tgz#50348857890cdfe8e6c784de3bb028caaa097f5e"
   integrity sha512-uNtAwenT276M9QYCjTBoHZ8X3MUeCRoGK59zPi92hMIxdfS9AyHjkDWJ94WroDxnv48UE+hIeo21BU84jKc8aQ==
 
-"@tauri-apps/api@^1":
+"@tauri-apps/api@1.6.0", "@tauri-apps/api@^1":
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.6.0.tgz#745b7e4e26782c3b2ad9510d558fa5bb2cf29186"
   integrity sha512-rqI++FWClU5I2UBp4HXFvl+sBWkdigBkxnpJDQUWttNyG7IZP4FwQGhTNL5EOw0vI8i6eSAJ5frLqO7n7jbJdg==
@@ -882,10 +882,10 @@ chalk@^2.4.2:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chart.js@^4.4.3:
-  version "4.4.3"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.4.3.tgz#3b2e11e7010fefa99b07d0349236f5098e5226ad"
-  integrity sha512-qK1gkGSRYcJzqrrzdR6a+I0vQ4/R+SoODXyAjscQ/4mzuNzySaMCd+hyVxitSY1+L2fjPD1Gbn+ibNqRmwQeLw==
+chart.js@^4.4.4:
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.4.4.tgz#b682d2e7249f7a0cbb1b1d31c840266ae9db64b7"
+  integrity sha512-emICKGBABnxhMjUjlYRR12PmOXhJ2eJjEHL2/dZlWjxRAZT1D8xplLFq5M0tMQK8ja+wBS/tuVEJB5C6r7VxJA==
   dependencies:
     "@kurkle/color" "^0.3.0"
 
@@ -1736,6 +1736,12 @@ tailwindcss@^3.4.4:
     postcss-selector-parser "^6.0.11"
     resolve "^1.22.2"
     sucrase "^3.32.0"
+
+"tauri-plugin-store-api@https://github.com/tauri-apps/tauri-plugin-store#v1":
+  version "0.0.0"
+  resolved "https://github.com/tauri-apps/tauri-plugin-store#5f5404feea43b6cddd65e4171f52e92ca161a2aa"
+  dependencies:
+    "@tauri-apps/api" "1.6.0"
 
 thenify-all@^1.0.0:
   version "1.6.0"

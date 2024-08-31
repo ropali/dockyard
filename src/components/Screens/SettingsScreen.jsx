@@ -1,62 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { capitalizeFirstLetter } from '../../utils';
 
+import { reteriveValue, storeValue } from '../../utils/storage';
+import { ALL_THEMES, DEFAULT_THEME, DOCKER_TERMINAL } from '../../constants';
+import { useSettings } from '../../state/SettingsContext';
+
 const SettingsScreen = () => {
 
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [theme, setTheme] = useState(DEFAULT_THEME);
 
-  const changeTheme = (newTheme) => {
+  const { settings, setSettingsValue } = useSettings();
+
+  const changeTheme = async (newTheme) => {
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme.toLowerCase());
+
     document.documentElement.setAttribute('data-theme', newTheme.toLowerCase());
+
+    await setSettingsValue("theme", newTheme.toLowerCase());
+
   };
 
-  useEffect(() => {
-
-    const storedTheme = localStorage.getItem("theme");
+  const loadDefaultTheme = async () => {
+    console.log("--S", settings);
+    
+    const storedTheme = settings?.theme;
 
     if (storedTheme) {
       setTheme(storedTheme);
       document.documentElement.setAttribute('data-theme', storedTheme);
     }
+  }
+
+  useEffect(() => {
+    loadDefaultTheme()
 
   }, [])
 
 
-  const themes = [
-    "light",
-    "dark",
-    "cupcake",
-    "bumblebee",
-    "emerald",
-    "corporate",
-    "synthwave",
-    "retro",
-    "cyberpunk",
-    "valentine",
-    "halloween",
-    "garden",
-    "forest",
-    "aqua",
-    "lofi",
-    "pastel",
-    "fantasy",
-    "wireframe",
-    "black",
-    "luxury",
-    "dracula",
-    "cmyk",
-    "autumn",
-    "business",
-    "acid",
-    "lemonade",
-    "night",
-    "coffee",
-    "winter",
-    "dim",
-    "nord",
-    "sunset",
-  ]
 
   return (
     <div className="bg-base-100 p-8 h-screen w-full flex justify-center">
@@ -74,7 +54,7 @@ const SettingsScreen = () => {
                   value={theme}
                   onChange={(e) => changeTheme(e.target.value)}
                 >
-                  {themes.map(option => (
+                  {ALL_THEMES.map(option => (
                     <option key={option} value={option}>
                       {capitalizeFirstLetter(option)}
                     </option>
@@ -83,49 +63,21 @@ const SettingsScreen = () => {
               </div>
             </div>
 
-            <SettingsItem label="Language" type="select" options={['English', 'Spanish', 'French']} />
-            <SettingsItem label="Auto-start on login" type="toggle" />
+
           </SettingsGroup>
 
           <SettingsGroup title="Docker">
-            <SettingsItem label="Docker path" type="input" placeholder="/usr/local/bin/docker" />
-            <SettingsItem label="Default network" type="select" options={['bridge', 'host', 'none']} />
-            <SettingsItem label="Enable experimental features" type="toggle" />
+            <SettingsItem label="Terminal Program" type="input" placeholder="gnome-terminal" storageKey={DOCKER_TERMINAL} />
           </SettingsGroup>
 
-
-          <SettingsGroup title="Security">
-            <SettingsItem label="TLS Verification" type="toggle" />
-            <SettingsItem label="Certificates Path" type="input" placeholder="/path/to/certs" />
-          </SettingsGroup>
-
-          <SettingsGroup title="Proxies">
-            <SettingsItem label="HTTP Proxy" type="input" placeholder="http://proxy.example.com:8080" />
-            <SettingsItem label="HTTPS Proxy" type="input" placeholder="https://proxy.example.com:8443" />
-            <SettingsItem label="No Proxy" type="input" placeholder="localhost,127.0.0.1" />
-          </SettingsGroup>
-
-          <SettingsGroup title="Volumes">
-            <SettingsItem label="Default Volume Path" type="input" placeholder="/var/lib/docker/volumes" />
-            <SettingsItem label="Prune Volumes on Exit" type="toggle" />
-          </SettingsGroup>
-
-          <SettingsGroup title="Networking">
-            <SettingsItem label="Default DNS Servers" type="input" placeholder="8.8.8.8, 8.8.4.4" />
-            <SettingsItem label="Host-to-Container Networking" type="toggle" />
-          </SettingsGroup>
 
           <SettingsGroup title="Updates">
-            <SettingsItem label="Auto-Update" type="toggle" />
             <div className="mb-4">
               <button className="btn btn-info">Check for Updates</button>
             </div>
           </SettingsGroup>
 
-          <SettingsGroup title="Advanced">
-            <SettingsItem label="Docker Daemon Options" type="input" placeholder="--experimental --log-level=debug" />
-            <button className="btn btn-error">Restart Docker</button>
-          </SettingsGroup>
+
         </div>
       </div>
     </div>
@@ -143,7 +95,33 @@ const SettingsGroup = ({ title, children }) => {
   );
 };
 
-const SettingsItem = ({ label, type, options, placeholder, min, max, unit }) => {
+
+const SettingsItem = ({ label, type, options, placeholder, min, max, unit, storageKey = null }) => {
+  const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    const loadStoredValue = async () => {
+      if (storageKey) {
+        const storedValue = await reteriveValue(storageKey);
+        if (storedValue) {
+          setInputValue(storedValue);
+        }
+      }
+    };
+
+    loadStoredValue();
+  }, [storageKey]);
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputBlur = async () => {
+    if (storageKey) {
+      await storeValue(storageKey, inputValue);
+    }
+  };
+
   const renderInput = () => {
     switch (type) {
       case 'select':
@@ -155,7 +133,16 @@ const SettingsItem = ({ label, type, options, placeholder, min, max, unit }) => 
       case 'toggle':
         return <input type="checkbox" className="checkbox" />;
       case 'input':
-        return <input type="text" className="input input-bordered w-full max-w-xs" placeholder={placeholder} />;
+        return (
+          <input
+            type="text"
+            className="input input-bordered w-full max-w-xs"
+            placeholder={placeholder}
+            value={inputValue}
+            onChange={handleInputChange}
+            onBlur={handleInputBlur}
+          />
+        );
       case 'range':
         return (
           <>

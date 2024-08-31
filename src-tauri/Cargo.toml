@@ -1,8 +1,8 @@
 [package]
-name = "docker_dex"
+name = "dockyard"
 version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "Beautifull, Fast & Simple Docker Client"
+authors = ["ropali"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -11,16 +11,18 @@ edition = "2021"
 tauri-build = { version = "1", features = [] }
 
 [dependencies]
-tauri = { version = "1", features = ["shell-open"] }
+tauri = { version = "1", features = [ "fs-all", "shell-open"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-# rs-docker = "0.0.60"
-#rust_dock = { path = "/home/ropali/Workspaces/rust-dock/" }
+
 tokio = { version = "1.7.0", features = ["rt", "rt-multi-thread", "macros"] }
 
 open = { version = "5.3.0"}
 bollard = "0.17.0"
 futures-util = "0.3.30"
+
+tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

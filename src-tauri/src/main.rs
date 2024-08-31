@@ -2,21 +2,30 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 
-use crate::commands::{
-    container_operation, container_stats, delete_image, fetch_container_info, fetch_containers,
-    get_container, image_history, image_info, inspect_network, inspect_volume, list_images,
-    list_networks, list_volumes, stream_docker_logs,
-    cancel_stream
-};
 use crate::state::AppState;
-mod commands;
+use crate::utils::storage::setup_storage;
+use crate::commands::container::{container_operation, container_stats, fetch_container_info, fetch_containers, get_container, stream_docker_logs};
+use crate::commands::extra::cancel_stream;
+use crate::commands::image::{delete_image, export_image, image_history, image_info, list_images};
+use crate::commands::network::{inspect_network, list_networks};
+use crate::commands::volume::{inspect_volume, list_volumes};
+
 mod state;
+mod utils;
+mod commands;
+mod constants;
 
 fn main() {
     let state = AppState::default();
 
+
     tauri::Builder::default()
         .manage(state)
+        .plugin(tauri_plugin_store::Builder::default().build())
+        .setup(|app| {
+            setup_storage(app);
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             // fetch_version,
             fetch_containers,
@@ -33,7 +42,8 @@ fn main() {
             list_networks,
             inspect_network,
             container_stats,
-            cancel_stream
+            cancel_stream,
+            export_image
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

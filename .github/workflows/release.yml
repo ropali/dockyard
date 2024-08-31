@@ -51,16 +51,15 @@ jobs:
 
       - name: Package the app
         run: |
-          mkdir dist
-          cp src-tauri/target/release/bundle/deb/*.deb ./dist/
-          # You can include other packaging formats if needed
-          cp src-tauri/target/release/bundle/appimage/*.AppImage ./dist/
+          mkdir release_builds
+          cp src-tauri/target/release/bundle/* ./release_builds/
+          
 
       - name: Upload the build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: dockyard-build
-          path: dist/*
+          path: release_builds/*
 
   release:
     needs: build
@@ -74,6 +73,6 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*
+          files: release_builds/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

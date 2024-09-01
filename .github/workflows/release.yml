@@ -54,7 +54,9 @@ jobs:
       - name: Package the app
         run: |
           mkdir release_builds
-          cp -r src-tauri/target/release/bundle/* ./release_builds/
+          cp src-tauri/target/release/bundle/appimage/dockyard_0.0.0_amd64.AppImage ./release_builds/
+          cp src-tauri/target/release/bundle/deb/dockyard_0.0.0_amd64.deb ./release_builds/
+          cp src-tauri/target/release/bundle/rpm/dockyard-0.0.0-1.x86_64.rpm ./release_builds/
           
 
       - name: Upload the build artifacts
@@ -75,7 +77,10 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: release_builds/*
+          files: |
+            release_builds/dockyard_0.0.0_amd64.AppImage
+            release_builds/dockyard_0.0.0_amd64.deb
+            release_builds/dockyard-0.0.0-1.x86_64.rpm
           tag_name: ${{ github.ref_name }}  # Uses the tag name from the push event
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

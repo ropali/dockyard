@@ -1,17 +1,16 @@
-import { invoke } from '@tauri-apps/api';
-import React, { useState, useEffect } from 'react';
-import { listen } from '@tauri-apps/api/event';
+import {invoke} from '@tauri-apps/api';
+import React, {useEffect, useState} from 'react';
+import {listen} from '@tauri-apps/api/event';
 
 import LogsViewer from '../LogsViewer';
-import StatsChart from '../StatsChart';
-import { IconDocker, IconBxTrashAlt, IconPlayCircle, IconBxTerminal, IconRestart, IconWeb, IconCircleStop } from '../../Icons';
+import {IconBxTerminal, IconBxTrashAlt, IconCircleStop, IconPlayCircle, IconRestart, IconWeb} from '../../Icons';
 
-import { toast } from 'react-toastify';
-import JSONPretty from 'react-json-pretty';
-import 'react-json-pretty/themes/acai.css';
-import { useContainers } from '../../state/ContainerContext';
+import {toast} from 'react-toastify';
+import {useContainers} from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';
 import ContainerStats from './ContainerStats';
+import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
+
 
 function ContainerDetails() {
 
@@ -20,7 +19,7 @@ function ContainerDetails() {
   const [activeTab, setActiveTab] = useState('LOGS');
   const [info, setInfo] = useState("");
   const [logs, setLogs] = useState([]);
-  const [stats, setStats] = useState([]);
+
   const [isContainerRunning, setIsContainerRunning] = useState(false)
 
   const [loadingButton, setLoadingButton] = useState(null)
@@ -125,7 +124,7 @@ function ContainerDetails() {
       case 'LOGS':
         return <LogsViewer logs={logs} />;
       case 'INFO':
-        return <JSONPretty id="json-pretty" data={info}></JSONPretty>;
+        return <JSONSyntaxHighlighter id="json-pretty" json={info}></JSONSyntaxHighlighter>;
       case 'STATS':
         return <ContainerStats selectedContainer={selectedContainer} />;
       default:

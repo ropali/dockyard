@@ -1,26 +1,27 @@
-import react, { useState } from "react";
-import { useVolumes } from "../../state/VolumesContext"
-import { IconCopy, IconBxTrashAlt } from "../../Icons";
-import JSONPretty from "react-json-pretty";
+import React, {useState} from "react";
+import {useVolumes} from "../../state/VolumesContext"
+import {IconCopy} from "../../Icons";
 import LogoScreen from "../LogoScreen";
-import { copyToClipboard } from "../../utils";
+import {copyToClipboard} from "../../utils";
 import VolumeAttachedContainers from "./VolumeAttachedContainers";
+import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
 
 
 export default function VolumeDetails() {
-    const { selectedVolume, setSelectedVolume, loadVolumes } = useVolumes();
+    const {selectedVolume, setSelectedVolume, loadVolumes} = useVolumes();
     const [activeTab, setActiveTab] = useState('INSPECT');
 
     if (selectedVolume == null) {
-        return <LogoScreen message={"Select a volume to see more details"} />;
+        return <LogoScreen message={"Select a volume to see more details"}/>;
     }
 
     const renderContent = () => {
         switch (activeTab) {
             case 'INSPECT':
-                return <JSONPretty id="json-pretty" data={selectedVolume}></JSONPretty>;
+                return <JSONSyntaxHighlighter id="json-pretty" json={selectedVolume}></JSONSyntaxHighlighter>;
+
             case 'CONTAINERS':
-                return <VolumeAttachedContainers />;
+                return <VolumeAttachedContainers/>;
             default:
                 return null;
         }
@@ -35,19 +36,19 @@ export default function VolumeDetails() {
                     onClick={() => copyToClipboard(selectedVolume.Name)}
                     title="Copy Name"
                 >
-                    <IconCopy className="w-4 h-4 text-base-content" />
+                    <IconCopy className="w-4 h-4 text-base-content"/>
                 </button>
-                
+
             </div>
-            
+
 
             <div className="flex items-center">
                 <p className="text-sm text-base-content mr-2">Created At: {selectedVolume.CreatedAt}</p>
-                
+
             </div>
             <div className="flex items-center mb-4">
                 <p className="text-sm text-base-content mr-2">Driver: {selectedVolume.Driver}</p>
-                
+
             </div>
 
             <div className="flex mb-4">
@@ -58,8 +59,12 @@ export default function VolumeDetails() {
                 </div> */}
             </div>
             <div className="flex mb-4 border-b border-base-300">
-                <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
-                <button className={`mr-4 pb-2 ${activeTab === 'CONTAINERS' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('CONTAINERS')}>CONTAINERS</button>
+                <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-content' : ''}`}
+                        onClick={() => setActiveTab('INSPECT')}>INSPECT
+                </button>
+                <button className={`mr-4 pb-2 ${activeTab === 'CONTAINERS' ? 'border-b-2 border-base-content' : ''}`}
+                        onClick={() => setActiveTab('CONTAINERS')}>CONTAINERS
+                </button>
 
             </div>
             <div className="flex-1 overflow-auto  p-2 rounded">

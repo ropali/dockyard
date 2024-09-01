@@ -1,19 +1,19 @@
-import react, { useState, useEffect } from "react";
-import { IconCopy, IconBxTrashAlt } from "../../Icons";
-import JSONPretty from "react-json-pretty";
+import React, {useEffect, useState} from "react";
+import {IconCopy} from "../../Icons";
 import LogoScreen from "../LogoScreen";
-import { copyToClipboard } from "../../utils";
-import { useNetworks } from "../../state/NetworkContext";
-import { invoke } from "@tauri-apps/api";
+import {copyToClipboard} from "../../utils";
+import {useNetworks} from "../../state/NetworkContext";
+import {invoke} from "@tauri-apps/api";
+import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
 
 
 export default function NetworkDetails() {
-    const { selectedNetwork, setSelectedNetwork } = useNetworks();
+    const {selectedNetwork, setSelectedNetwork} = useNetworks();
     const [activeTab, setActiveTab] = useState('INSPECT');
 
     const inspectNetwork = () => {
         if (selectedNetwork) {
-            invoke('inspect_network', { name: selectedNetwork.Name }).then((info) => {
+            invoke('inspect_network', {name: selectedNetwork.Name}).then((info) => {
                 setSelectedNetwork(info)
             });
         }
@@ -26,17 +26,14 @@ export default function NetworkDetails() {
     }, [activeTab, selectedNetwork])
 
 
-
     if (selectedNetwork == null) {
-        return <LogoScreen message={"Select a network to see more details"} />;
+        return <LogoScreen message={"Select a network to see more details"}/>;
     }
 
     const renderContent = () => {
         switch (activeTab) {
             case 'INSPECT':
-                return <div className="flex-grow overflow-auto">
-                    <JSONPretty id="json-pretty" data={selectedNetwork}></JSONPretty>
-                </div>;
+                return <JSONSyntaxHighlighter id="json-pretty" json={selectedNetwork}></JSONSyntaxHighlighter>;
 
             default:
                 return null;
@@ -52,7 +49,7 @@ export default function NetworkDetails() {
                     onClick={() => copyToClipboard(selectedNetwork.Name)}
                     title="Copy Name"
                 >
-                    <IconCopy className="w-4 h-4 " />
+                    <IconCopy className="w-4 h-4 "/>
                 </button>
 
             </div>
@@ -63,7 +60,7 @@ export default function NetworkDetails() {
                     onClick={() => copyToClipboard(selectedNetwork.Id)}
                     title="Copy full ID"
                 >
-                    <IconCopy className="w-4 h-4 " />
+                    <IconCopy className="w-4 h-4 "/>
                 </button>
             </div>
 
@@ -76,7 +73,9 @@ export default function NetworkDetails() {
                 </div>
             </div>
             <div className="flex mb-4 border-b border-base-300">
-                <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-content' : ''}`} onClick={() => setActiveTab('INSPECT')}>INSPECT</button>
+                <button className={`mr-4 pb-2 ${activeTab === 'INSPECT' ? 'border-b-2 border-base-content' : ''}`}
+                        onClick={() => setActiveTab('INSPECT')}>INSPECT
+                </button>
 
             </div>
             <div className="flex-1 overflow-auto text-black p-2 rounded">

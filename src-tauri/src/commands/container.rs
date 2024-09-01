@@ -36,7 +36,7 @@ pub async fn get_container(
     list_container_filters.insert(String::from("id"), vec![c_id]);
 
     let opts = ListContainersOptions::<String> {
-        all: false,
+        all: true,
         filters: list_container_filters,
         ..Default::default()
     };

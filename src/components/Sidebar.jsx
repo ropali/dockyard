@@ -1,6 +1,13 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { IconBxsTachometer, IconContainerTwentyFour, IconStack2, IconDatabaseCheckOutline, IconServerNetworkAlt, IconDocker, IconBxCog } from "../Icons";
+import {Link, useLocation} from 'react-router-dom';
+import {
+  IconBxCog,
+  IconContainerTwentyFour,
+  IconDatabaseCheckOutline,
+  IconDocker,
+  IconServerNetworkAlt,
+  IconStack2
+} from "../Icons";
 
 function Sidebar() {
   const location = useLocation();
@@ -10,7 +17,7 @@ function Sidebar() {
       <div>
         <div className="inline-flex size-16 items-center justify-center">
           <span className="grid size-10 place-content-center rounded-lg tooltip tooltip-right hover:tooltip-open" data-tip="Dockyard - Beatiful, Simple & Fast Docker Client">
-            <img src="/circle_logo.png" alt="" srcSet="" />
+            <img src="/logo.png" alt="" srcSet="" />
           </span>
         </div>
 

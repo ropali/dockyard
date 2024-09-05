@@ -2,8 +2,6 @@ name: Build and Release Dockyard
 
 on:
   push:
-    branches:
-      - release
     tags:
       - 'v*.*.*'
   release:
@@ -77,10 +75,10 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: v__VERSION__
           files: |
             /home/runner/work/dockyard/dockyard/*.AppImage
             /home/runner/work/dockyard/dockyard/*.deb
             /home/runner/work/dockyard/dockyard/*.rpm
-          tag_name: ${{ github.ref_name }}  # Uses the tag name from the push event
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

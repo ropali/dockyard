@@ -62,10 +62,19 @@ jobs:
           name: dockyard-build
           path: release_builds/*
 
+      - name: Read Changelog Content
+        id: changelog
+        run: |
+          content=$(cat CHANGELOG.md)
+          echo "::set-output name=changelog_content::$content"
+
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Download build artifacts
         uses: actions/download-artifact@v3
         with:
@@ -76,7 +85,7 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name }}
           name: Dockyard Release - ${{ github.event.release.tag_name }}
-          body_path: ./CHANGELOG.md
+          body: ${{ needs.build.outputs.changelog_content }}
           files: |
             /home/runner/work/dockyard/dockyard/*.AppImage
             /home/runner/work/dockyard/dockyard/*.deb

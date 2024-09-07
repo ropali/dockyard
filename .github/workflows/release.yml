@@ -49,21 +49,12 @@ jobs:
       - name: Build the Tauri app for Linux
         run: npm run tauri build
 
-      - name: Install git-chglog
-        run: |
-          curl -sS https://raw.githubusercontent.com/git-chglog/git-chglog/master/install.sh | bash -s -- -b /usr/local/bin
-
-      - name: Generate Changelog
-        run: |
-          git-chglog --output CHANGELOG.md
-
       - name: Package the app
         run: |
           mkdir release_builds
           cp src-tauri/target/release/bundle/appimage/*.AppImage ./release_builds/
           cp src-tauri/target/release/bundle/deb/*.deb ./release_builds/
           cp src-tauri/target/release/bundle/rpm/*.rpm ./release_builds/
-          cp CHANGELOG.md ./release_builds/
 
       - name: Upload the build artifacts
         uses: actions/upload-artifact@v3
@@ -85,7 +76,7 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name }}
           name: Dockyard Release - ${{ github.event.release.tag_name }}
-          body_path: ./release_builds/CHANGELOG.md
+          body_path: ./CHANGELOG.md
           files: |
             /home/runner/work/dockyard/dockyard/*.AppImage
             /home/runner/work/dockyard/dockyard/*.deb

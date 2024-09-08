@@ -5,7 +5,7 @@
 use crate::state::AppState;
 use crate::utils::storage::setup_storage;
 use crate::commands::container::{container_operation, container_stats, fetch_container_info, fetch_containers, get_container, stream_docker_logs};
-use crate::commands::extra::cancel_stream;
+use crate::commands::extra::{cancel_stream, get_version};
 use crate::commands::image::{delete_image, export_image, image_history, image_info, list_images};
 use crate::commands::network::{inspect_network, list_networks};
 use crate::commands::volume::{inspect_volume, list_volumes};
@@ -45,7 +45,8 @@ fn main() {
             inspect_network,
             container_stats,
             cancel_stream,
-            export_image
+            export_image,
+            get_version
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

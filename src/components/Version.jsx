@@ -8,7 +8,6 @@ export default function Version() {
 
     useEffect(() => {
         invoke('get_version').then((res) => {
-            console.log(res)
             setVersion("Version " + res["Version"]);
         });
     }, []);

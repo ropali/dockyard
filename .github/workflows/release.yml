@@ -55,18 +55,13 @@ jobs:
           cp src-tauri/target/release/bundle/appimage/*.AppImage ./release_builds/
           cp src-tauri/target/release/bundle/deb/*.deb ./release_builds/
           cp src-tauri/target/release/bundle/rpm/*.rpm ./release_builds/
+          cp CHANGELOG.md ./release_builds
 
       - name: Upload the build artifacts
         uses: actions/upload-artifact@v3
         with:
           name: dockyard-build
           path: release_builds/*
-
-      - name: Read Changelog Content
-        id: changelog
-        run: |
-          content=$(cat CHANGELOG.md)
-          echo "::set-output name=changelog_content::$content"
 
   release:
     needs: build
@@ -85,7 +80,7 @@ jobs:
         with:
           tag_name: ${{ github.event.release.tag_name }}
           name: Dockyard Release - ${{ github.event.release.tag_name }}
-          body: ${{ needs.build.outputs.changelog_content }}
+          body_path: /home/runner/work/dockyard/dockyard/CHANGELOG.md
           files: |
             /home/runner/work/dockyard/dockyard/*.AppImage
             /home/runner/work/dockyard/dockyard/*.deb

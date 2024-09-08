@@ -2,29 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.3] - 2024-09-08
-
-### 🐛 Bug Fixes
-
-- CHANGELOG file path in release step
-
-## [0.0.2] - 2024-09-07
-
-### 🐛 Bug Fixes
-
-- CHANGELOG file missing issue in the gh action
-
-## [0.0.1] - 2024-09-07
+## [0.1.0] - 2024-09-08
 
 ### 🚀 Features
 
-- Option to specify terminal-app in settings
-- Better json syntax highlighting
-- Optimized json syntax highlighting
+- Docker service status detection on startup
+- Added version on hover on docker inline indicator at sidebar bottom
 - Added changelog generation using git-cliff
+- Optimized json syntax highlighting
+- Better json syntax highlighting
+- Option to specify terminal-app in settings
 
 ### 🐛 Bug Fixes
 
 - Container refresh api filtering running container only
+
+### 📚 Documentation
+
+- Updated links and banner image
 
 

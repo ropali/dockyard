@@ -2,21 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
-## [__VERSION__] - 2024-09-05
-
-### 🚀 Features
-
-- Better json syntax highlighting
-- Optimized json syntax highlighting
+## [0.0.3] - 2024-09-08
 
 ### 🐛 Bug Fixes
 
-- Container refresh api filtering running container only
+- CHANGELOG file path in release step
 
-## [release] - 2024-08-31
+## [0.0.2] - 2024-09-07
+
+### 🐛 Bug Fixes
+
+- CHANGELOG file missing issue in the gh action
+
+## [0.0.1] - 2024-09-07
 
 ### 🚀 Features
 
 - Option to specify terminal-app in settings
+- Better json syntax highlighting
+- Optimized json syntax highlighting
+- Added changelog generation using git-cliff
+
+### 🐛 Bug Fixes
+
+- Container refresh api filtering running container only
 
 

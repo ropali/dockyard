@@ -78,8 +78,8 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.release.tag_name }}
-          name: Dockyard Release - ${{ github.event.release.tag_name }}
+          tag_name: ${{github.ref_name}}
+          name: Release - ${{github.ref_name}}
           body_path: /home/runner/work/dockyard/dockyard/CHANGELOG.md
           files: |
             /home/runner/work/dockyard/dockyard/*.AppImage

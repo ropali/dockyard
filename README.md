@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://i.ibb.co/j6DWMDy/Dockyard-banner-2.jpg" />
+  <img src="public/banner.png" />
 </h1>
 <p>
 Dockyard is a modern, fast, and user-friendly Docker client designed to simplify container management on Linux. Built with Rust + Tauri and React.js, Dockyard offers a sleek interface and powerful features, making it easier than ever to work with Docker containers.
@@ -9,7 +9,7 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 
 <div align="center">
 
-[![Linux Support](https://img.shields.io/badge/linux-1793D1?style=flat&logo=linux&logoColor=white)](https://github.com/lzdyes/douyin-downloader/releases)
+[![Linux Support](https://img.shields.io/badge/linux-1793D1?style=flat&logo=linux&logoColor=white)](https://github.com/ropali/dockyard/releases)
 
 </div>
 
@@ -119,7 +119,7 @@ We welcome contributions from the community! To get started:
 
 To set up a development environment:
 
-1. Clone the repository: `git clone https://github.com/yourusername/dockyard.git`
+1. Clone the repository: `git clone https://github.com/ropali/dockyard.git`
 2. Navigate to the project directory: `cd dockyard`
 3. Install Node.js dependencies: `yarn install`
 4. Build the Rust backend: `cargo build --release`

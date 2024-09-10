@@ -9,11 +9,20 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 
 <div align="center">
 
-[![Linux Support](https://img.shields.io/badge/linux-1793D1?style=flat&logo=linux&logoColor=white)](https://github.com/ropali/dockyard/releases)
+![GitHub Release](https://img.shields.io/github/v/release/ropali/dockyard)
+[![release](https://github.com/ropali/dockyard/actions/workflows/release.yml/badge.svg)](https://github.com/ropali/dockyard/actions/workflows/release.yml)
+[![built_with-Rust](https://img.shields.io/badge/built_with-Rust-dca282.svg?style=flat-square)](https://www.rust-lang.org/)
 
 </div>
 
 
+<div align="center">
+
+[![Debian Support](https://img.shields.io/badge/Debian-E95420?style=for-the-badge&logo=debian&logoColor=white)](https://github.com/ropali/dockyard/releases) 
+[![Fedora Support](https://img.shields.io/badge/fedora-0078D6?style=for-the-badge&logo=fedora&logoColor=white)](https://github.com/ropali/dockyard/releases) 
+[![AppImage Support](https://img.shields.io/badge/AppImage-adb8c5?style=for-the-badge&logo=appian&logoColor=white)](https://github.com/ropali/dockyard/releases)
+
+</div>
 
 
 

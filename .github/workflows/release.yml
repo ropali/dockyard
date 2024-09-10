@@ -1,4 +1,4 @@
-name: Build and Release Dockyard
+name: release
 
 on:
   push:

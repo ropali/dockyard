@@ -11,7 +11,7 @@ function ImagesList() {
     const [searchQuery, setSearchQuery] = useState('');
 
     const filteredImages = images.filter(image => {
-        return image.RepoTags[0].toLowerCase().includes(searchQuery.toLowerCase());
+        return image.RepoTags[0]?.toLowerCase().includes(searchQuery.toLowerCase());
     });
 
 

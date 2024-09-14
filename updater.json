@@ -1,0 +1,11 @@
+{
+  "version": "v1.0.0",
+  "notes": "Test version",
+  "pub_date": "2020-06-22T19:25:57Z",
+  "platforms": {
+    "linux-x86_64": {
+      "signature": "Content of app.AppImage.tar.gz.sig",
+      "url": "https://github.com/ropali/dockyard/releases/download/v0.1.1/app-amd64.AppImage.tar.gz"
+    }
+  }
+}

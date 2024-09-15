@@ -16,8 +16,8 @@ jobs:
         include:
           - platform: 'ubuntu-22.04'
             args: ''
-          - platform: 'windows-latest'
-            args: ''
+#          - platform: 'windows-latest'
+#            args: ''
 
     runs-on: ${{ matrix.platform }}
     environment: PROD
@@ -48,8 +48,10 @@ jobs:
         id: changelog
         run: |
           echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
+          cat CHANGELOG.md
           cat CHANGELOG.md >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+          echo ${{ env.RELEASE_BODY }}
 
       - uses: tauri-apps/tauri-action@v0
         env:

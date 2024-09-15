@@ -9,6 +9,7 @@ on:
 
 jobs:
   publish-tauri:
+
     permissions:
       contents: write
     strategy:
@@ -21,6 +22,7 @@ jobs:
             args: ''
 
     runs-on: ${{ matrix.platform }}
+    environment: PROD
     steps:
       - uses: actions/checkout@v4
 

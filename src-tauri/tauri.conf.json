@@ -7,11 +7,14 @@
   },
   "package": {
     "productName": "dockyard",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "tauri": {
     "allowlist": {
       "all": false,
+      "app": {
+        "all": true
+      },
       "shell": {
         "all": false,
         "open": true
@@ -41,6 +44,14 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ]
+    },
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://github.com/ropali/dockyard/releases/latest/download/latest.json"
+      ],
+      "dialog": false,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc1RjkxM0Y1NTQ1RjY2RkMKUldUOFpsOVU5UlA1ZGVydXRQMERJUjk5dnA3eUt1WU5YUGx1WDFHV2RhWjR1MkV6TWhqRzBLTWQK"
     }
   }
 }

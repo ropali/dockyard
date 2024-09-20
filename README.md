@@ -20,7 +20,9 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 
 [![Debian Support](https://img.shields.io/badge/Debian-E95420?style=for-the-badge&logo=debian&logoColor=white)](https://github.com/ropali/dockyard/releases) 
 [![Fedora Support](https://img.shields.io/badge/fedora-0078D6?style=for-the-badge&logo=fedora&logoColor=white)](https://github.com/ropali/dockyard/releases) 
-[![AppImage Support](https://img.shields.io/badge/AppImage-adb8c5?style=for-the-badge&logo=appian&logoColor=white)](https://github.com/ropali/dockyard/releases)
+[![AppImage Support](https://img.shields.io/badge/AppImage-647d88?style=for-the-badge&logo=appian&logoColor=white)](https://github.com/ropali/dockyard/releases)
+[![MacOS Support](https://img.shields.io/badge/Macos-adb8c5?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/ropali/dockyard/releases)
+
 
 </div>
 

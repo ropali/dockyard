@@ -8,82 +8,66 @@ on:
     types: [created]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  publish-tauri:
 
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest' # for Arm based macs (M1 and above).
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest' # for Intel based macs.
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04' # for Tauri v1 you could replace this with ubuntu-20.04.
+            args: ''
+#          - platform: 'windows-latest'
+#            args: ''
+
+    runs-on: ${{ matrix.platform }}
+    environment: PROD
     steps:
-      - name: Install System Dependencies
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
         run: |
-          sudo apt update
-          sudo apt install libwebkit2gtk-4.0-dev \
-              build-essential \
-              curl \
-              wget \
-              file \
-              libssl-dev \
-              libgtk-3-dev \
-              libayatana-appindicator3-dev \
-              librsvg2-dev
-              
-      - name: Checkout code
-        uses: actions/checkout@v3
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+      - name: install frontend dependencies
+        run: yarn install
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          override: true
-          profile: minimal
-
-      - name: Install Tauri CLI
-        run: cargo install tauri-cli
-
-      - name: Build the Tauri app for Linux
-        run: npm run tauri build
-
-      - name: Package the app
+      # Read the changelog file into a variable
+      - name: Read changelog
+        id: changelog
         run: |
-          mkdir release_builds
-          cp src-tauri/target/release/bundle/appimage/*.AppImage ./release_builds/
-          cp src-tauri/target/release/bundle/deb/*.deb ./release_builds/
-          cp src-tauri/target/release/bundle/rpm/*.rpm ./release_builds/
-          cp CHANGELOG.md ./release_builds
+          echo "RELEASE_BODY<<EOF" >> $GITHUB_ENV
+          cat CHANGELOG.md
+          cat CHANGELOG.md >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
-      - name: Upload the build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: dockyard-build
-          path: release_builds/*
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Download build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: dockyard-build
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{github.ref_name}}
-          name: Release - ${{github.ref_name}}
-          body_path: /home/runner/work/dockyard/dockyard/CHANGELOG.md
-          files: |
-            /home/runner/work/dockyard/dockyard/*.AppImage
-            /home/runner/work/dockyard/dockyard/*.deb
-            /home/runner/work/dockyard/dockyard/*.rpm
+      - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
+          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+        with:
+          tagName: v__VERSION__
+          releaseName: 'App v__VERSION__'
+          releaseBody: ${{ env.RELEASE_BODY }} # Use the changelog content as the release body
+          releaseId: ${{github.ref_name}}
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}

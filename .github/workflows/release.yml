@@ -68,6 +68,6 @@ jobs:
           releaseName: 'App v__VERSION__'
           releaseBody: ${{ env.RELEASE_BODY }} # Use the changelog content as the release body
           releaseId: ${{github.ref_name}}
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}

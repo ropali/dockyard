@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
+    "@patternfly/react-core": "^5.4.0",
     "@patternfly/react-log-viewer": "^5.2.0",
     "@tauri-apps/api": "^1",
     "chart.js": "^4.4.4",

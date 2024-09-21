@@ -150,7 +150,7 @@ Dockyard is licensed under the [MIT License](LICENSE).
 ## Acknowledgements
 
 - Built with [Tauri](https://tauri.app/), [React.js](https://reactjs.org/), and [Rust](https://www.rust-lang.org/).
-- Inspired by my personal itch of creating a beatiful Docker Client(especially for Linux).
+- Inspired by my personal itch of creating a beautiful Docker Client(especially for Linux).
 
 ## Community
 

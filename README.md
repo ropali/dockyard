@@ -65,7 +65,7 @@ You can download the latest release from [GitHub Releases](#) and install it usi
 #### Using .deb file
 ```bash
 # Download the latest .deb package
-wget https://github.com/yourusername/dockyard/releases/download/vX.Y.Z/dockyard_X.Y.Z_amd64.deb
+wget https://github.com/ropali/dockyard/releases/download/vX.Y.Z/dockyard_X.Y.Z_amd64.deb
 
 # Install the package
 sudo dpkg -i dockyard_X.Y.Z_amd64.deb

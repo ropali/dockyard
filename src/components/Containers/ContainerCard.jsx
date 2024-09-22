@@ -1,5 +1,3 @@
-
-
 const ContainerCard = ({ container, onClick, isSelected }) => {
     const statusColor = container.Status.includes("Exited") ? 'bg-red-500' : 'bg-green-500';
 
@@ -27,7 +25,7 @@ const ContainerCard = ({ container, onClick, isSelected }) => {
                 <p className="text-xs ">
                     <span className="font-medium">Status:</span> {container.Status.split(' ')[0]}
                 </p>
-                {container.Ports && container.Ports.length > 0 && (
+                {container.Ports && container.Ports.length > 0 && container.Ports[0].PublicPort && (
                     <p className="text-xs ">
                         <span className="font-medium">Ports:</span> {container.Ports[0].PublicPort} &rarr; {container.Ports[0].PrivatePort}
                     </p>

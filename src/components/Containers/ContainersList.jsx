@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, {useEffect, useState} from 'react'
 import ContainersTopBar from "./ContainersTopBar"
 import ContainerCard from './ContainerCard'
-import { useContainers } from '../../state/ContainerContext'
+import {useContainers} from '../../state/ContainerContext'
 
 
 function ContainersList() {
 
-    const { containers, loadContainers, selectedContainer ,setSelectedContainer } = useContainers();
+    const {containers, loadContainers, selectedContainer, setSelectedContainer} = useContainers();
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -33,12 +33,15 @@ function ContainersList() {
         return matchesSearchQuery && matchesFilter;
     });
 
+    // Load containers initially and after container actions
+    // TODO: This fixes the issue now but need to fix it in a better way
     useEffect(() => {
-
-        loadContainers()
-
-    }, [containers])
-
+        loadContainers();
+        const interval = setInterval(() => {
+            loadContainers();
+        }, 3000);
+        return () => clearInterval(interval);
+    }, [loadContainers]);
 
 
     return (

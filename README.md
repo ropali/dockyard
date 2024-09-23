@@ -127,7 +127,6 @@ cargo build --release
 npm run tauri dev
 ```
 
-
 ## Usage
 
 Dockyard is designed to be simple and intuitive. Once installed, launch the application and start managing your Docker containers, volumes, and networks. 

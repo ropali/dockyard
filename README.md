@@ -74,6 +74,27 @@ sudo apt-get install -f
 
 ```
 
+> [!NOTE]
+> **macOS aarch64 Installation Issue:**
+> 
+> Due to Apple's security policies, software without developer certification cannot be installed directly. To bypass this restriction, follow these steps:
+> 
+> - Click the Cancel button
+> 
+> - Go to System Preferences -> Security & Privacy
+>
+> - Click Open Anyway, and then click Open in the pop-up window. 
+>
+> If your system version is higher, you may not find the above options on the Security & Privacy page, or it may prompt that the file is damaged when you start it. then, you can bypass via terminal:
+>
+> - Open the terminal and execute the following command to authorize.
+>
+>```bash
+>sudo xattr -d com.apple.quarantine /Applications/dockyard.app/
+>```
+>
+
+
 
 #### Using AppImage file
 ```bash
@@ -105,6 +126,7 @@ cargo build --release
 # Run the app in development mode
 npm run tauri dev
 ```
+
 
 ## Usage
 

@@ -74,8 +74,22 @@ sudo apt-get install -f
 
 ```
 
+
+
+#### Using AppImage file
+```bash
+# Download the latest release
+wget https://github.com/ropali/dockyard/releases/download/vX.Y.Z/dockyard-X.Y.Z.AppImage
+
+# Make it executable
+chmod +x dockyard-X.Y.Z.AppImage
+
+# Run Dockyard
+./dockyard-X.Y.Z.AppImage
+```
+
+#### MacOS Installation Issue
 > [!NOTE]
-> **macOS aarch64 Installation Issue:**
 > 
 > Due to Apple's security policies, software without developer certification cannot be installed directly. To bypass this restriction, follow these steps:
 > 
@@ -94,19 +108,6 @@ sudo apt-get install -f
 >```
 >
 
-
-
-#### Using AppImage file
-```bash
-# Download the latest release
-wget https://github.com/ropali/dockyard/releases/download/vX.Y.Z/dockyard-X.Y.Z.AppImage
-
-# Make it executable
-chmod +x dockyard-X.Y.Z.AppImage
-
-# Run Dockyard
-./dockyard-X.Y.Z.AppImage
-```
 
 ### Build from Source
 

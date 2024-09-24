@@ -25,7 +25,6 @@ pub async fn open_container_shell(
 fn open_terminal_macos(term_app: &Terminal, command: &str) -> Result<(), String> {
     if let Some(template) = term_app.command_template() {
         let script = template.replace("{}", &command.replace("\"", "\\\""));
-        println!("Executing AppleScript: {}", script); // Debug print
 
         Command::new("osascript")
             .arg("-e")
@@ -36,12 +35,6 @@ fn open_terminal_macos(term_app: &Terminal, command: &str) -> Result<(), String>
     } else {
         let term_arg = term_app.command_prefix();
         let args: Vec<&str> = command.split_whitespace().collect();
-        println!(
-            "Executing command: {} {} {:?}",
-            term_app.as_str(),
-            term_arg,
-            args
-        ); // Debug print
 
         Command::new(term_app.as_str())
             .arg(term_arg)
@@ -55,12 +48,6 @@ fn open_terminal_macos(term_app: &Terminal, command: &str) -> Result<(), String>
 fn open_terminal_windows(term_app: &Terminal, command: &str) -> Result<(), String> {
     let term_arg = term_app.command_prefix();
     let args: Vec<&str> = command.split_whitespace().collect();
-    println!(
-        "Executing command: {} {} {:?}",
-        term_app.as_str(),
-        term_arg,
-        args
-    ); // Debug print
 
     Command::new(term_app.as_str())
         .arg(term_arg)
@@ -73,12 +60,6 @@ fn open_terminal_windows(term_app: &Terminal, command: &str) -> Result<(), Strin
 fn open_terminal_unix(term_app: &Terminal, command: &str) -> Result<(), String> {
     let term_arg = term_app.command_prefix();
     let args: Vec<&str> = command.split_whitespace().collect();
-    println!(
-        "Executing command: {} {} {:?}",
-        term_app.as_str(),
-        term_arg,
-        args
-    ); // Debug print
 
     Command::new(term_app.as_str())
         .arg(term_arg)

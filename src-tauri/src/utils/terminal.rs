@@ -106,9 +106,15 @@ pub fn open_terminal(
         ("sh", vec!["-c", &shell_command])
     };
 
-    Command::new(shell)
+    let output = Command::new(shell)
         .args(&args)
-        .spawn()
-        .map(|_| format!("Opening terminal with command: '{}'", command))
-        .map_err(|err| format!("Failed to execute terminal command: {}", err))
+        .output()
+        .map_err(|err| format!("Failed to execute terminal command: {}", err))?;
+
+    if !output.stderr.is_empty() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("Terminal command error: {}", stderr));
+    }
+
+    Ok(format!("Opening terminal with command: '{}'", command))
 }

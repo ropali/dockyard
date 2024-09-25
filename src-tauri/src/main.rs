@@ -9,7 +9,7 @@ use crate::commands::extra::{cancel_stream, get_version, ping};
 use crate::commands::image::{delete_image, export_image, image_history, image_info, list_images};
 use crate::commands::network::{inspect_network, list_networks};
 use crate::commands::volume::{inspect_volume, list_volumes};
-use crate::commands::terminal::{get_available_terminals, get_terminal_command, set_terminal};
+use crate::commands::terminal::get_available_terminals;
 
 mod state;
 mod utils;
@@ -50,8 +50,6 @@ fn main() {
             get_version,
             ping,
             get_available_terminals,
-            set_terminal,
-            get_terminal_command,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -70,7 +70,7 @@ const SettingsScreen = () => {
 
     const loadTerminal = useCallback(async () => {
         try {
-            const terminal = await invoke('get_terminal_command');
+            const terminal = await reteriveValue(DOCKER_TERMINAL);
             setTerminal(terminal);
         } catch (error) {
             console.error("Failed to load terminal:", error);
@@ -88,7 +88,7 @@ const SettingsScreen = () => {
 
     const saveTerminal = useCallback(async (newTerminal) => {
         try {
-            await invoke('set_terminal', { terminal: newTerminal });
+            await storeValue(DOCKER_TERMINAL, newTerminal);
             setTerminal(newTerminal);
         } catch (error) {
             console.error("Failed to save terminal:", error);

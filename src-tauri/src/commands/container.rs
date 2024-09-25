@@ -1,6 +1,5 @@
 use crate::state::AppState;
-use crate::commands::terminal::get_terminal;
-use crate::utils::terminal::open_container_shell;
+use crate::utils::terminal::{get_terminal, open_terminal};
 use bollard::container::{ListContainersOptions, LogsOptions, StatsOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
@@ -24,7 +23,6 @@ pub async fn fetch_containers(
         .await
         .map_err(|e| e.to_string())
 }
-
 #[tauri::command]
 pub async fn get_container(
     state: tauri::State<'_, AppState>,
@@ -104,6 +102,7 @@ pub async fn container_operation(
     op_type: String,
 ) -> Result<String, String> {
     let docker = state.docker.clone();
+    let terminal = get_terminal(&app_handle).await?;
 
     let mut list_container_filters = std::collections::HashMap::new();
     list_container_filters.insert(String::from("name"), vec![container_name.clone()]);
@@ -143,10 +142,10 @@ pub async fn container_operation(
             Err(e) => Err(format!("Failed to restart container: {}", e.to_string())),
         },
         "web" => open_container_url(container),
-        "exec" => {
-            let terminal = get_terminal(app_handle).await?;
-            open_container_shell(container_name, Some(terminal)).await
-        }
+        "exec" => match open_terminal(&terminal, Some("exec"), Some(&container_name)) {
+            Ok(_) => Ok("Opening terminal".to_string()),
+            Err(e) => Err(format!("Failed to open terminal: {}", e.to_string())),
+        },
         _ => Err("Invalid operation type".to_string()),
     };
 
@@ -165,7 +164,6 @@ fn open_container_url(container: ContainerSummary) -> Result<String, String> {
         Err(err) => Err(format!("Failed to open '{}': {}", path, err)),
     }
 }
-
 
 #[tauri::command]
 pub async fn container_stats(

@@ -1,73 +1,94 @@
-import {IconCancel, IconEdit, IconTickSmall} from "../../Icons/index.jsx";
+import {IconCancel, IconEdit, IconTick} from "../../Icons/index.jsx";
 import React, {useState} from "react";
+import {invoke} from "@tauri-apps/api";
+import {useContainers} from "../../state/ContainerContext.jsx";
+import {toast} from "react-toastify";
 
-export default function ContainerNameWidget({ContainerName}) {
+export default function ContainerNameWidget() {
+    const {selectedContainer, refreshSelectedContainer} = useContainers();
 
     const [isEditingName, setIsEditingName] = useState(false);
-    const [newContainerName, setNewContainerName] = useState(ContainerName);
+    const [newContainerName, setNewContainerName] = useState(
+        selectedContainer.Names[0].replace("/", "")
+    );
 
     const handleNameUpdate = () => {
-        // Implement the logic to update the container name
-        // For example:
-        // invoke('update_container_name', { containerId: selectedContainer.Id, newName: newContainerName })
-        //     .then(() => {
-        //         refreshSelectContainer();
-        //         setIsEditingName(false);
-        //         toast.success('Container name updated successfully');
-        //     })
-        //     .catch((error) => {
-        //         toast.error('Failed to update container name');
-        //         console.error(error);
-        //     });
 
-        // For now, we'll just log the new name and reset the editing state
-        console.log('New container name:', newContainerName);
-        // setIsEditingName(false);
+        // If the new name is the same as the old name, do nothing
+        if (newContainerName === selectedContainer.Names[0].replace("/", "")) {
+            setIsEditingName(false);
+            return;
+        }
+
+        invoke('rename_container', {
+            name: selectedContainer.Names[0].replace("/", ""),
+            newName: newContainerName
+        })
+            .then((res) => {
+                refreshSelectedContainer();
+                setIsEditingName(false);
+                toast.success(res);
+            })
+            .catch((error) => {
+                toast.error('Failed to update container name');
+                console.error(error);
+            })
+            .finally(() => setIsEditingName(false));
     };
 
     const startEditing = () => {
-        console.log("---- Start editing container name");
-        setNewContainerName(ContainerName);
+        setNewContainerName(selectedContainer.Names[0].replace("/", ""));
         setIsEditingName(true);
     };
 
-
     const cancelEditing = () => {
-        console.log('Cancelling name edit');
-        setNewContainerName(ContainerName);
+        setNewContainerName(selectedContainer.Names[0].replace("/", ""));
         setIsEditingName(false);
     };
 
-
-    return (<>
-            {isEditingName ? (<input
+    return (
+        <div className="flex items-center space-x-2">
+            {isEditingName ? (
+                <input
                     type="text"
-                    value={ContainerName}
+                    value={newContainerName}
                     onChange={(e) => setNewContainerName(e.target.value)}
-                    className="text-lg font-bold bg-transparent border-b border-base-content focus:outline-none"
+                    className="text-lg font-bold bg-transparent border-b border-gray-300 focus:outline-none focus:border-gray-600"
                     autoFocus
-                    onBlur={() => setTimeout(() => setIsEditingName(false), 500)} // Delay the blur to allow button clicks
-                />) : (<h1 className="text-lg font-bold">{ContainerName}</h1>)}
-            {!isEditingName && <button
-                className="btn btn-ghost btn-xs ml-2 bg-transparent	"
-                onClick={startEditing}
-            >
-                <IconEdit className="size-5"/>
-            </button>}
-            {isEditingName && (<div className="ml-1">
+                    onBlur={() => setTimeout(() => setIsEditingName(false), 100)}
+                />
+            ) : (
+                <h1 className="text-lg font-bold">
+                    {selectedContainer.Names[0].replace("/", "")}
+                </h1>
+            )}
+            {!isEditingName && (
+                <button
+                    className="p-1 text-gray-600 hover:text-base-content transition-colors duration-200 tooltip tooltip-bottom hover:tooltip-open"
+                    data-tip="Edit Name"
+                    onClick={startEditing}
+                >
+                    <IconEdit className="w-4 h-4"/>
+                </button>
+            )}
+            {isEditingName && (
+                <div className="flex items-center space-x-2">
                     <button
-                        className="btn btn-ghost btn-xs bg-transparent"
+                        className="p-1 text-gray-600 hover:text-green-600 transition-colors duration-200 tooltip tooltip-bottom hover:tooltip-open"
+                        data-tip="Save"
                         onClick={handleNameUpdate}
                     >
-                        <IconTickSmall className="size-5"/>
+                        <IconTick className="w-4 h-4"/>
                     </button>
                     <button
-                        className="btn btn-ghost btn-xs bg-transparent"
+                        className="p-1 text-gray-600 hover:text-red-600 transition-colors duration-200 tooltip tooltip-bottom hover:tooltip-open"
+                        data-tip="Cancel"
                         onClick={cancelEditing}
                     >
-                        <IconCancel className="size-5"/>
+                        <IconCancel className="w-4 h-4"/>
                     </button>
-                </div>)}
-
-        </>)
+                </div>
+            )}
+        </div>
+    );
 }

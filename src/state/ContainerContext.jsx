@@ -13,9 +13,20 @@ export function ContainerProvider({children}) {
         });
     }, []);
 
+    function refreshSelectedContainer() {
+        invoke('get_container', {cId: selectedContainer.Id}).then((res) => {
+
+            if (res) {
+                setSelectedContainer(res)
+            }
+
+        })
+    }
+
 
     return (
-        <ContainerContext.Provider value={{containers, selectedContainer, loadContainers, setSelectedContainer}}>
+        <ContainerContext.Provider
+            value={{containers, selectedContainer, loadContainers, setSelectedContainer, refreshSelectedContainer}}>
             {children}
         </ContainerContext.Provider>
     );

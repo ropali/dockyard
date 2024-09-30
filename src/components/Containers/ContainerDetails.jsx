@@ -15,7 +15,7 @@ import ContainerNameWidget from "./ContainerNameWidget.jsx";
 
 function ContainerDetails() {
 
-    const {selectedContainer, setSelectedContainer} = useContainers()
+    const {selectedContainer, refreshSelectedContainer} = useContainers()
 
     const [activeTab, setActiveTab] = useState('LOGS');
     const [info, setInfo] = useState("");
@@ -60,7 +60,7 @@ function ContainerDetails() {
     useEffect(() => {
         if (selectedContainer) {
             const intervalId = setInterval(() => {
-                refreshSelectContainer();
+                refreshSelectedContainer();
             }, 60000); // 60000 milliseconds = 1 minute
 
             // Clean up function to clear the interval when the component unmounts
@@ -91,15 +91,6 @@ function ContainerDetails() {
         return selectedContainer.Ports.length > 0 && selectedContainer.Ports[0].PublicPort !== null;
     };
 
-    function refreshSelectContainer() {
-        invoke('get_container', {cId: selectedContainer.Id}).then((res) => {
-
-            if (res) {
-                setSelectedContainer(res)
-            }
-
-        })
-    }
 
     function containerOperation(actionType) {
         setLoadingButton(actionType)
@@ -110,7 +101,7 @@ function ContainerDetails() {
             if (res) {
                 toast.success(res);
 
-                refreshSelectContainer()
+                refreshSelectedContainer()
             }
         }).catch((e) => {
             toast.error(e);

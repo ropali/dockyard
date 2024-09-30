@@ -439,46 +439,55 @@ export function IconGithub(props) {
 
 
 export function IconEdit(props) {
-  return (
-    <svg
-      viewBox="0 0 1024 1024"
-      fill="currentColor"
-      height="1em"
-      width="1em"
-      {...props}
-    >
-      <path d="M880 836H144c-17.7 0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32zm-622.3-84c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 000-14.1L694.9 114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 009.4 29.8c6.6 6.4 14.9 9.9 23.8 9.9z" />
-    </svg>
-  );
+    return (
+        <svg
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2.5}
+            viewBox="0 0 24 24"
+            height="1em"
+            width="1em"
+            {...props}
+        >
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+    )
 }
 
 
-export function IconTickSmall(props) {
-  return (
-    <svg
-      baseProfile="tiny"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      height="1em"
-      width="1em"
-      {...props}
-    >
-      <path d="M16.972 6.251a1.999 1.999 0 00-2.72.777l-3.713 6.682-2.125-2.125a2 2 0 10-2.828 2.828l4 4c.378.379.888.587 1.414.587l.277-.02a2 2 0 001.471-1.009l5-9a2 2 0 00-.776-2.72z" />
-    </svg>
-  );
+export function IconTick(props) {
+    return (
+        <svg fill="none" viewBox="0 0 15 15" height="1em" width="1em" {...props}>
+            <path
+                stroke="currentColor"
+                strokeWidth={1.5}
+                d="M4 7.5L7 10l4-5m-3.5 9.5a7 7 0 110-14 7 7 0 010 14z"
+            />
+        </svg>
+    );
 }
 
 
 export function IconCancel(props) {
-  return (
-    <svg
-      viewBox="0 0 470 1000"
-      fill="currentColor"
-      height="1em"
-      width="1em"
-      {...props}
-    >
-      <path d="M452 656c12 12 18 26.333 18 43s-6 31-18 43c-12 10.667-26.333 16-43 16s-31-5.333-43-16L234 590 102 742c-12 10.667-26.333 16-43 16s-31-5.333-43-16C5.333 730 0 715.667 0 699s5.333-31 16-43l138-156L16 342C5.333 330 0 315.667 0 299s5.333-31 16-43c12-10.667 26.333-16 43-16s31 5.333 43 16l132 152 132-152c12-10.667 26.333-16 43-16s31 5.333 43 16c12 12 18 26.333 18 43s-6 31-18 43L314 500l138 156" />
-    </svg>
-  );
+    return (
+        <svg
+            viewBox="0 0 16 16"
+            fill="currentColor"
+            height="1em"
+            width="1em"
+            {...props}
+        >
+            <path
+                fill="currentColor"
+                d="M8 0a8 8 0 100 16A8 8 0 008 0zm0 14.5a6.5 6.5 0 110-13 6.5 6.5 0 010 13z"
+            />
+            <path
+                fill="currentColor"
+                d="M10.5 4L8 6.5 5.5 4 4 5.5 6.5 8 4 10.5 5.5 12 8 9.5l2.5 2.5 1.5-1.5L9.5 8 12 5.5z"
+            />
+        </svg>
+    )
 }

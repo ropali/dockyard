@@ -7,13 +7,16 @@ import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
 import { relaunch } from "@tauri-apps/api/process";
 import { IconGithub } from "../../Icons/index.jsx";
 import Swal from "sweetalert2";
-import {reteriveValue} from "../../utils/storage.js";
+import { invoke } from '@tauri-apps/api';
+import { reteriveValue, storeValue } from "../../utils/storage.js";
 
 const SettingsScreen = () => {
     const [theme, setTheme] = useState(DEFAULT_THEME);
     const [appVersion, setAppVersion] = useState(null);
     const [isCheckingUpdate, setIsCheckingUpdate] = useState(false);
     const { settings, setSettingsValue } = useSettings();
+    const [terminal, setTerminal] = useState('');
+    const [availableTerminals, setAvailableTerminals] = useState([]);
 
     const changeTheme = useCallback(async (newTheme) => {
         setTheme(newTheme);
@@ -65,10 +68,39 @@ const SettingsScreen = () => {
         }
     }, []);
 
+    const loadTerminal = useCallback(async () => {
+        try {
+            const terminal = await reteriveValue(DOCKER_TERMINAL);
+            setTerminal(terminal);
+        } catch (error) {
+            console.error("Failed to load terminal:", error);
+        }
+    }, []);
+
+    const loadAvailableTerminals = useCallback(async () => {
+        try {
+            const terminals = await invoke('get_available_terminals');
+            setAvailableTerminals(terminals);
+        } catch (error) {
+            console.error("Failed to load available terminals:", error);
+        }
+    }, []);
+
+    const saveTerminal = useCallback(async (newTerminal) => {
+        try {
+            await storeValue(DOCKER_TERMINAL, newTerminal);
+            setTerminal(newTerminal);
+        } catch (error) {
+            console.error("Failed to save terminal:", error);
+        }
+    }, []);
+
     useEffect(() => {
         getAppVersion();
         loadDefaultTheme();
-    }, [getAppVersion, loadDefaultTheme]);
+        loadTerminal();
+        loadAvailableTerminals();
+    }, [getAppVersion, loadDefaultTheme, loadTerminal, loadAvailableTerminals]);
 
     return (
         <div className="bg-base-100 p-8 h-screen w-full flex justify-center">
@@ -94,7 +126,14 @@ const SettingsScreen = () => {
                         </div>
                     </SettingsGroup>
                     <SettingsGroup title="Docker">
-                        <SettingsItem label="Terminal Program" type="input" placeholder="gnome-terminal" storageKey={DOCKER_TERMINAL} />
+                        <SettingsItem
+                            label="Terminal Program"
+                            type="select"
+                            options={availableTerminals}
+                            value={terminal}
+                            onChange={saveTerminal}
+                            storageKey={DOCKER_TERMINAL}
+                        />
                     </SettingsGroup>
                     <SettingsGroup title="Updates">
                         <div className="mb-4">
@@ -131,8 +170,8 @@ const SettingsGroup = ({ title, children }) => (
     </div>
 );
 
-const SettingsItem = ({ label, type, options, placeholder, min, max, unit, storageKey = null }) => {
-    const [inputValue, setInputValue] = useState('');
+const SettingsItem = ({ label, type, options, placeholder, storageKey = null, value, onChange }) => {
+    const [inputValue, setInputValue] = useState(value);
 
     useEffect(() => {
         const loadStoredValue = async () => {
@@ -146,7 +185,10 @@ const SettingsItem = ({ label, type, options, placeholder, min, max, unit, stora
         loadStoredValue();
     }, [storageKey]);
 
-    const handleInputChange = (e) => setInputValue(e.target.value);
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+        onChange(e.target.value);
+    };
 
     const handleInputBlur = async () => {
         if (storageKey) {
@@ -158,8 +200,17 @@ const SettingsItem = ({ label, type, options, placeholder, min, max, unit, stora
         switch (type) {
             case 'select':
                 return (
-                    <select className="select w-full max-w-xs">
-                        {options.map(option => <option key={option}>{option}</option>)}
+                    <select
+                        className="select w-full max-w-xs"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onBlur={handleInputBlur}
+                    >
+                        {options.map(option => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
                     </select>
                 );
             case 'toggle':

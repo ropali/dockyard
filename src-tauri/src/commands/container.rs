@@ -1,16 +1,13 @@
-use crate::constants::DOCKER_TERMINAL_APP;
 use crate::state::AppState;
-use crate::utils::find_terminal;
-use crate::utils::storage::get_storage_path;
+use crate::utils::terminal::{get_terminal, open_terminal};
 use bollard::container::{
     ListContainersOptions, LogsOptions, RenameContainerOptions, StatsOptions,
 };
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
-use futures_util::{StreamExt, TryFutureExt};
+use futures_util::StreamExt;
 use std::collections::HashMap;
 use std::sync::atomic::Ordering;
 use tauri::Manager;
-use tauri_plugin_store::StoreBuilder;
 
 #[tauri::command]
 pub async fn fetch_containers(
@@ -28,7 +25,6 @@ pub async fn fetch_containers(
         .await
         .map_err(|e| e.to_string())
 }
-
 #[tauri::command]
 pub async fn get_container(
     state: tauri::State<'_, AppState>,
@@ -108,6 +104,7 @@ pub async fn container_operation(
     op_type: String,
 ) -> Result<String, String> {
     let docker = state.docker.clone();
+    let terminal = get_terminal(&app_handle).await?;
 
     let mut list_container_filters = std::collections::HashMap::new();
     list_container_filters.insert(String::from("name"), vec![container_name.clone()]);
@@ -147,7 +144,10 @@ pub async fn container_operation(
             Err(e) => Err(format!("Failed to restart container: {}", e.to_string())),
         },
         "web" => open_container_url(container),
-        "exec" => open_container_shell(app_handle, container_name),
+        "exec" => match open_terminal(&terminal, Some("exec"), Some(&container_name)) {
+            Ok(_) => Ok("Opening terminal".to_string()),
+            Err(e) => Err(format!("Failed to open terminal: {}", e.to_string())),
+        },
         _ => Err("Invalid operation type".to_string()),
     };
 
@@ -164,65 +164,6 @@ fn open_container_url(container: ContainerSummary) -> Result<String, String> {
     match open::that(path.clone()) {
         Ok(_) => Ok(format!("Opening '{}'.", path)),
         Err(err) => Err(format!("Failed to open '{}': {}", path, err)),
-    }
-}
-
-fn open_container_shell(
-    app_handle: tauri::AppHandle,
-    container_name: String,
-) -> Result<String, String> {
-    let term_commands_prefix: HashMap<String, String> = HashMap::from([
-        ("gnome-terminal".to_owned(), "--".to_owned()),
-        ("alacritty".to_owned(), "-e".to_owned()),
-        ("xterm".to_owned(), "-e".to_owned()),
-        ("terminator".to_owned(), "-x".to_owned()),
-        ("konsole".to_owned(), "-e".to_owned()),
-    ]);
-
-    let mut store = StoreBuilder::new(app_handle.clone(), get_storage_path()).build();
-
-    // Attempt to load the store, if it's saved already.
-    store.load().map_err(|_| "Failed to load store from disk")?;
-
-    let term_app;
-
-    let stored_val = store.get(DOCKER_TERMINAL_APP);
-
-    if stored_val.is_some_and(|val| val != "") {
-        term_app = stored_val.unwrap().to_string().replace("\"", "");
-    } else {
-        term_app = find_terminal().unwrap();
-    }
-
-    let docker_commands = vec![
-        "docker".to_owned(),
-        "exec".to_owned(),
-        "-it".to_owned(),
-        container_name.to_owned(),
-        "sh".to_owned(),
-    ];
-
-    let mut command = std::process::Command::new(term_app.clone());
-
-    let term_arg = term_commands_prefix
-        .get(term_app.as_str())
-        .ok_or_else(|| format!("Terminal application '{}' not supported", term_app))?;
-
-    command.args(std::iter::once(term_arg.to_owned()).chain(docker_commands));
-
-    match command.spawn() {
-        Ok(_) => Ok(format!("Opening terminal inside '{container_name}'")),
-        Err(err) => match err.kind() {
-            std::io::ErrorKind::NotFound => Err(format!(
-                "cannot use '{}' to open terminal. Change it in settings.",
-                term_app
-            )),
-
-            _ => Err(format!(
-                "Cannot run exec command: {}",
-                err.kind().to_string()
-            )),
-        },
     }
 }
 

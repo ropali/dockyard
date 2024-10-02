@@ -1,6 +1,8 @@
 use crate::state::AppState;
 use crate::utils::terminal::{get_terminal, open_terminal};
-use bollard::container::{ListContainersOptions, LogsOptions, StatsOptions};
+use bollard::container::{
+    ListContainersOptions, LogsOptions, RenameContainerOptions, StatsOptions,
+};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
 use std::collections::HashMap;
@@ -191,4 +193,24 @@ pub async fn container_stats(
     }
 
     Ok(())
+}
+
+#[tauri::command]
+pub async fn rename_container(
+    state: tauri::State<'_, AppState>,
+    name: String,
+    new_name: String,
+) -> Result<String, String> {
+    let opts = RenameContainerOptions { name: &new_name };
+    state
+        .docker
+        .rename_container(&name, opts)
+        .await
+        .map(|_| {
+            format!(
+                "Container '{}' successfully renamed to '{}'",
+                name, new_name
+            )
+        })
+        .map_err(|e| e.to_string())
 }

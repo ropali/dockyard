@@ -609,6 +609,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@sweetalert2/theme-dark@^5.0.18":
+  version "5.0.18"
+  resolved "https://registry.yarnpkg.com/@sweetalert2/theme-dark/-/theme-dark-5.0.18.tgz#e070da21b74eec8ba3420c26cf5bd64ed480dd05"
+  integrity sha512-Fdt8OQHQcbJy6i+rvA49h3OAzQevMwDgfsHPdR2kNwT5M7AtG5rAaBBo0StlvNbcTx/AQ5xhEdMyJdnM05CNoQ==
+
 "@tanstack/react-virtual@^3.8.1":
   version "3.10.8"
   resolved "https://registry.yarnpkg.com/@tanstack/react-virtual/-/react-virtual-3.10.8.tgz#bf4b06f157ed298644a96ab7efc1a2b01ab36e3c"

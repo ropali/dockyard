@@ -5,12 +5,13 @@ import {listen} from '@tauri-apps/api/event';
 import LogsViewer from '../LogsViewer';
 import {IconBxTerminal, IconBxTrashAlt, IconCircleStop, IconPlayCircle, IconRestart, IconWeb} from '../../Icons';
 
-import {toast} from 'react-toastify';
 import {useContainers} from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';
 import ContainerStats from './ContainerStats';
 import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
 import ContainerNameWidget from "./ContainerNameWidget.jsx";
+import Swal from "sweetalert2";
+import toast from "../../utils/toast.js";
 
 
 function ContainerDetails() {
@@ -93,6 +94,30 @@ function ContainerDetails() {
 
 
     function containerOperation(actionType) {
+
+        let unsafeActions = ["delete"]
+
+        if (unsafeActions.includes(actionType)) {
+            Swal.fire({
+                title: 'Are you sure?',
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                denyButtonText: 'No',
+                icon: 'warning'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('Saved!', '', 'success')
+                } else if (result.isDenied) {
+                    Swal.fire('Changes are not saved', '', 'info')
+                }
+            })
+            toast.success('Operation completed successfully!');
+
+            return
+        }
+
+
         setLoadingButton(actionType)
         invoke('container_operation', {
             containerName: selectedContainer.Names[0].replace("/", ""),
@@ -161,13 +186,13 @@ function ContainerDetails() {
                         <button className="btn btn-square btn-sm mr-3"
                                 onClick={() => containerOperation("stop")}
                         >
-                            {loadingButton == 'stop' ? <span className="loading loading-bars loading-xs"></span> :
+                            {loadingButton === 'stop' ? <span className="loading loading-bars loading-xs"></span> :
                                 <IconCircleStop className="size-5"/>}
                         </button>
                         : <button className="btn btn-square btn-sm mr-3"
                                   onClick={() => containerOperation("start")}
                         >
-                            {loadingButton == 'start' ? <span className="loading loading-bars loading-xs"></span> :
+                            {loadingButton === 'start' ? <span className="loading loading-bars loading-xs"></span> :
                                 <IconPlayCircle className="size-5"/>}
                         </button>
                     }
@@ -178,7 +203,7 @@ function ContainerDetails() {
                             disabled={!isContainerRunning}
                             onClick={() => containerOperation("restart")}
                     >
-                        {loadingButton == 'restart' ? <span className="loading loading-bars loading-xs"></span> :
+                        {loadingButton === 'restart' ? <span className="loading loading-bars loading-xs"></span> :
                             <IconRestart className="size-5"/>}
                     </button>
                 </div>
@@ -187,7 +212,7 @@ function ContainerDetails() {
                     <button className="btn btn-square btn-sm hover:btn-error mr-3"
                             onClick={() => containerOperation("delete")}
                     >
-                        {loadingButton == 'delete' ? <span className="loading loading-bars loading-xs"></span> :
+                        {loadingButton === 'delete' ? <span className="loading loading-bars loading-xs"></span> :
                             <IconBxTrashAlt className="size-5"/>}
                     </button>
                 </div>

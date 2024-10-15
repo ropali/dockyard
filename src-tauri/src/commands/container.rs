@@ -1,8 +1,7 @@
 use crate::state::AppState;
 use crate::utils::terminal::{get_terminal, open_terminal};
-use bollard::container::{
-    ListContainersOptions, LogsOptions, RenameContainerOptions, StatsOptions,
-};
+use bollard::container::{ListContainersOptions, LogsOptions, RenameContainerOptions, StatsOptions};
+use bollard::exec::{CreateExecOptions, StartExecResults};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
 use std::collections::HashMap;
@@ -213,4 +212,49 @@ pub async fn rename_container(
             )
         })
         .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn exec(state: tauri::State<'_, AppState>, app_handle: tauri::AppHandle, c_name: String, command: String) -> Result<(), String> {
+    let cmd = command.split(" ").collect::<Vec<&str>>();
+
+    let config = CreateExecOptions {
+        cmd: Some(cmd),
+        attach_stdout: Some(true),
+        attach_stdin: Some(true),
+        ..Default::default()
+    };
+
+    let exec = state.docker
+        .create_exec(
+            c_name.as_str(),
+            config,
+        )
+        .await
+        .expect("Failed to create exec");
+
+    let exec_result = state.docker.start_exec(&exec.id, None).await.expect("Failed to start exec");
+
+
+    // Start the Exec command
+    if let StartExecResults::Attached { mut output, .. } = exec_result {
+        // Capture the output stream
+        while let Some(chunk) = output.next().await {
+            match chunk {
+                Ok(output_chunk) => {
+                    app_handle
+                        .emit_all("terminal_stdout", String::from_utf8_lossy(&output_chunk.into_bytes()).to_owned())
+                        .expect("Failed to emit terminal_stdout data");
+                }
+                Err(e) => {
+                    eprintln!("Error while receiving output: {}", e);
+                    break;
+                }
+            }
+        }
+    } else {
+        eprintln!("Failed to attach to the exec instance.");
+    }
+
+    Ok(())
 }

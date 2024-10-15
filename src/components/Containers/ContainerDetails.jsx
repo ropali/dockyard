@@ -9,8 +9,9 @@ import {toast} from 'react-toastify';
 import {useContainers} from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';
 import ContainerStats from './ContainerStats';
-import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
-import ContainerNameWidget from "./ContainerNameWidget.jsx";
+import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
+import ContainerNameWidget from "./ContainerNameWidget";
+import TerminalComponent from "../Terminal";
 
 
 function ContainerDetails() {
@@ -118,6 +119,10 @@ function ContainerDetails() {
                 return <JSONSyntaxHighlighter id="json-pretty" json={info}></JSONSyntaxHighlighter>;
             case 'STATS':
                 return <ContainerStats selectedContainer={selectedContainer}/>;
+            case 'TERMINAL':
+                return <div style={{ height: '100%', width: '100%' }}>
+                    <TerminalComponent />
+                </div>;
             default:
                 return null;
         }
@@ -201,6 +206,9 @@ function ContainerDetails() {
                 </button>
                 <button className={`mr-4 pb-2 ${activeTab === 'STATS' ? 'border-b-2 border-base-content' : ''}`}
                         onClick={() => setActiveTab('STATS')}>STATS
+                </button>
+                <button className={`mr-4 pb-2 ${activeTab === 'TERMINAL' ? 'border-b-2 border-base-content' : ''}`}
+                        onClick={() => setActiveTab('TERMINAL')}>TERMINAL
                 </button>
             </div>
             <div className="flex-1 overflow-auto text-black p-2 rounded">

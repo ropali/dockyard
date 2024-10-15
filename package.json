@@ -13,6 +13,9 @@
     "@headlessui/react": "^2.1.2",
     "@patternfly/react-log-viewer": "^5.2.0",
     "@tauri-apps/api": "^1",
+    "@xterm/addon-fit": "^0.10.0",
+    "@xterm/addon-search": "^0.15.0",
+    "@xterm/xterm": "^5.5.0",
     "chart.js": "^4.4.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
@@ -22,8 +25,10 @@
     "react-syntax-highlighter": "^15.5.0",
     "react-table": "^7.8.0",
     "react-toastify": "^10.0.5",
+    "react-xtermjs": "^1.0.9",
     "sweetalert2": "^11.14.0",
-    "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store#v1"
+    "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store#v1",
+    "xterm-addon-fit": "^0.8.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",

@@ -2,7 +2,8 @@ import {IconCancel, IconEdit, IconTick} from "../../Icons/index.jsx";
 import React, {useState} from "react";
 import {invoke} from "@tauri-apps/api";
 import {useContainers} from "../../state/ContainerContext.jsx";
-import {toast} from "react-toastify";
+import Swal from "sweetalert2";
+import {TOAST_OPTIONS_ERROR, TOAST_OPTIONS_SUCCESS} from "../../constants.js";
 
 export default function ContainerNameWidget() {
     const {selectedContainer, refreshSelectedContainer} = useContainers();
@@ -27,10 +28,16 @@ export default function ContainerNameWidget() {
             .then((res) => {
                 refreshSelectedContainer();
                 setIsEditingName(false);
-                toast.success(res);
+                Swal.fire({
+                    text: res,
+                    ...TOAST_OPTIONS_SUCCESS
+                });
             })
             .catch((error) => {
-                toast.error('Failed to update container name');
+                Swal.fire({
+                    text: 'Failed to update container name',
+                    ...TOAST_OPTIONS_ERROR
+                })
                 console.error(error);
             })
             .finally(() => setIsEditingName(false));

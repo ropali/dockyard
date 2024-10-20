@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useImages } from '../../state/ImagesContext'
 import { formatSize, formatDate } from '../../utils';
 import { invoke } from '@tauri-apps/api';
-import { toast } from 'react-toastify';
+import Swal from "sweetalert2";
+import {TOAST_OPTIONS_ERROR} from "../../constants.js";
 
 
 
@@ -16,9 +17,11 @@ const ImageHistory = () => {
     function getHistory() {
         invoke('image_history', { name: selectedImage.RepoTags[0] }).then((history) => {
             setHistory(history);
-
         }).catch((error) => {
-            toast.error("Failed to fetch image history.")
+            Swal.fire({
+                text: "Failed to fetch image history.",
+                ...TOAST_OPTIONS_ERROR
+            });
             console.error("Error fetching image history:", error);
         });
     }

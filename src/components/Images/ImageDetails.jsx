@@ -1,12 +1,13 @@
 import {invoke} from '@tauri-apps/api';
 import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
 import {useImages} from "../../state/ImagesContext";
 import {IconBxExport, IconBxTrashAlt, IconCopy} from '../../Icons';
 import ImageHistory from './ImageHistory';
 import {copyToClipboard, formatSize} from '../../utils';
 import LogoScreen from '../LogoScreen';
 import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
+import Swal from "sweetalert2";
+import {TOAST_OPTIONS_ERROR, TOAST_OPTIONS_SUCCESS} from "../../constants.js";
 
 function ImageDetails() {
     const {selectedImage, setSelectedImage, loadImages} = useImages();
@@ -25,7 +26,10 @@ function ImageDetails() {
             setInfo(info);
         }).catch((error) => {
             console.error("Error fetching image info:", error);
-            toast.error(error);
+            Swal.fire({
+                text: error.message,
+                ...TOAST_OPTIONS_ERROR
+            })
         });
     }
 
@@ -54,11 +58,13 @@ function ImageDetails() {
             force: forceDelete,
             noPrune: noPrune
         }).then((res) => {
-            toast.success(res);
             setSelectedImage(null);
             loadImages();
         }).catch((err) => {
-            toast.error(err);
+            Swal.fire({
+                text: err.message,
+                ...TOAST_OPTIONS_ERROR
+            });
         }).finally(() => {
             setLoadingButton(null);
 
@@ -69,9 +75,15 @@ function ImageDetails() {
     const exportImage = () => {
         setLoadingButton("export-btn");
         invoke("export_image", {imageName: selectedImage.RepoTags[0]}).then((res) => {
-            toast.success(res);
+            Swal.fire({
+                text: res,
+                ...TOAST_OPTIONS_SUCCESS
+            });
         }).catch((err) => {
-            toast.error(err);
+            Swal.fire({
+                text: err,
+                ...TOAST_OPTIONS_ERROR
+            });
         }).finally(() => {
             setLoadingButton(null);
         });

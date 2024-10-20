@@ -87,7 +87,7 @@ pub async fn export_image(state: tauri::State<'_, AppState>, image_name: String)
             let kind = err.kind();
             match kind {
                 ErrorKind::PermissionDenied => Err(String::from(format!("Permission denied to open target file: {path}"))),
-                ErrorKind::AlreadyExists => Err(String::from(format!("Target file already exist at {path}"))),
+                ErrorKind::AlreadyExists => Err(String::from(format!("Target file already exists at {path}"))),
                 _ => Err(String::from(format!("Failed to open target file: {path}")))
             }
         }

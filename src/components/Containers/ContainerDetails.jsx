@@ -5,12 +5,13 @@ import {listen} from '@tauri-apps/api/event';
 import LogsViewer from '../LogsViewer';
 import {IconBxTerminal, IconBxTrashAlt, IconCircleStop, IconPlayCircle, IconRestart, IconWeb} from '../../Icons';
 
-import {toast} from 'react-toastify';
 import {useContainers} from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';
 import ContainerStats from './ContainerStats';
 import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
 import ContainerNameWidget from "./ContainerNameWidget.jsx";
+import {TOAST_OPTIONS_ERROR, TOAST_OPTIONS_SUCCESS} from "../../constants.js";
+import Swal from 'sweetalert2';
 
 
 function ContainerDetails() {
@@ -99,12 +100,18 @@ function ContainerDetails() {
             opType: actionType
         }).then((res) => {
             if (res) {
-                toast.success(res);
+                Swal.fire({
+                    text: res,
+                    ...TOAST_OPTIONS_SUCCESS
+                })
 
                 refreshSelectedContainer()
             }
         }).catch((e) => {
-            toast.error(e);
+            Swal.fire({
+                text: e,
+                ...TOAST_OPTIONS_ERROR
+            })
         }).finally(() => {
             setLoadingButton(null)
         });

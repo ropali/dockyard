@@ -67,7 +67,7 @@ define_terminals!(
 
 
 // A fallback mechanism to figure out the default installed terminal on the system
-pub fn find_terminal() -> Option<Terminal> {
+pub fn find_default_terminal() -> Option<Terminal> {
     for terminal in Terminal::variants() {
         let app_name = terminal.app_name();
         if Command::new("which").arg(app_name).output().is_ok() {
@@ -86,7 +86,7 @@ pub async fn get_terminal(app: &AppHandle<Wry>) -> Result<Terminal, String> {
             Some(value) => Ok(value.clone()),
             None => {
                 // Find the terminal if not found in storage
-                if let Some(terminal) = find_terminal() {
+                if let Some(terminal) = find_default_terminal() {
                     let terminal_app_name = terminal.app_name().to_string();
                     store.insert(DOCKER_TERMINAL.parse().unwrap(), terminal_app_name.clone().into())
                         .map_err(|e| format!("Failed to store terminal: {}", e)).unwrap();

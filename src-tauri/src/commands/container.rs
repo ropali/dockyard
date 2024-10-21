@@ -147,9 +147,17 @@ pub async fn container_operation(
             let terminal = get_terminal(&app_handle).await.map_err(|e| e.to_string())?;
             match open_terminal(&terminal, Some("exec"), Some(&container_name)) {
                 Ok(_) => Ok("Opening terminal".to_string()),
-                Err(e) => Err(format!("Failed to open terminal: {}", e.to_string())),
+                Err(e) => {
+                    let error_msg = e.to_string();
+
+                    if error_msg.contains("deprecated") {
+                        Ok("Terminal opened".to_string())
+                    } else {
+                        Err(format!("Failed to open terminal: {}", error_msg))
+                    }
+                }
             }
-        },
+        }
         _ => Err("Invalid operation type".to_string()),
     };
 

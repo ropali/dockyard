@@ -2,6 +2,7 @@ use crate::constants::DOCKER_TERMINAL;
 use crate::constants::{LINUX_COMMAND_TEMPLATE, MACOS_COMMAND_TEMPLATE, WINDOWS_COMMAND_TEMPLATE};
 use crate::utils::storage::get_storage_path;
 use std::process::Command;
+use serde_json::{json, Value};
 use tauri::Manager;
 use tauri::{AppHandle, Wry};
 use tauri_plugin_store::with_store;
@@ -64,6 +65,18 @@ define_terminals!(
     WezTerm => "WezTerm", MACOS_COMMAND_TEMPLATE, "macos"
 );
 
+
+// A fallback mechanism to figure out the default installed terminal on the system
+pub fn find_terminal() -> Option<Terminal> {
+    for terminal in Terminal::variants() {
+        let app_name = terminal.app_name();
+        if Command::new("which").arg(app_name).output().is_ok() {
+            return Some(*terminal);
+        }
+    }
+    None
+}
+
 pub async fn get_terminal(app: &AppHandle<Wry>) -> Result<Terminal, String> {
     let stores = app.state::<StoreCollection<Wry>>();
     let path = get_storage_path();
@@ -71,10 +84,22 @@ pub async fn get_terminal(app: &AppHandle<Wry>) -> Result<Terminal, String> {
     let terminal_str = with_store(app.clone(), stores, path.clone(), |store| {
         match store.get(DOCKER_TERMINAL) {
             Some(value) => Ok(value.clone()),
-            None => Err(Error::NotFound(path.clone())),
+            None => {
+                // Find the terminal if not found in storage
+                if let Some(terminal) = find_terminal() {
+                    let terminal_app_name = terminal.app_name().to_string();
+                    store.insert(DOCKER_TERMINAL.parse().unwrap(), terminal_app_name.clone().into())
+                        .map_err(|e| format!("Failed to store terminal: {}", e)).unwrap();
+
+                    // Return the found terminal app name
+                    Ok(terminal_app_name.into())
+                } else {
+                    Err(Error::NotFound(path.clone()))
+                }
+            }
         }
     })
-    .map_err(|e| format!("Failed to retrieve terminal from storage: {}", e))?;
+        .map_err(|e| format!("Failed to retrieve terminal from storage: {}", e))?;
 
     let terminal_str = terminal_str.as_str().unwrap_or_default().to_string();
 

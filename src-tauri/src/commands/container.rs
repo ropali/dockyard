@@ -104,7 +104,6 @@ pub async fn container_operation(
     op_type: String,
 ) -> Result<String, String> {
     let docker = state.docker.clone();
-    let terminal = get_terminal(&app_handle).await?;
 
     let mut list_container_filters = std::collections::HashMap::new();
     list_container_filters.insert(String::from("name"), vec![container_name.clone()]);
@@ -144,9 +143,12 @@ pub async fn container_operation(
             Err(e) => Err(format!("Failed to restart container: {}", e.to_string())),
         },
         "web" => open_container_url(container),
-        "exec" => match open_terminal(&terminal, Some("exec"), Some(&container_name)) {
-            Ok(_) => Ok("Opening terminal".to_string()),
-            Err(e) => Err(format!("Failed to open terminal: {}", e.to_string())),
+        "exec" => {
+            let terminal = get_terminal(&app_handle).await.map_err(|e| e.to_string())?;
+            match open_terminal(&terminal, Some("exec"), Some(&container_name)) {
+                Ok(_) => Ok("Opening terminal".to_string()),
+                Err(e) => Err(format!("Failed to open terminal: {}", e.to_string())),
+            }
         },
         _ => Err("Invalid operation type".to_string()),
     };

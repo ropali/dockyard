@@ -7,6 +7,7 @@ use futures_util::StreamExt;
 use std::collections::HashMap;
 use std::sync::atomic::Ordering;
 use tauri::Manager;
+use shellish_parse::{parse as parse_shellish, ParseOptions};
 
 #[tauri::command]
 pub async fn fetch_containers(
@@ -216,6 +217,14 @@ pub async fn rename_container(
 
 #[tauri::command]
 pub async fn exec(state: tauri::State<'_, AppState>, app_handle: tauri::AppHandle, c_name: String, command: String) -> Result<(), String> {
+    let shellish_opts = ParseOptions::new()
+        .allow_comments_within_elements();
+
+    let parsed_cmd = match parse_shellish(&command, shellish_opts) {
+        Ok(res) => res,
+        Err(e) => panic!("Failed to parse command: {}", e),
+    };
+
     let cmd = command.split(" ").collect::<Vec<&str>>();
 
     let config = CreateExecOptions {
@@ -240,6 +249,7 @@ pub async fn exec(state: tauri::State<'_, AppState>, app_handle: tauri::AppHandl
     if let StartExecResults::Attached { mut output, .. } = exec_result {
         // Capture the output stream
         while let Some(chunk) = output.next().await {
+            println!("Chunk Recv: {:#?}", chunk);
             match chunk {
                 Ok(output_chunk) => {
                     app_handle

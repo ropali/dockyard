@@ -4,98 +4,82 @@ import {FitAddon} from 'xterm-addon-fit';
 import '@xterm/xterm/css/xterm.css';
 import {invoke} from "@tauri-apps/api";
 import {useContainers} from "../state/ContainerContext.jsx";
-import {toast} from "react-toastify";
 import {listen} from "@tauri-apps/api/event";
 
-
 const TerminalComponent = () => {
-    const terminalRef = useRef(null);  // Reference to terminal container
-    const xterm = useRef(null);        // Xterm instance
-    const fitAddon = useRef(new FitAddon()); // FitAddon instance
-
+    const terminalRef = useRef(null);
+    const xterm = useRef(null);
+    const fitAddon = useRef(new FitAddon());
     const {selectedContainer} = useContainers();
-
-    // Define a command prompt symbol
     const promptSymbol = '>>> ';
-
-    // Buffer to store the user's command input
     let inputBuffer = '';
 
-    // Function to display the prompt symbol
     const showPrompt = () => {
         xterm.current.write(`\r\n${promptSymbol}`);
     };
 
-
-    // Function to execute the command and display the result in the terminal
     const executeCommand = async (cmd) => {
+
         try {
-            let res = await invoke("exec", {cName: selectedContainer.Names[0].replace("/", ""), command: cmd});
+            const result = await invoke("exec", {cName: selectedContainer.Names[0].replace("/", ""), command: cmd});
+
         } catch (e) {
-            xterm.current.writeln(`\r\nError: ${e}`);  // Display the error message
-            toast.error(e);  // Optionally show the error with toast
+            xterm.current.write(`\r\nError: ${e.message}\r\n`);
+
         } finally {
-            fitAddon.current.fit();  // Ensure terminal resizes after error
+            fitAddon.current.fit(); // Adjust terminal size after command execution
+
         }
+
     };
 
     useEffect(() => {
         if (!terminalRef.current) return;
 
-        // Initialize Xterm terminal
         xterm.current = new Terminal({
             cursorBlink: true,
             fontSize: 16,
             fontFamily: '"Fira Mono", monospace',
-            padding: 10,
+            rows: 24,
+            cols: 80,
+            scrollback: 1000
         });
 
         xterm.current.loadAddon(fitAddon.current);
         xterm.current.open(terminalRef.current);
         fitAddon.current.fit();
+        showPrompt();
 
-        showPrompt(); // Show the prompt at the start
-
-        // Handle terminal user input
         xterm.current.onData(async (data) => {
             const code = data.charCodeAt(0);
 
             if (code === 13) { // Enter key
-                const command = inputBuffer.trim(); // Get the input command and trim extra spaces
-                inputBuffer = '';  // Clear input buffer
-
+                const command = inputBuffer.trim();
                 if (command.length > 0) {
-                    await executeCommand(command);  // Execute the command
+                    await executeCommand(command);
                 }
-
-                showPrompt();  // Show the next prompt after command execution
+                inputBuffer = ''; // Clear input buffer
             } else if (code === 127) { // Backspace
                 if (inputBuffer.length > 0) {
-                    inputBuffer = inputBuffer.slice(0, -1);  // Remove last character
-                    xterm.current.write('\b \b');  // Move cursor back, clear the character at the cursor position
+                    inputBuffer = inputBuffer.slice(0, -1);
+                    xterm.current.write('\b \b'); // Move cursor back and clear character
                 }
-            } else {
-                inputBuffer += data;  // Append to input buffer
-                xterm.current.write(data);  // Display the typed character
+            } else if (data.length === 1) { // Regular characters
+                inputBuffer += data; // Append to buffer
+                xterm.current.write(data); // Write character
             }
         });
 
-
-        // Clean up terminal on unmount
         return () => {
-
             xterm.current.dispose();
         };
     }, [selectedContainer]);
 
-    // Handle resizing the terminal to fit the container
     useEffect(() => {
         const handleResize = () => {
             fitAddon.current.fit();
         };
-
         window.addEventListener('resize', handleResize);
-
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -107,10 +91,10 @@ const TerminalComponent = () => {
 
                 const lines = event.payload.split(/\n/);  // Split by newlines otherwise output appears crooked
                 lines.forEach(l => {
-                    xterm.current.write(`\r${l}\r\n`);  // Write each line to the terminal
+                    xterm.current.write(`\r\n${l}\r`);  // Write each line to the terminal
                 });
+                showPrompt()
             });
-
 
             return () => {
                 unlistenTerm.then(f => f());
@@ -120,7 +104,6 @@ const TerminalComponent = () => {
 
     return (
         <div style={{height: '100%', width: '100%', overflow: 'hidden'}} ref={terminalRef}/>
-
     );
 };
 

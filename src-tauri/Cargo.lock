@@ -644,6 +644,7 @@ dependencies = [
  "open 5.3.0",
  "serde",
  "serde_json",
+ "shellish_parse",
  "tauri",
  "tauri-build",
  "tauri-plugin-store",
@@ -2904,6 +2905,12 @@ checksum = "f40ca3c46823713e0d4209592e8d6e826aa57e928f09752619fc696c499637f6"
 dependencies = [
  "lazy_static",
 ]
+
+[[package]]
+name = "shellish_parse"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c29b912ad681a28566f37b936bba1f3580a93b9391c4a0b12cb1c6b4ed79973"
 
 [[package]]
 name = "simd-adler32"

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useImages } from '../../state/ImagesContext'
 import { formatSize, formatDate } from '../../utils';
 import { invoke } from '@tauri-apps/api';
-import { toast } from 'react-toastify';
+import toast from '../../utils/toast.js';
 
 
 

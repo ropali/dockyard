@@ -1,6 +1,5 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import daisyuiColors from 'daisyui/src/theming/themes'
 import '@sweetalert2/theme-dark/dark.css';
 
 const toast = (() => {
@@ -8,11 +7,12 @@ const toast = (() => {
 
 
     const showToast = (message, type = 'info', duration = 3000) => {
-        let colorScheme = daisyuiColors[document.documentElement.getAttribute('data-theme')]["color-scheme"]
-
-        // Check for dark mode
-        const isDarkMode = colorScheme === 'dark';
-
+        const timerProgressColors = {
+            success: "bg-success",
+            info: "bg-info",
+            warning: "bg-warning",
+            error: "bg-error"
+        };
         if (currentLibrary === 'sweetalert2') {
             Swal.fire({
                 toast: true,
@@ -22,14 +22,10 @@ const toast = (() => {
                 timerProgressBar: true,
                 icon: type,
                 title: message,
-                background: isDarkMode
-                    ? '#3b3e50'
-                    : '#F0F0F0',
+                background: 'oklch(var(--b2))',
                 customClass: {
-                    popup: isDarkMode
-                        ? 'bg-[#2d2d2d] text-[#f5f5f5]'  // Dark mode: Charcoal bg, light gray text
-                        : 'bg-[#f7f7f7] text-[#333333]', // Light mode: Very light gray bg, dark gray text
-                    timerProgressBar: isDarkMode ? 'bg-[#42a5f5]' : 'bg-[#1976d2]', // Accent color
+                    popup: 'text-base-content',
+                    timerProgressBar: timerProgressColors[type]
                 },
             });
         } else if (currentLibrary === 'react-toast') {

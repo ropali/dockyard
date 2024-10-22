@@ -1,6 +1,6 @@
 import {invoke} from '@tauri-apps/api';
 import React, {useEffect, useState} from 'react';
-import {toast} from 'react-toastify';
+import toast from '../../utils/toast.js';
 import {useImages} from "../../state/ImagesContext";
 import {IconBxExport, IconBxTrashAlt, IconCopy} from '../../Icons';
 import ImageHistory from './ImageHistory';
@@ -54,7 +54,7 @@ function ImageDetails() {
             force: forceDelete,
             noPrune: noPrune
         }).then((res) => {
-            toast.success(res);
+            toast.success('Image successfully deleted!');
             setSelectedImage(null);
             loadImages();
         }).catch((err) => {

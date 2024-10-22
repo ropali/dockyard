@@ -22,7 +22,6 @@
     "react-router-dom": "^6.25.1",
     "react-syntax-highlighter": "^15.5.0",
     "react-table": "^7.8.0",
-    "react-toastify": "^10.0.5",
     "sweetalert2": "^11.14.0",
     "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store#v1"
   },

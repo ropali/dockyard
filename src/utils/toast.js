@@ -7,6 +7,12 @@ const toast = (() => {
 
 
     const showToast = (message, type = 'info', duration = 3000) => {
+        const timerProgressColors = {
+            success: "bg-success",
+            info: "bg-info",
+            warning: "bg-warning",
+            error: "bg-error"
+        };
         if (currentLibrary === 'sweetalert2') {
             Swal.fire({
                 toast: true,
@@ -19,7 +25,7 @@ const toast = (() => {
                 background: 'oklch(var(--b2))',
                 customClass: {
                     popup: 'text-base-content',
-                    timerProgressBar: 'bg-accent'
+                    timerProgressBar: timerProgressColors[type]
                 },
             });
         } else if (currentLibrary === 'react-toast') {

@@ -2,8 +2,6 @@ import React, {useEffect, useRef} from 'react';
 import {BrowserRouter as Router, Route, Routes, useNavigate, useLocation} from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import ContainersScreen from './components/Screens/ContainersScreen';
-import {ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import ImagesScreen from './components/Screens/ImagesScreen';
 import VolumesScreen from './components/Screens/VolumesScreen';
 import NetworkScreen from './components/Screens/NetworkScreen';
@@ -55,11 +53,6 @@ function App() {
         <div className="flex h-screen w-screen overflow-hidden bg-base-100">
             <Sidebar className="w-64 flex-shrink-0"/>
             <div className="flex-1 flex flex-col overflow-hidden">
-                <ToastContainer
-                    theme="dark"
-                    position="bottom-right"
-                    toastClassName="bg-base-100 text-base-content"
-                />
                 <main className="flex p-5 bg-base-200 flex-1 overflow-hidden mb-2">
                     <Routes>
                         <Route path="/" element={<ContainersScreen/>}/>

@@ -609,6 +609,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@sweetalert2/theme-dark@^5.0.18":
+  version "5.0.18"
+  resolved "https://registry.yarnpkg.com/@sweetalert2/theme-dark/-/theme-dark-5.0.18.tgz#e070da21b74eec8ba3420c26cf5bd64ed480dd05"
+  integrity sha512-Fdt8OQHQcbJy6i+rvA49h3OAzQevMwDgfsHPdR2kNwT5M7AtG5rAaBBo0StlvNbcTx/AQ5xhEdMyJdnM05CNoQ==
+
 "@tanstack/react-virtual@^3.8.1":
   version "3.10.8"
   resolved "https://registry.yarnpkg.com/@tanstack/react-virtual/-/react-virtual-3.10.8.tgz#bf4b06f157ed298644a96ab7efc1a2b01ab36e3c"
@@ -907,7 +912,7 @@ chokidar@^3.5.3:
   optionalDependencies:
     fsevents "~2.3.2"
 
-clsx@^2.0.0, clsx@^2.1.0:
+clsx@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-2.1.1.tgz#eed397c9fd8bd882bfb18deab7102049a2f32999"
   integrity sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==
@@ -1627,13 +1632,6 @@ react-table@^7.8.0:
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/react-table/-/react-table-7.8.0.tgz#07858c01c1718c09f7f1aed7034fcfd7bda907d2"
   integrity sha512-hNaz4ygkZO4bESeFfnfOft73iBUj8K5oKi1EcSHPAibEydfsX2MyU6Z8KCr3mv3C9Kqqh71U+DhZkFvibbnPbA==
-
-react-toastify@^10.0.5:
-  version "10.0.5"
-  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-10.0.5.tgz#6b8f8386060c5c856239f3036d1e76874ce3bd1e"
-  integrity sha512-mNKt2jBXJg4O7pSdbNUfDdTsK9FIdikfsIE/yUCxbAEXl4HMyJaivrVFcn3Elvt5xvCQYhUZm+hqTIu1UXM3Pw==
-  dependencies:
-    clsx "^2.1.0"
 
 react@^18.2.0:
   version "18.3.1"

@@ -1,14 +1,15 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { capitalizeFirstLetter } from '../../utils';
-import { ALL_THEMES, DEFAULT_THEME, DOCKER_TERMINAL } from '../../constants';
-import { useSettings } from '../../state/SettingsContext';
-import { getVersion } from "@tauri-apps/api/app";
-import { checkUpdate, installUpdate } from "@tauri-apps/api/updater";
-import { relaunch } from "@tauri-apps/api/process";
-import { IconGithub } from "../../Icons/index.jsx";
+import React, {useCallback, useEffect, useState} from 'react';
+import {capitalizeFirstLetter} from '../../utils';
+import {ALL_THEMES, DEFAULT_THEME, DOCKER_TERMINAL} from '../../constants';
+import {useSettings} from '../../state/SettingsContext';
+import {getVersion} from "@tauri-apps/api/app";
+import {checkUpdate, installUpdate} from "@tauri-apps/api/updater";
+import {relaunch} from "@tauri-apps/api/process";
+import {IconGithub} from "../../Icons/index.jsx";
 import Swal from "sweetalert2";
-import { invoke } from '@tauri-apps/api';
-import { reteriveValue, storeValue } from "../../utils/storage.js";
+import {invoke} from '@tauri-apps/api';
+import {reteriveValue, storeValue} from "../../utils/storage.js";
+import toast from "../../utils/toast.js";
 
 const SettingsScreen = () => {
     const [theme, setTheme] = useState(DEFAULT_THEME);
@@ -42,14 +43,7 @@ const SettingsScreen = () => {
         try {
             const { shouldUpdate, manifest } = await checkUpdate();
             if (!shouldUpdate) {
-                Swal.fire({
-                    position: "bottom-right",
-                    icon: "success",
-                    title: "Your app is up to date.",
-                    showConfirmButton: false,
-                    timer: 1500,
-                    toast: true
-                });
+                toast.success("Your app is up to date.")
                 return;
             }
             console.log(`Installing update ${manifest?.version}, ${manifest?.date}, ${manifest?.body}`);
@@ -60,7 +54,7 @@ const SettingsScreen = () => {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: error.message,
+                text: error.message ? error.message : "Failed to check for updates.",
                 footer: '<a target="_blank" href="https://github.com/ropali/dockyard/releases/latest">Visit Latest Release Page</a>'
             });
         } finally {

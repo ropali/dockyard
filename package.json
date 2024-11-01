@@ -12,6 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^2.1.2",
     "@patternfly/react-log-viewer": "^5.2.0",
+    "@sweetalert2/theme-dark": "^5.0.18",
     "@tauri-apps/api": "^1",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/addon-search": "^0.15.0",

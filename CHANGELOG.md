@@ -2,22 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.0] - 2024-10-02
+## [0.2.1] - 2024-10-21
 
-### 🚀 Features
+🐛 Bug Fixes
 
-- Container rename option  (#24)
-- Cross platform terminal settings (#22)
-- Enable Link-Time Optimization
+- Fixed .store.bin issue if terminal not set manually from settings screen
 
-### 📚 Documentation
-
-- Update screenshots
-- Fixed install instructions in  README.md
 
 ### ⚙️ Miscellaneous Tasks
 
-- Update major version for release
-- Add the steps to open in MacOS
+- Bumped up version for release
 
 

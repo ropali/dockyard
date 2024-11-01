@@ -4,10 +4,10 @@ use bollard::container::{ListContainersOptions, LogsOptions, RenameContainerOpti
 use bollard::exec::{CreateExecOptions, StartExecResults};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
+use shellish_parse::{parse as parse_shellish, ParseOptions};
 use std::collections::HashMap;
 use std::sync::atomic::Ordering;
 use tauri::Manager;
-use shellish_parse::{parse as parse_shellish, ParseOptions};
 
 #[tauri::command]
 pub async fn fetch_containers(
@@ -235,10 +235,9 @@ pub async fn exec(state: tauri::State<'_, AppState>, app_handle: tauri::AppHandl
         Err(e) => panic!("Failed to parse command: {}", e),
     };
 
-    let cmd = command.split(" ").collect::<Vec<&str>>();
 
     let config = CreateExecOptions {
-        cmd: Some(cmd),
+        cmd: Some(parsed_cmd),
         attach_stdout: Some(true),
         attach_stdin: Some(true),
         ..Default::default()

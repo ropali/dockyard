@@ -6,6 +6,32 @@ import {invoke} from "@tauri-apps/api";
 import {useContainers} from "../state/ContainerContext.jsx";
 import {listen} from "@tauri-apps/api/event";
 
+
+const TERMINAL_CONFIG = {
+    cursorBlink: true,
+    fontSize: 16,
+    fontFamily: '"Fira Mono", monospace',
+    rows: 24,
+    cols: 80,
+    scrollback: 1000
+};
+
+const KEY_CODES = {
+    ENTER: 13,
+    BACKSPACE: 127
+};
+
+const ESCAPE_SEQUENCES = {
+    RIGHT_ARROW: '\x1b[C',
+    LEFT_ARROW: '\x1b[D',
+    UP_ARROW: '\x1b[A',
+    DOWN_ARROW: '\x1b[B',
+    HOME: ['\x1b[H', '\x1bOH'],
+    END: ['\x1b[F', '\x1bOF'],
+    CTRL_RIGHT: '\x1b[1;5C',
+    CTRL_LEFT: '\x1b[1;5D'
+};
+
 const TerminalComponent = () => {
     const terminalRef = useRef(null);
     const xterm = useRef(null);
@@ -43,18 +69,36 @@ const TerminalComponent = () => {
         }
     }, []);
 
+    // Helper function to find word boundaries when moving the cursor left/right with CTRL
     const findWordBoundary = useCallback((text, position, direction) => {
         if (direction === 'left') {
+            // If already at start, return start position
             if (position === 0) return 0;
+
+            // Start from one position left of cursor
             let newPos = position - 1;
+
+            // Skip any whitespace characters moving left
             while (newPos > 0 && /\s/.test(text[newPos])) newPos--;
+
+            // Skip any non-whitespace characters moving left
+            // This gets us to the start of the current word
             while (newPos > 0 && !/\s/.test(text[newPos - 1])) newPos--;
+
             return newPos;
         } else {
+            // If already at end, return end position 
             if (position === text.length) return text.length;
+
             let newPos = position;
+
+            // Skip any whitespace characters moving right
             while (newPos < text.length && /\s/.test(text[newPos])) newPos++;
+
+            // Skip any non-whitespace characters moving right
+            // This gets us to the end of the current word
             while (newPos < text.length && !/\s/.test(text[newPos])) newPos++;
+
             return newPos;
         }
     }, []);
@@ -85,41 +129,49 @@ const TerminalComponent = () => {
         }
     }, [selectedContainer, showPrompt]);
 
+    // Handles navigation through command history using up/down arrows
     const handleHistory = useCallback((direction) => {
+        // If there's no command history, do nothing
         if (terminalState.current.history.length === 0) return;
 
         if (direction === 'up') {
+            // If we're at the current command (position -1), go to most recent history item
             if (terminalState.current.historyPosition === -1) {
                 terminalState.current.historyPosition = terminalState.current.history.length - 1;
-            } else if (terminalState.current.historyPosition > 0) {
+            }
+            // Otherwise move up in history if we're not at the oldest command
+            else if (terminalState.current.historyPosition > 0) {
                 terminalState.current.historyPosition--;
             }
         } else if (direction === 'down') {
+            // Move down in history if we're not at the most recent command
             if (terminalState.current.historyPosition < terminalState.current.history.length - 1) {
                 terminalState.current.historyPosition++;
-            } else {
+            }
+            // If we're at the most recent command, go back to empty current command
+            else {
                 terminalState.current.historyPosition = -1;
             }
         }
 
+        // Update the terminal buffer with either:
+        // - Empty string if we're back at current command (position -1)
+        // - Or the historical command at current position
         terminalState.current.buffer = terminalState.current.historyPosition === -1
             ? ''
             : terminalState.current.history[terminalState.current.historyPosition];
+
+        // Move cursor to end of command
         terminalState.current.cursorPosition = terminalState.current.buffer.length;
+
+        // Redraw the terminal line to show the new command
         redrawLine();
     }, [redrawLine]);
 
     const initializeTerminal = useCallback(() => {
         if (!terminalRef.current || terminalState.current.initialized) return;
 
-        xterm.current = new Terminal({
-            cursorBlink: true,
-            fontSize: 16,
-            fontFamily: '"Fira Mono", monospace',
-            rows: 24,
-            cols: 80,
-            scrollback: 1000
-        });
+        xterm.current = new Terminal(TERMINAL_CONFIG);
 
         xterm.current.loadAddon(fitAddon.current);
         xterm.current.open(terminalRef.current);
@@ -131,35 +183,35 @@ const TerminalComponent = () => {
 
             if (data.length > 1) {
                 switch (data) {
-                    case '\x1b[C': // Right arrow
+                    case ESCAPE_SEQUENCES.RIGHT_ARROW: // Right arrow
                         if (terminalState.current.cursorPosition < terminalState.current.buffer.length) {
                             terminalState.current.cursorPosition++;
                             xterm.current.write(data);
                         }
                         return;
-                    case '\x1b[D': // Left arrow
+                    case ESCAPE_SEQUENCES.LEFT_ARROW: // Left arrow
                         if (terminalState.current.cursorPosition > 0) {
                             terminalState.current.cursorPosition--;
                             xterm.current.write(data);
                         }
                         return;
-                    case '\x1b[A': // Up arrow
+                    case ESCAPE_SEQUENCES.UP_ARROW: // Up arrow
                         handleHistory('up');
                         return;
-                    case '\x1b[B': // Down arrow
+                    case ESCAPE_SEQUENCES.DOWN_ARROW: // Down arrow
                         handleHistory('down');
                         return;
-                    case '\x1b[H': // Home key
-                    case '\x1bOH':
+                    case ESCAPE_SEQUENCES.HOME[0]: // Home key
+                    case ESCAPE_SEQUENCES.HOME[1]:
                         terminalState.current.cursorPosition = 0;
                         redrawLine();
                         return;
-                    case '\x1b[F': // End key
-                    case '\x1bOF':
+                    case ESCAPE_SEQUENCES.END[0]: // End key
+                    case ESCAPE_SEQUENCES.END[1]:
                         terminalState.current.cursorPosition = terminalState.current.buffer.length;
                         redrawLine();
                         return;
-                    case '\x1b[1;5C': // Ctrl + Right
+                    case ESCAPE_SEQUENCES.CTRL_LEFT: // Ctrl + Right
                         terminalState.current.cursorPosition = findWordBoundary(
                             terminalState.current.buffer,
                             terminalState.current.cursorPosition,
@@ -167,7 +219,7 @@ const TerminalComponent = () => {
                         );
                         redrawLine();
                         return;
-                    case '\x1b[1;5D': // Ctrl + Left
+                    case ESCAPE_SEQUENCES.CTRL_RIGHT: // Ctrl + Left
                         terminalState.current.cursorPosition = findWordBoundary(
                             terminalState.current.buffer,
                             terminalState.current.cursorPosition,
@@ -179,27 +231,41 @@ const TerminalComponent = () => {
                 return;
             }
 
-            if (code === 13) { // Enter key
+            // Handle Enter key press
+            if (code === KEY_CODES.ENTER) {
+                // Get the trimmed command from the current buffer
                 const command = terminalState.current.buffer.trim();
                 if (command.length > 0) {
+                    // If command exists, write a newline and execute it
                     xterm.current.write('\r\n');
                     await executeCommand(command);
                 } else {
+                    // If empty command, just show the prompt again
                     showPrompt();
                 }
-            } else if (code === 127) { // Backspace
+            } else if (code === KEY_CODES.BACKSPACE) {
+                // Only handle backspace if we're not at the start of the line
                 if (terminalState.current.cursorPosition > 0) {
+                    // Split buffer into before and after cursor
                     const start = terminalState.current.buffer.slice(0, terminalState.current.cursorPosition - 1);
                     const end = terminalState.current.buffer.slice(terminalState.current.cursorPosition);
+                    // Remove one character by joining buffer without it
                     terminalState.current.buffer = start + end;
+                    // Move cursor back one position
                     terminalState.current.cursorPosition--;
+                    // Redraw the line to show the change
                     redrawLine();
                 }
-            } else if (data.length === 1) { // Regular characters
+            } else if (data.length === 1) {
+                // Handle single character input (regular typing)
+                // Split buffer at cursor position
                 const start = terminalState.current.buffer.slice(0, terminalState.current.cursorPosition);
                 const end = terminalState.current.buffer.slice(terminalState.current.cursorPosition);
+                // Insert new character at cursor position
                 terminalState.current.buffer = start + data + end;
+                // Move cursor forward
                 terminalState.current.cursorPosition++;
+                // Redraw line to show the new character
                 redrawLine();
             }
         };

@@ -232,8 +232,12 @@ function ContainerDetails() {
                 <button className={`mr-4 pb-2 ${activeTab === 'STATS' ? 'border-b-2 border-base-content' : ''}`}
                         onClick={() => setActiveTab('STATS')}>STATS
                 </button>
-                <button className={`mr-4 pb-2 ${activeTab === 'TERMINAL' ? 'border-b-2 border-base-content' : ''}`}
-                        onClick={() => setActiveTab('TERMINAL')}>TERMINAL
+                <button
+                    className={`mr-4 pb-2 relative ${activeTab === 'TERMINAL' ? 'border-b-2 border-base-content' : ''}`}
+                    onClick={() => setActiveTab('TERMINAL')}>
+                    TERMINAL
+                    <span
+                        className="absolute -top-2 -right-4 inline-flex items-center justify-center px-1.5 py-0.5 text-[8px] font-bold leading-none text-white bg-blue-600 rounded">BETA</span>
                 </button>
             </div>
             <div className="flex-1 overflow-auto text-black p-2 rounded">

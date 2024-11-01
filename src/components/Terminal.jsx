@@ -76,6 +76,8 @@ const TerminalComponent = () => {
                 command: cmd
             });
 
+            showPrompt();
+
         } catch (e) {
             terminalState.current.expectingOutput = false;  // Reset flag on error
             xterm.current.write(`\r\nError: ${e.message}\r\n`);
@@ -236,23 +238,28 @@ const TerminalComponent = () => {
         };
     }, []);
 
+    const setupTerminalOutput = async () => {
+        const unlistenTerm = await listen('terminal_stdout', (event) => {
+            if (!xterm.current || !terminalState.current.expectingOutput) return;
+
+            // First write a new line to ensure clean output
+            xterm.current.write('\r\n');
+
+            // Write the output
+            const output = event.payload.replace(/\n/g, '\r\n');
+
+            // Check if this is the end of command output
+            if (output.includes('\n#$')) {
+                terminalState.current.expectingOutput = false;
+            } else {
+                xterm.current.write(output);
+            }
+        });
+        terminalState.current.unsubscribeCallbacks.push(() => unlistenTerm());
+    };
+
     useEffect(() => {
         if (selectedContainer && xterm.current) {
-            const setupTerminalOutput = async () => {
-                const unlistenTerm = await listen('terminal_stdout', (event) => {
-                    if (!xterm.current || !terminalState.current.expectingOutput) return;
-                    console.log("payload", event.payload)
-                    const lines = event.payload.split(/\n/);
-                    console.log("lines", lines)
-                    lines.forEach(l => {
-                        xterm.current.write(`\r\n${l}\r`);
-                    });
-                    showPrompt();
-                });
-
-                terminalState.current.unsubscribeCallbacks.push(() => unlistenTerm());
-            };
-
             setupTerminalOutput();
         }
     }, [selectedContainer, showPrompt]);

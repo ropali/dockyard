@@ -271,6 +271,11 @@ pub async fn exec(state: tauri::State<'_, AppState>, app_handle: tauri::AppHandl
                 }
             }
         }
+
+        // Send chars to end the output stream
+        app_handle
+            .emit_all("terminal_stdout", "\n#$")
+            .expect("Failed to emit terminal_stdout data");
     } else {
         eprintln!("Failed to attach to the exec instance.");
     }

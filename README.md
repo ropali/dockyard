@@ -41,18 +41,18 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 - **Multi Themes**: Many themes to choose from.
 
 ## Screenshots
-![Containers](https://i.ibb.co/5MV13Gy/image.png)
-![Stats](https://i.ibb.co/G2GVsz1/image.png)
-![Different Theme](https://i.ibb.co/SVkLjY5/image.png)
 
-
+![Containers](https://i.ibb.co/3vCXjW5/Screenshot-from-2024-11-14-17-36-47.png)
+![Stats](https://i.ibb.co/hX6PSnz/Screenshot-from-2024-11-14-17-37-20.png)
+![Different Theme](https://i.ibb.co/5hCsgc9/Screenshot-from-2024-11-14-17-40-09.png)
 
 
 ## Installation
 
 ### Prerequisites
 
-- Linux (currently supported only on Linux-based systems)
+- Linux/Mac
+- [Tauri](https://v1.tauri.app/v1/guides/getting-started/prerequisites) (for development and building from source)
 - Docker >=27.1.1 installed and running
 - Node.js >= v20.11.1 (for development and building from source)
 - Rust >= 1.79.0 (for building from source)

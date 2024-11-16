@@ -2,15 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.1] - 2024-10-21
+## [0.2.2] - 2024-11-14
 
-🐛 Bug Fixes
+### 🚀 Features
 
-- Fixed .store.bin issue if terminal not set manually from settings screen
-
-
-### ⚙️ Miscellaneous Tasks
-
-- Bumped up version for release
+- Container export option added
+- Moved to SweetAlert2 from react-toast for torts and modal popups
+- Apply theme based styles to toast
 
 

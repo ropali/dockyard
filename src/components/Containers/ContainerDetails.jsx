@@ -3,7 +3,15 @@ import React, {useEffect, useState} from 'react';
 import {listen} from '@tauri-apps/api/event';
 
 import LogsViewer from '../LogsViewer';
-import {IconBxTerminal, IconBxTrashAlt, IconCircleStop, IconPlayCircle, IconRestart, IconWeb} from '../../Icons';
+import {
+    IconBxTerminal,
+    IconBxTrashAlt,
+    IconCircleStop,
+    IconPlayCircle,
+    IconRestart,
+    IconThreeDots,
+    IconWeb
+} from '../../Icons';
 
 import {useContainers} from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';
@@ -136,6 +144,41 @@ function ContainerDetails() {
         });
     }
 
+    const exportContainer = () => {
+        setLoadingButton("export")
+        invoke('export_container', {
+            name: selectedContainer.Names[0].replace("/", ""),
+
+        }).then((res) => {
+            if (res) {
+                toast.success(res);
+
+                refreshSelectedContainer()
+            }
+        }).catch((e) => {
+            toast.error(e);
+        }).finally(() => {
+            setLoadingButton(null)
+        });
+    }
+
+    const downloadFromContainer = () => {
+        setLoadingButton("export")
+        invoke('download_from_container', {
+            name: selectedContainer.Names[0].replace("/", ""),
+
+        }).then((res) => {
+            if (res) {
+                toast.success(res);
+                refreshSelectedContainer()
+            }
+        }).catch((e) => {
+            toast.error(e);
+        }).finally(() => {
+            setLoadingButton(null)
+        });
+    }
+
     const renderContent = () => {
         switch (activeTab) {
             case 'LOGS':
@@ -220,6 +263,24 @@ function ContainerDetails() {
                         {loadingButton === 'delete' ? <span className="loading loading-bars loading-xs"></span> :
                             <IconBxTrashAlt className="size-5"/>}
                     </button>
+                </div>
+
+                <div className="dropdown dropdown-bottom">
+                    {loadingButton == 'export' ? <button className="btn btn-square btn-sm mr-3">
+
+                            <span className="loading loading-bars loading-xs"></span>
+                        </button> :
+                        <>
+                            <div tabIndex={0} role="button" className="btn btn-square btn-sm mr-3"><IconThreeDots
+                                className="size-5"/></div>
+
+                            <ul tabIndex={0}
+                                className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+                                <li><a onClick={() => exportContainer()}>Export Container</a></li>
+                            </ul>
+                        </>
+                    }
+
                 </div>
             </div>
             <div className="flex mb-4 border-b border-base-300">

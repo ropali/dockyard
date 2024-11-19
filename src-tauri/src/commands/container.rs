@@ -1,7 +1,7 @@
 use crate::state::AppState;
 use crate::utils::storage::get_user_download_dir;
 use crate::utils::terminal::{get_terminal, open_terminal};
-use bollard::container::{ListContainersOptions, LogsOptions, RenameContainerOptions, StatsOptions};
+use bollard::container::{ListContainersOptions, LogsOptions, RenameContainerOptions, ResizeContainerTtyOptions, StatsOptions};
 use bollard::exec::{CreateExecOptions, StartExecResults};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
@@ -229,6 +229,34 @@ pub async fn rename_container(
         .map_err(|e| e.to_string())
 }
 
+
+#[tauri::command]
+pub async fn export_container(state: tauri::State<'_, AppState>, name: String) -> Result<String, String> {
+    let download_dir = get_user_download_dir()?;
+
+    let path = format!("{download_dir}/{name}.tar.gz");
+
+    let file_result = File::create_new::<&str>(path.as_ref()).await;
+    match file_result {
+        Ok(mut file) => {
+            let mut stream = state.docker.export_container(&name);
+            while let Some(response) = stream.next().await {
+                file.write_all(&response.unwrap()).await.unwrap();
+            }
+            Ok(String::from(format!("Image exported at {}", path.clone())))
+        }
+        Err(err) => {
+            let kind = err.kind();
+            match kind {
+                ErrorKind::PermissionDenied => Err(String::from(format!("Permission denied to open target file: {path}"))),
+                ErrorKind::AlreadyExists => Err(String::from(format!("Target file already exist at {path}"))),
+                _ => Err(String::from(format!("Failed to open target file: {path}")))
+            }
+        }
+    }
+}
+
+
 #[tauri::command]
 pub async fn exec(state: tauri::State<'_, AppState>, app_handle: tauri::AppHandle, c_name: String, command: String) -> Result<(), String> {
     let shellish_opts = ParseOptions::new()
@@ -244,8 +272,16 @@ pub async fn exec(state: tauri::State<'_, AppState>, app_handle: tauri::AppHandl
         cmd: Some(parsed_cmd),
         attach_stdout: Some(true),
         attach_stdin: Some(true),
+        tty: Some(true),
         ..Default::default()
     };
+
+    let options = ResizeContainerTtyOptions {
+        width: 24,
+        height: 80,
+    };
+
+    state.docker.resize_container_tty(&c_name, options).await.expect("Failed to resize container tty");
 
     let exec = state.docker
         .create_exec(
@@ -286,28 +322,5 @@ pub async fn exec(state: tauri::State<'_, AppState>, app_handle: tauri::AppHandl
 
     Ok(())
 }
-#[tauri::command]
-pub async fn export_container(state: tauri::State<'_, AppState>, name: String) -> Result<String, String> {
-    let download_dir = get_user_download_dir()?;
 
-    let path = format!("{download_dir}/{name}.tar.gz");
 
-    let file_result = File::create_new::<&str>(path.as_ref()).await;
-    match file_result {
-        Ok(mut file) => {
-            let mut stream = state.docker.export_container(&name);
-            while let Some(response) = stream.next().await {
-                file.write_all(&response.unwrap()).await.unwrap();
-            }
-            Ok(String::from(format!("Image exported at {}", path.clone())))
-        }
-        Err(err) => {
-            let kind = err.kind();
-            match kind {
-                ErrorKind::PermissionDenied => Err(String::from(format!("Permission denied to open target file: {path}"))),
-                ErrorKind::AlreadyExists => Err(String::from(format!("Target file already exist at {path}"))),
-                _ => Err(String::from(format!("Failed to open target file: {path}")))
-            }
-        }
-    }
-}

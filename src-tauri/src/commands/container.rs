@@ -1,7 +1,7 @@
 use crate::state::AppState;
 use crate::utils::storage::get_user_download_dir;
 use crate::utils::terminal::{get_terminal, open_terminal};
-use bollard::container::{ListContainersOptions, LogsOptions, RenameContainerOptions, StatsOptions};
+use bollard::container::{ListContainersOptions, LogsOptions, RemoveContainerOptions, RenameContainerOptions, StatsOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
 use std::collections::HashMap;
@@ -99,6 +99,27 @@ pub async fn stream_docker_logs(
 }
 
 #[tauri::command]
+pub async fn delete_container(
+    state: tauri::State<'_, AppState>,
+    container_name: String,
+    force: bool,
+    del_volume: bool,
+) -> Result<String, String> {
+    let opts = RemoveContainerOptions {
+        v: del_volume,
+        force,
+        link: false,
+    };
+
+    match state.docker.remove_container(&container_name, Option::from(opts)).await {
+        Ok(_) => {
+            Ok("Deleted container".to_string())
+        }
+        Err(e) => Err(format!("Failed to delete container: {}", e.to_string())),
+    }
+}
+
+#[tauri::command]
 pub async fn container_operation(
     state: tauri::State<'_, AppState>,
     app_handle: tauri::AppHandle,
@@ -125,10 +146,6 @@ pub async fn container_operation(
         .ok_or_else(|| "Container not found".to_string())?;
 
     let res = match op_type.as_str() {
-        "delete" => match docker.remove_container(&container_name, None).await {
-            Ok(_) => Ok("Deleted container".to_string()),
-            Err(e) => Err(format!("Failed to delete container: {}", e.to_string())),
-        },
         "start" => match docker
             .start_container::<String>(&container_name, None)
             .await

@@ -24,7 +24,7 @@ import toast from "../../utils/toast.js";
 
 function ContainerDetails() {
 
-    const {selectedContainer, refreshSelectedContainer} = useContainers()
+    const {selectedContainer, refreshSelectedContainer, setSelectedContainer} = useContainers()
 
     const [activeTab, setActiveTab] = useState('LOGS');
     const [info, setInfo] = useState("");
@@ -100,33 +100,71 @@ function ContainerDetails() {
         return selectedContainer.Ports.length > 0 && selectedContainer.Ports[0].PublicPort !== null;
     };
 
+    const deleteContainer = async () => {
 
-    function containerOperation(actionType) {
+        let result = await Swal.fire({
+            title: 'Are you sure?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            icon: 'warning',
+            html: `
+            <div class="form-control">
+                  <label class="label cursor-pointer">
+                    <span class="font-bold">Force</span>
+                    <input type="checkbox" checked="checked" class="checkbox" id="force-delete" />
+                  </label>
+                </div>
+                            <div class="form-control">
+                  <label class="label cursor-pointer">
+                    <span class="font-bold">Delete Volumes</span>
+                    <input type="checkbox" checked="checked" class="checkbox" id="delete-vol"/>
+                  </label>
+              </div>
+            `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    document.getElementById("force-delete").value,
+                    document.getElementById("delete-vol").value
+                ];
+            },
+            background: 'oklch(var(--b2))',
+            customClass: {
+                popup: 'text-base-content',
+            }
+        })
 
-        let unsafeActions = ["delete"]
-
-        if (unsafeActions.includes(actionType)) {
-            Swal.fire({
-                title: 'Are you sure?',
-                showDenyButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                denyButtonText: 'No',
-                icon: 'warning'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire('Saved!', '', 'success')
-                } else if (result.isDenied) {
-                    Swal.fire('Changes are not saved', '', 'info')
-                }
-            })
-            toast.success('Operation completed successfully!');
-
-            return
+        if (result.isDenied || result.isDismissed) {
+            setLoadingButton(null)
+            return null;
         }
 
+        console.log("---VA", result.value)
+
+        setLoadingButton("delete")
+
+        invoke('delete_container', {
+            containerName: selectedContainer.Names[0].replace("/", ""),
+            force: result.value.length > 1 && result.value[0] === "on",
+            delVolume: result.value.length > 1 && result.value[0] === "on"
+        }).then((res) => {
+            if (res) {
+                toast.success(res);
+
+                setSelectedContainer(null)
+            }
+        }).catch((e) => {
+            toast.error(e);
+        }).finally(() => {
+            setLoadingButton(null)
+        });
+    }
+
+
+    async function containerOperation(actionType) {
 
         setLoadingButton(actionType)
+
         invoke('container_operation', {
             containerName: selectedContainer.Names[0].replace("/", ""),
             opType: actionType
@@ -253,7 +291,7 @@ function ContainerDetails() {
 
                 <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
                     <button className="btn btn-square btn-sm hover:btn-error mr-3"
-                            onClick={() => containerOperation("delete")}
+                            onClick={() => deleteContainer()}
                     >
                         {loadingButton === 'delete' ? <span className="loading loading-bars loading-xs"></span> :
                             <IconBxTrashAlt className="size-5"/>}

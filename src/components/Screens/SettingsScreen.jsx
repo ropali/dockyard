@@ -46,7 +46,6 @@ const SettingsScreen = () => {
                 toast.success("Your app is up to date.")
                 return;
             }
-            console.log(`Installing update ${manifest?.version}, ${manifest?.date}, ${manifest?.body}`);
             await installUpdate();
             await relaunch();
         } catch (error) {
@@ -54,8 +53,12 @@ const SettingsScreen = () => {
             Swal.fire({
                 icon: "error",
                 title: "Oops...",
-                text: error.message ? error.message : "Failed to check for updates.",
-                footer: '<a target="_blank" href="https://github.com/ropali/dockyard/releases/latest">Visit Latest Release Page</a>'
+                text: error.message ? error.message : "Failed to automatically update. Please install the update manually.",
+                footer: '<a target="_blank" href="https://github.com/ropali/dockyard/releases/latest">Visit Latest Release Page</a>',
+                background: 'oklch(var(--b2))',
+                customClass: {
+                    popup: 'text-base-content',
+                }
             });
         } finally {
             setIsCheckingUpdate(false);

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {BrowserRouter as Router, Route, Routes, useNavigate, useLocation} from 'react-router-dom';
+import {Route, Routes, useLocation, useNavigate} from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import ContainersScreen from './components/Screens/ContainersScreen';
 import ImagesScreen from './components/Screens/ImagesScreen';
@@ -22,8 +22,8 @@ function App() {
     }
 
     const ping = () => {
-        invoke("ping").then(r => {
-            console.log(r);
+        invoke("ping").then(_ => {
+            // DO NOTHING
         }).catch((e) => {
             console.log(e)
             navigate("/error", {state: {message: "Docker API not reachable.\nMake sure Docker API is running at unix:///var/run/docker.sock"}});

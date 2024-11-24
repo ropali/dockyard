@@ -37,4 +37,4 @@ export const DEFAULT_THEME = "light"
 
 export const DOCKER_TERMINAL = "docker_terminal"
 
-export const DOCKER_SERVICE_PING_INTERVAL = 30000
+export const DOCKER_SERVICE_PING_INTERVAL = 5000

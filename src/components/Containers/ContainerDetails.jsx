@@ -20,6 +20,7 @@ import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
 import ContainerNameWidget from "./ContainerNameWidget.jsx";
 import Swal from "sweetalert2";
 import toast from "../../utils/toast.js";
+import ContainerProcesses from "./ContainerProcesses.jsx";
 
 
 function ContainerDetails() {
@@ -139,8 +140,6 @@ function ContainerDetails() {
             return null;
         }
 
-        console.log("---VA", result.value)
-
         setLoadingButton("delete")
 
         invoke('delete_container', {
@@ -199,22 +198,6 @@ function ContainerDetails() {
         });
     }
 
-    const downloadFromContainer = () => {
-        setLoadingButton("export")
-        invoke('download_from_container', {
-            name: selectedContainer.Names[0].replace("/", ""),
-
-        }).then((res) => {
-            if (res) {
-                toast.success(res);
-                refreshSelectedContainer()
-            }
-        }).catch((e) => {
-            toast.error(e);
-        }).finally(() => {
-            setLoadingButton(null)
-        });
-    }
 
     const renderContent = () => {
         switch (activeTab) {
@@ -224,6 +207,9 @@ function ContainerDetails() {
                 return <JSONSyntaxHighlighter id="json-pretty" json={info}></JSONSyntaxHighlighter>;
             case 'STATS':
                 return <ContainerStats selectedContainer={selectedContainer}/>;
+
+            case 'PROCESSES':
+                return <ContainerProcesses/>
             default:
                 return null;
         }
@@ -325,6 +311,9 @@ function ContainerDetails() {
                 </button>
                 <button className={`mr-4 pb-2 ${activeTab === 'STATS' ? 'border-b-2 border-base-content' : ''}`}
                         onClick={() => setActiveTab('STATS')}>STATS
+                </button>
+                <button className={`mr-4 pb-2 ${activeTab === 'PROCESSES' ? 'border-b-2 border-base-content' : ''}`}
+                        onClick={() => setActiveTab('PROCESSES')}>PROCESSES
                 </button>
             </div>
             <div className="flex-1 overflow-auto text-black p-2 rounded">

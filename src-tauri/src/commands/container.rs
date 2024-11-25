@@ -1,7 +1,7 @@
 use crate::state::AppState;
 use crate::utils::storage::get_user_download_dir;
 use crate::utils::terminal::{get_terminal, open_terminal};
-use bollard::container::{ListContainersOptions, LogsOptions, RemoveContainerOptions, RenameContainerOptions, StatsOptions};
+use bollard::container::{ListContainersOptions, LogsOptions, RemoveContainerOptions, RenameContainerOptions, StatsOptions, TopOptions};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
 use std::collections::HashMap;
@@ -267,5 +267,22 @@ pub async fn export_container(state: tauri::State<'_, AppState>, name: String) -
                 _ => Err(String::from(format!("Failed to open target file: {path}")))
             }
         }
+    }
+}
+
+
+#[tauri::command]
+pub async fn get_container_processes(state: tauri::State<'_, AppState>, container: String) -> Result<Vec<Vec<String>>, String> {
+    let options = Some(TopOptions {
+        ps_args: "aux",
+    });
+
+    let result = state.docker.top_processes(&container, options).await;
+
+    match result {
+        Ok(processes) => {
+            Ok(processes.processes.expect("Failed to get processes from docker container"))
+        },
+        Err(e) => return Err(e.to_string()),
     }
 }

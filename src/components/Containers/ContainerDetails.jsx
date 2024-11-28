@@ -21,6 +21,7 @@ import ContainerNameWidget from "./ContainerNameWidget.jsx";
 import Swal from "sweetalert2";
 import toast from "../../utils/toast.js";
 import ContainerProcesses from "./ContainerProcesses.jsx";
+import ContainerEnvVars from "./ContainerEnvVars.jsx";
 
 
 function ContainerDetails() {
@@ -210,6 +211,8 @@ function ContainerDetails() {
 
             case 'PROCESSES':
                 return <ContainerProcesses/>
+            case 'ENV_VARS':
+                return <ContainerEnvVars/>
             default:
                 return null;
         }
@@ -314,6 +317,9 @@ function ContainerDetails() {
                 </button>
                 <button className={`mr-4 pb-2 ${activeTab === 'PROCESSES' ? 'border-b-2 border-base-content' : ''}`}
                         onClick={() => setActiveTab('PROCESSES')}>PROCESSES
+                </button>
+                <button className={`mr-4 pb-2 ${activeTab === 'ENV_VARS' ? 'border-b-2 border-base-content' : ''}`}
+                        onClick={() => setActiveTab('ENV_VARS')}>ENV VARS
                 </button>
             </div>
             <div className="flex-1 overflow-auto text-black p-2 rounded">

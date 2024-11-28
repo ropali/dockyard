@@ -286,3 +286,20 @@ pub async fn get_container_processes(state: tauri::State<'_, AppState>, containe
         Err(e) => return Err(e.to_string()),
     }
 }
+
+
+#[tauri::command]
+pub async fn get_container_env_vars(state: tauri::State<'_, AppState>, container: String) -> Result<Vec<Vec<String>>, String> {
+    let options = Some(TopOptions {
+        ps_args: "aux",
+    });
+
+    let result = state.docker.top_processes(&container, options).await;
+
+    match result {
+        Ok(processes) => {
+            Ok(processes.processes.expect("Failed to get processes from docker container"))
+        },
+        Err(e) => return Err(e.to_string()),
+    }
+}

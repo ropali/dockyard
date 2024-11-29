@@ -2,14 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.2.3] - 2024-11-22
+## [0.3.0] - 2024-11-29
 
 ### 🚀 Features
 
-- Refactored delete action & added confirmation dialog
+- Added container processes tab
+- Container env vars tab
 
-### 🚜 Refactor
+### 🐛 Bug Fixes
 
-- Removed dead UI code
+- Update fail message & modal UI theme issue
+- Make the ping interval tighter
+
 
 

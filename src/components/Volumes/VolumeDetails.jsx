@@ -1,10 +1,10 @@
 import React, {useState} from "react";
 import {useVolumes} from "../../state/VolumesContext"
-import {IconCopy} from "../../Icons";
+import {IconCopy} from "../../Icons/index";
 import LogoScreen from "../LogoScreen";
 import {copyToClipboard} from "../../utils";
 import VolumeAttachedContainers from "./VolumeAttachedContainers";
-import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
+import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
 
 
 export default function VolumeDetails() {

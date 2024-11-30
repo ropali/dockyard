@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {IconCopy} from "../../Icons";
+import {IconCopy} from "../../Icons/index";
 import LogoScreen from "../LogoScreen";
 import {copyToClipboard} from "../../utils";
 import {useNetworks} from "../../state/NetworkContext";
 import {invoke} from "@tauri-apps/api";
-import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
+import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
 
 
 export default function NetworkDetails() {

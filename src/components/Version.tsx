@@ -1,14 +1,14 @@
-import {IconDocker} from "../Icons/index.jsx";
+import {IconDocker} from "../Icons/index.tsx";
 import React, {useEffect, useState} from "react";
 import {invoke} from "@tauri-apps/api";
 
-export default function Version() {
+export default function Version(): JSX.Element {
 
-    const [version, setVersion] = useState("")
+    const [version, setVersion] = useState<string>("")
 
     useEffect(() => {
-        invoke('get_version').then((res) => {
-            setVersion("Version " + res["Version"]);
+        invoke<string>('get_version').then((res) => {
+            setVersion(`Version ${res["Version"]}`);
         });
     }, []);
 

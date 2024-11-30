@@ -1,12 +1,12 @@
 import {invoke} from '@tauri-apps/api';
 import React, {useEffect, useState} from 'react';
-import toast from '../../utils/toast.js';
+import toast from '../../utils/toast';
 import {useImages} from "../../state/ImagesContext";
-import {IconBxExport, IconBxTrashAlt, IconCopy} from '../../Icons';
+import {IconBxExport, IconBxTrashAlt, IconCopy} from '../../Icons/index';
 import ImageHistory from './ImageHistory';
 import {copyToClipboard, formatSize} from '../../utils';
 import LogoScreen from '../LogoScreen';
-import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
+import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
 
 function ImageDetails() {
     const {selectedImage, setSelectedImage, loadImages} = useImages();

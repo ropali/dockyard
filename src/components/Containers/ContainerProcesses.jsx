@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {invoke} from "@tauri-apps/api";
-import toast from "../../utils/toast.js";
-import {useContainers} from "../../state/ContainerContext.jsx";
-import LogoScreen from "../LogoScreen.jsx";
+import toast from "../../utils/toast.ts";
+import {useContainers} from "../../state/ContainerContext.tsx";
+import LogoScreen from "../LogoScreen.tsx";
 
 const ContainerProcesses = () => {
     const {selectedContainer} = useContainers();

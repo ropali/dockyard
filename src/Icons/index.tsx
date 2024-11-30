@@ -1,6 +1,8 @@
 import * as React from "react";
 
-export function IconBxsTachometer(props) {
+interface IconProps extends React.SVGProps<SVGSVGElement> {}
+
+export function IconBxsTachometer(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -16,7 +18,7 @@ export function IconBxsTachometer(props) {
 }
 
 
-export function IconContainerTwentyFour(props) {
+export function IconContainerTwentyFour(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -34,7 +36,7 @@ export function IconContainerTwentyFour(props) {
 }
 
 
-export function IconStack2(props) {
+export function IconStack2(props: IconProps) {
     return (
         <svg
             fill="none"
@@ -53,7 +55,7 @@ export function IconStack2(props) {
     );
 }
 
-export function IconDatabaseCheckOutline(props) {
+export function IconDatabaseCheckOutline(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -69,7 +71,7 @@ export function IconDatabaseCheckOutline(props) {
 }
 
 
-export function IconServerNetworkAlt(props) {
+export function IconServerNetworkAlt(props: IconProps) {
     return (
         <svg
             data-name="Layer 1"
@@ -85,7 +87,7 @@ export function IconServerNetworkAlt(props) {
     );
 }
 
-export function IconDocker(props) {
+export function IconDocker(props: IconProps) {
     return (
         <svg
             viewBox="0 0 640 512"
@@ -100,7 +102,7 @@ export function IconDocker(props) {
 }
 
 
-export function IconBxCog(props) {
+export function IconBxCog(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -118,7 +120,7 @@ export function IconBxCog(props) {
 }
 
 
-export function IconTextWrap(props) {
+export function IconTextWrap(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -134,7 +136,7 @@ export function IconTextWrap(props) {
     );
 }
 
-export function IconArrowDownCircleFill(props) {
+export function IconArrowDownCircleFill(props: IconProps) {
     return (
         <svg
             fill="currentColor"
@@ -150,7 +152,7 @@ export function IconArrowDownCircleFill(props) {
 }
 
 
-export function IconArrowUpCircleFill(props) {
+export function IconArrowUpCircleFill(props: IconProps) {
     return (
         <svg
             fill="currentColor"
@@ -165,7 +167,7 @@ export function IconArrowUpCircleFill(props) {
     );
 }
 
-export function IconBxTrashAlt(props) {
+export function IconBxTrashAlt(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -180,7 +182,7 @@ export function IconBxTrashAlt(props) {
     );
 }
 
-export function IconRestart(props) {
+export function IconRestart(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -196,7 +198,7 @@ export function IconRestart(props) {
 }
 
 
-export function IconBxTerminal(props) {
+export function IconBxTerminal(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -213,7 +215,7 @@ export function IconBxTerminal(props) {
 }
 
 
-export function IconWeb(props) {
+export function IconWeb(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -228,7 +230,7 @@ export function IconWeb(props) {
     );
 }
 
-export function IconPlayCircle(props) {
+export function IconPlayCircle(props: IconProps) {
     return (
         <svg
             viewBox="0 0 1024 1024"
@@ -245,7 +247,7 @@ export function IconPlayCircle(props) {
     );
 }
 
-export function IconCircleStop(props) {
+export function IconCircleStop(props: IconProps) {
     return (
         <svg
             viewBox="0 0 512 512"
@@ -261,7 +263,7 @@ export function IconCircleStop(props) {
 }
 
 
-export function IconTag(props) {
+export function IconTag(props: IconProps) {
     return (
         <svg
             viewBox="0 0 1024 1024"
@@ -277,7 +279,7 @@ export function IconTag(props) {
 }
 
 
-export function IconDownload(props) {
+export function IconDownload(props: IconProps) {
     return (
         <svg fill="none" viewBox="0 0 24 24" height="1em" width="1em" {...props}>
             <path
@@ -292,7 +294,7 @@ export function IconDownload(props) {
     );
 }
 
-export function IconHistory(props) {
+export function IconHistory(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -308,7 +310,7 @@ export function IconHistory(props) {
 }
 
 
-export function IconSearch(props) {
+export function IconSearch(props: IconProps) {
     return (
         <svg
             viewBox="0 0 1024 1024"
@@ -323,7 +325,7 @@ export function IconSearch(props) {
     );
 }
 
-export function IconCopy(props) {
+export function IconCopy(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -338,7 +340,7 @@ export function IconCopy(props) {
     );
 }
 
-export function IconDatabase(props) {
+export function IconDatabase(props: IconProps) {
     return (
         <svg
             viewBox="0 0 32 32"

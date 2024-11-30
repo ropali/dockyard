@@ -1,4 +1,12 @@
-const ContainerCard = ({ container, onClick, isSelected }) => {
+import { ContainerSummary } from '../../state/ContainerContext';
+
+interface ContainerCardProps {
+    container: ContainerSummary;
+    onClick: () => void;
+    isSelected: boolean;
+}
+
+const ContainerCard = ({ container, onClick, isSelected }: ContainerCardProps) => {
     const statusColor = container.Status.includes("Exited") ? 'bg-red-500' : 'bg-green-500';
 
     return (

@@ -11,17 +11,17 @@ import {
     IconRestart,
     IconThreeDots,
     IconWeb
-} from '../../Icons';
+} from '../../Icons/index';
 
 import {useContainers} from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';
 import ContainerStats from './ContainerStats';
-import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter.jsx";
-import ContainerNameWidget from "./ContainerNameWidget.jsx";
+import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
+import ContainerNameWidget from "./ContainerNameWidget";
 import Swal from "sweetalert2";
-import toast from "../../utils/toast.js";
-import ContainerProcesses from "./ContainerProcesses.jsx";
-import ContainerEnvVars from "./ContainerEnvVars.jsx";
+import toast from "../../utils/toast";
+import ContainerProcesses from "./ContainerProcesses";
+import ContainerEnvVars from "./ContainerEnvVars";
 
 
 function ContainerDetails() {

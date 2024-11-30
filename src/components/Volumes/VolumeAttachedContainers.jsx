@@ -14,7 +14,7 @@ const VolumeAttachedContainers = () => {
 
 
     function filterContainersByVolume() {
-        let result = containers.filter((container) => {
+        let result = Array.isArray(containers) ? containers.filter((container) => {
             let matched = false
             if (container && container.Mounts) {
 
@@ -26,7 +26,7 @@ const VolumeAttachedContainers = () => {
             }
 
             return matched
-        })
+        }) : [];
 
         return result
     }

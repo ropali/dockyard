@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 
 import "@patternfly/react-core/dist/styles/base.css";
-import { IconTextWrap, IconArrowDownCircle, IconArrowUpCircle } from "../Icons";
+import { IconTextWrap, IconArrowDownCircle, IconArrowUpCircle } from "../Icons/index.tsx";
 
 import { LogViewer, LogViewerSearch } from '@patternfly/react-log-viewer';
-import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup, Tooltip } from '@patternfly/react-core';
+import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
 
-const LogsViewer = ({ logs }) => {
+interface LogsViewerProps {
+    logs: string[];
+}
+
+const LogsViewer = ({ logs }: LogsViewerProps) => {
     const [isTextWrapped, setIsTextWrapped] = React.useState(false);
-    const [scrollTo, setScrollTo] = useState(0)
+    const [scrollTo, setScrollTo] = useState(0);
 
 
     const rightAlignedToolbarGroup = (

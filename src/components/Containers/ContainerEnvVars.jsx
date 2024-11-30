@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {invoke} from "@tauri-apps/api";
-import {useContainers} from "../../state/ContainerContext.jsx";
+import {useContainers} from "../../state/ContainerContext.tsx";
 
 const ContainerEnvVars = () => {
     const {selectedContainer} = useContainers();

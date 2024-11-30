@@ -9,23 +9,27 @@ import SettingsScreen from './components/Screens/SettingsScreen';
 import {useSettings} from './state/SettingsContext';
 import {DEFAULT_THEME, DOCKER_SERVICE_PING_INTERVAL} from './constants';
 import {invoke} from "@tauri-apps/api/tauri";
-import ErrorScreen from "./components/Screens/ErrorScreen.jsx";
+import ErrorScreen from "./components/Screens/ErrorScreen";
 
-function App() {
+interface Settings {
+    theme?: string;
+}
+
+const App: React.FC = () => {
     const {settings} = useSettings();
     const navigate = useNavigate();
     const location = useLocation();
-    const intervalRef = useRef(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    const loadTheme = () => {
+    const loadTheme = (): void => {
         document.documentElement.setAttribute('data-theme', settings?.theme || DEFAULT_THEME);
     }
 
-    const ping = () => {
-        invoke("ping").then(_ => {
+    const ping = (): void => {
+        invoke("ping").then((_: unknown) => {
             // DO NOTHING
-        }).catch((e) => {
-            console.log(e)
+        }).catch((e: Error) => {
+            console.log(e);
             navigate("/error", {state: {message: "Docker API not reachable.\nMake sure Docker API is running at unix:///var/run/docker.sock"}});
         });
     }
@@ -51,7 +55,7 @@ function App() {
 
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-base-100">
-            <Sidebar className="w-64 flex-shrink-0"/>
+            <Sidebar />
             <div className="flex-1 flex flex-col overflow-hidden">
                 <main className="flex p-5 bg-base-200 flex-1 overflow-hidden mb-2">
                     <Routes>

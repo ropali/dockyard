@@ -5,11 +5,11 @@ import {useSettings} from '../../state/SettingsContext';
 import {getVersion} from "@tauri-apps/api/app";
 import {checkUpdate, installUpdate} from "@tauri-apps/api/updater";
 import {relaunch} from "@tauri-apps/api/process";
-import {IconGithub} from "../../Icons/index.jsx";
+import {IconGithub} from "../../Icons/index";
 import Swal from "sweetalert2";
 import {invoke} from '@tauri-apps/api';
-import {reteriveValue, storeValue} from "../../utils/storage.js";
-import toast from "../../utils/toast.js";
+import {reteriveValue, storeValue} from "../../utils/storage";
+import toast from "../../utils/toast";
 
 const SettingsScreen = () => {
     const [theme, setTheme] = useState(DEFAULT_THEME);

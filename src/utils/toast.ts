@@ -2,14 +2,20 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import '@sweetalert2/theme-dark/dark.css';
 
+type ToastType = 'success' | 'error' | 'warning' | 'info';
+type ToastLibrary = 'sweetalert2' | 'react-toast';
+
+interface TimerProgressColors {
+    [key: string]: string;
+}
+
 const toast = (() => {
-    let currentLibrary = 'sweetalert2';
+    let currentLibrary: ToastLibrary = 'sweetalert2';
 
-
-    const showToast = (message, type = 'info', duration = 3000) => {
-        const timerProgressColors = {
+    const showToast = (message: string, type: ToastType = 'info', duration: number = 3000): void => {
+        const timerProgressColors: TimerProgressColors = {
             success: "bg-success",
-            info: "bg-info",
+            info: "bg-info", 
             warning: "bg-warning",
             error: "bg-error"
         };
@@ -33,7 +39,7 @@ const toast = (() => {
         }
     };
 
-    const setLibrary = (library) => {
+    const setLibrary = (library: ToastLibrary): void => {
         if (['sweetalert2', 'react-toast'].includes(library)) {
             currentLibrary = library;
         } else {
@@ -42,10 +48,10 @@ const toast = (() => {
     };
 
     return {
-        success: (message, duration) => showToast(message, 'success', duration),
-        error: (message, duration) => showToast(message, 'error', duration),
-        warning: (message, duration) => showToast(message, 'warning', duration),
-        info: (message, duration) => showToast(message, 'info', duration),
+        success: (message: string, duration?: number) => showToast(message, 'success', duration),
+        error: (message: string, duration?: number) => showToast(message, 'error', duration),
+        warning: (message: string, duration?: number) => showToast(message, 'warning', duration),
+        info: (message: string, duration?: number) => showToast(message, 'info', duration),
         setLibrary
     };
 })();

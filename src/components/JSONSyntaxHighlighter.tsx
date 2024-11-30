@@ -5,7 +5,11 @@ import json from 'react-syntax-highlighter/dist/esm/languages/prism/json';
 
 SyntaxHighlighter.registerLanguage('json', json);
 
-export default function JSONSyntaxHighlighter({ json }) {
+export interface JSONSyntaxHighlighterProps {
+  json: object;
+}
+
+export default function JSONSyntaxHighlighter({ json }: JSONSyntaxHighlighterProps) {
   return (
     <div className={`h-full flex flex-col h-full`}>
       <SyntaxHighlighter

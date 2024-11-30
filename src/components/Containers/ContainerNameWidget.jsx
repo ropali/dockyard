@@ -1,8 +1,8 @@
-import {IconCancel, IconEdit, IconTick} from "../../Icons/index.jsx";
+import {IconCancel, IconEdit, IconTick} from "../../Icons/index.tsx";
 import React, {useState} from "react";
 import {invoke} from "@tauri-apps/api";
-import {useContainers} from "../../state/ContainerContext.jsx";
-import toast from "../../utils/toast.js";
+import {useContainers} from "../../state/ContainerContext.tsx";
+import toast from "../../utils/toast.ts";
 
 export default function ContainerNameWidget() {
     const {selectedContainer, refreshSelectedContainer} = useContainers();

@@ -7,10 +7,14 @@ import {
     IconDocker,
     IconServerNetworkAlt,
     IconStack2
-} from "../Icons";
-import Version from "./Version.jsx";
+} from "../Icons/index";
+import Version from "./Version";
 
-function Sidebar() {
+interface SidebarProps {
+
+}
+
+function Sidebar(props: SidebarProps) {
     const location = useLocation();
 
     return (

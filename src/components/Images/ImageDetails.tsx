@@ -21,18 +21,18 @@ function ImageDetails() {
     }, [activeTab, selectedImage]);
 
     function getInfo() {
-        invoke('image_info', {name: selectedImage.RepoTags[0]}).then((info) => {
-            setInfo(info);
+        invoke('image_info', {name: selectedImage?.getName()}).then((info) => {
+            setInfo(info as string);
         }).catch((error) => {
             console.error("Error fetching image info:", error);
-            toast.error(error);
+            toast.error(error as string);
         });
     }
 
     const renderContent = () => {
         switch (activeTab) {
             case 'INSPECT':
-                return <JSONSyntaxHighlighter id="json-pretty" json={selectedImage}></JSONSyntaxHighlighter>;
+                return <JSONSyntaxHighlighter id="json-pretty" json={info}></JSONSyntaxHighlighter>;
             case 'HISTORY':
                 return <ImageHistory/>;
             default:
@@ -43,14 +43,20 @@ function ImageDetails() {
     function handleDelete(event) {
         event.preventDefault();
         const modal = document.getElementById('delete_image_modal');
-        const forceDelete = modal.querySelector('input[name="forceDelete"]').checked;
-        const noPrune = modal.querySelector('input[name="noPrune"]').checked;
 
+        //@ts-ignore
+        const forceDelete = modal?.querySelector('input[name="forceDelete"]')?.checked; 
+        //@ts-ignore
+        const noPrune = modal?.querySelector('input[name="noPrune"]')?.checked;
+
+        //@ts-ignore
         setLoadingButton("delete-btn");
-        modal.close();
+
+        //@ts-ignore
+        modal?.close();
 
         invoke("delete_image", {
-            imageName: selectedImage.RepoTags[0],
+            imageName: selectedImage?.getName(),
             force: forceDelete,
             noPrune: noPrune
         }).then((res) => {
@@ -67,9 +73,11 @@ function ImageDetails() {
     }
 
     const exportImage = () => {
+        //@ts-ignore
         setLoadingButton("export-btn");
-        invoke("export_image", {imageName: selectedImage.RepoTags[0]}).then((res) => {
-            toast.success(res);
+        
+        invoke("export_image", {imageName: selectedImage?.getName}).then((res) => {
+            toast.success(res as string);
         }).catch((err) => {
             toast.error(err);
         }).finally(() => {
@@ -103,7 +111,7 @@ function ImageDetails() {
                     <div className="modal-action">
                         <form method="dialog">
                             <button className="btn btn-ghost mr-2"
-                                    onClick={(e) => document.getElementById('delete_image_modal').closeModal()}>Cancel
+                                    onClick={(e) => document.getElementById('delete_image_modal')?.closeModal()}>Cancel
                             </button>
                             <button className="btn btn-error" onClick={handleDelete}>Delete</button>
                         </form>
@@ -113,15 +121,15 @@ function ImageDetails() {
 
             <div className="dark p-4 bg-base-100 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
                 <div className="flex items-center">
-                    <h1 className="text-lg font-bold mr-2">{selectedImage.RepoTags[0]}</h1>
-                    <button className="rounded" onClick={() => copyToClipboard(selectedImage.RepoTags[0])}
+                    <h1 className="text-lg font-bold mr-2">{selectedImage?.getName()}</h1>
+                    <button className="rounded" onClick={() => copyToClipboard(selectedImage?.getName())}
                             title="Copy Image Name">
                         <IconCopy className="w-4 h-4 text-gray-600"/>
                     </button>
                     <p className="ml-auto text-sm ">Size: {formatSize(selectedImage.Size)}</p>
                 </div>
                 <div className="flex items-center mb-4">
-                    <p className="text-sm text mr-2">{selectedImage.Id.slice(7, 19)}</p>
+                    <p className="text-sm text mr-2">{selectedImage.getShortId()}</p>
                     <button className="rounded" onClick={() => copyToClipboard(selectedImage.Id)} title="Copy full ID">
                         <IconCopy className="w-4 h-4 text-gray-600"/>
                     </button>
@@ -141,7 +149,7 @@ function ImageDetails() {
                     <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
                         <button
                             className="btn btn-square btn-sm hover:btn-error mr-3"
-                            onClick={() => document.getElementById('delete_image_modal').showModal()}
+                            onClick={() => document.getElementById('delete_image_modal')?.showModal()}
                             disabled={loadingButton == "delete-btn"}
                         >
                             {loadingButton == "delete-btn" ? <span className="loading loading-bars loading-xs"></span> :

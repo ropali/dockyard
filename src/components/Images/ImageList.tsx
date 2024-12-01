@@ -4,11 +4,8 @@ import { useImages } from '../../state/ImagesContext';
 import ImagesTopBar from './ImagesTopBar';
 import ImageCard from './ImageCard';
 
-interface ImageListProps {
 
-}
-
-function ImagesList(props: ImageListProps) {
+function ImagesList() {
 
     const { images, loadImages, setSelectedImage, selectedImage } = useImages();
 

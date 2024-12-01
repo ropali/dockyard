@@ -18,13 +18,21 @@ export declare namespace Docker {
 
   export interface Image {
     Id: string;
-    Name: string;
     Tag: string;
     Created: string;
     Size: number;
     RepoTags: string[];
 
     getName(): string;
+
+    getShortId(): string;
+  }
+
+  interface ImageHistory {
+    Created: number;
+    CreatedBy: string;
+    Size: number;
+    Tags?: string[];
   }
 
   export interface Volume {
@@ -41,4 +49,6 @@ export declare namespace Docker {
     Id: string;
     Name: string;
   }
+
+
 }

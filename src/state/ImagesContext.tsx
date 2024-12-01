@@ -1,24 +1,24 @@
 // @ts-ignore
 import React, { createContext, useState, useContext, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
-import type { Docker } from '../types/docker';
+import { Image } from '../models/Image';
 
 interface ImageContextType {
-  images: Docker.ImageInfo[];
-  selectedImage: Docker.ImageInfo | null;
+  images: Image[];
+  selectedImage: Image | null;
   loadImages: () => void;
-  setSelectedImage: (image: Docker.ImageInfo | null) => void;
+  setSelectedImage: (image: Image | null) => void;
 }
 
 const ImagesContext = createContext<ImageContextType | null>(null);
 
 export function ImagesProvider({ children }: { children: React.ReactNode }): JSX.Element {
-  const [images, setImages] = useState<Docker.ImageInfo[]>([]);
-  const [selectedImage, setSelectedImage] = useState<Docker.ImageInfo | null>(null);
+  const [images, setImages] = useState<Image[]>([]);
+  const [selectedImage, setSelectedImage] = useState<Image | null>(null);
 
   const loadImages = useCallback(() => {
-    invoke<Docker.ImageInfo[]>('list_images').then((images) => {
-      setImages(images);
+    invoke<Image[]>('list_images').then((images) => {
+      setImages(images.map((image) => new Image(image)));
     });
   }, []);
 

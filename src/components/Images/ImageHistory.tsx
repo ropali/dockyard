@@ -3,28 +3,21 @@ import { useImages } from '../../state/ImagesContext'
 import { formatSize, formatDate } from '../../utils';
 import { invoke } from '@tauri-apps/api';
 import toast from '../../utils/toast';
+import { ImageHistory as ImageHistoryModel } from '../../models/Image';
 
-interface ImageHistory {
-    Created: number;
-    CreatedBy: string;
-    Size: number;
-    Tags?: string[];
-}
 
-interface ImageHistoryProps {
-
-}
+interface ImageHistoryProps {}
 
 const ImageHistory: React.FC<ImageHistoryProps> = () => {
 
     const { selectedImage } = useImages();
 
-    const [history, setHistory] = useState<Array<ImageHistory>>([])
+    const [history, setHistory] = useState<Array<ImageHistoryModel>>([])
 
     const getHistory = () => {
         if (selectedImage) {
             invoke('image_history', { name: selectedImage.RepoTags[0] }).then((history: unknown) => {
-                setHistory(history as Array<ImageHistory>);
+                setHistory(history as Array<ImageHistoryModel>);
             }).catch((error) => {
                 toast.error("Failed to fetch image history.")
                 console.error("Error fetching image history:", error);
@@ -57,7 +50,7 @@ const ImageHistory: React.FC<ImageHistoryProps> = () => {
                             <td className="max-w-md truncate text-base" title={layer.CreatedBy}>
                                 {layer.CreatedBy || 'N/A'}
                             </td>
-                            <td className='min-w-12 text-base'>{formatSize(layer.Size)}</td>
+                            <td className='min-w-12 text-base'>{layer.getFormattedSize()}</td>
                             <td>
                                 {layer.Tags && layer.Tags.length > 0 ? (
                                     <div className="flex flex-wrap gap-1">

@@ -36,15 +36,16 @@ type LoadingButtonType =
   | 'exec'
   | null;
 
+type Tab = 'LOGS' | 'INFO' | 'STATS' | 'PROCESSES' | 'ENV_VARS'
+
 type ActionType = 'start' | 'stop' | 'restart' | 'exec' | 'web';
 
 const ContainerDetails: React.FC = () => {
   const { selectedContainer, refreshSelectedContainer, setSelectedContainer } =
     useContainers();
 
-  const [activeTab, setActiveTab] = useState<
-    'LOGS' | 'INFO' | 'STATS' | 'PROCESSES' | 'ENV_VARS'
-  >('LOGS');
+  const [activeTab, setActiveTab] = useState<Tab>('LOGS');
+
   const [info, setInfo] = useState<any>('');
   const [logs, setLogs] = useState<string[]>([]);
 
@@ -67,7 +68,7 @@ const ContainerDetails: React.FC = () => {
       });
 
       invoke('stream_docker_logs', {
-        containerName: selectedContainer.Names[0].replace('/', ''),
+        containerName: selectedContainer.getName(),
       });
 
       return () => {
@@ -115,8 +116,9 @@ const ContainerDetails: React.FC = () => {
 
   const isWeb = (): boolean => {
     return (
-      selectedContainer?.Ports.length > 0 &&
-      selectedContainer?.Ports[0].PublicPort !== null
+      selectedContainer?.Ports != null &&
+      selectedContainer.Ports.length > 0 &&
+      selectedContainer.Ports[0].PublicPort !== null
     );
   };
 
@@ -162,7 +164,7 @@ const ContainerDetails: React.FC = () => {
     setLoadingButton('delete');
 
     invoke('delete_container', {
-      containerName: selectedContainer?.Names[0].replace('/', ''),
+      containerName: selectedContainer?.getName(),
       force: result.value[0],
       delVolume: result.value[1],
     })
@@ -184,7 +186,7 @@ const ContainerDetails: React.FC = () => {
     setLoadingButton(actionType);
 
     invoke('container_operation', {
-      containerName: selectedContainer?.Names[0].replace('/', ''),
+      containerName: selectedContainer?.getName(),
       opType: actionType,
     })
       .then((res) => {
@@ -204,7 +206,7 @@ const ContainerDetails: React.FC = () => {
   const exportContainer = () => {
     setLoadingButton('export');
     invoke('export_container', {
-      name: selectedContainer?.Names[0].replace('/', ''),
+      name: selectedContainer?.getName(),
     })
       .then((res) => {
         if (res) {

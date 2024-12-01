@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Container } from '../../state/ContainerContext';
+import { Container } from '../../models/Container';
 
 interface ContainerCardProps {
     container: Container;
@@ -9,7 +9,7 @@ interface ContainerCardProps {
 }
 
 const ContainerCard = ({ container, onClick, isSelected }: ContainerCardProps) => {
-    const statusColor = container.Status.includes("Exited") ? 'bg-red-500' : 'bg-green-500';
+    const statusColor = !container.isRunning() ? 'bg-red-500' : 'bg-green-500';
 
     return (
         <div
@@ -21,7 +21,7 @@ const ContainerCard = ({ container, onClick, isSelected }: ContainerCardProps) =
         >
             <div className="flex items-center mb-1">
                 <div className={`w-3 h-3 rounded-full ${statusColor} mr-2`}></div>
-                <h1 className="text-sm font-semibold">{container.Names[0].slice(1)}</h1>
+                <h1 className="text-sm font-semibold">{container.getName()}</h1>
             </div>
             <div className="mb-1">
                 <p className="text-xs ">

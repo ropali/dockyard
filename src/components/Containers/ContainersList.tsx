@@ -10,8 +10,9 @@ const ContainersList = () => {
   const [containerFilter, setContainerFilter] = useState('all');
 
   const filteredContainers = containers.filter((container) => {
-    const matchesSearchQuery = container.Names[0].toLowerCase().includes(searchQuery.toLowerCase());
-    let matchesFilter;
+    const matchesSearchQuery = container.getName().toLowerCase().includes(searchQuery.toLowerCase());
+    
+    let matchesFilter: boolean;
 
     switch (containerFilter.toLowerCase()) {
       case 'all':

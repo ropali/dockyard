@@ -28,9 +28,20 @@ const ContainerProcesses = () => {
     const getProcesses = async () => {
         try {
             const response: Process[] = await invoke('get_container_processes', {
-                container: selectedContainer?.Names[0].replace('/', '') || '',
+                container: selectedContainer?.getName() || '',
             });
-            setProcess(response);
+            
+            setProcess(response.map((process) => ({
+                uuid: process[0],
+                pid: process[1],
+                ppid: process[2],
+                c: process[3],
+                tty: process[4],
+                time: process[5],
+                cmd: process[6],
+            })));
+
+            
         } catch (error) {
             toast.error(error);
         }

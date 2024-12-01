@@ -11,19 +11,19 @@ export default function ContainerNameWidget(): JSX.Element {
 
     const [isEditingName, setIsEditingName] = useState(false);
     const [newContainerName, setNewContainerName] = useState<string>(
-        selectedContainer?.Names[0].replace("/", "")
+        selectedContainer?.getName() ?? ''
     );
 
     const handleNameUpdate = (): void => {
 
         // If the new name is the same as the old name, do nothing
-        if (newContainerName === selectedContainer?.Names[0].replace("/", "")) {
+        if (newContainerName === selectedContainer?.getName()) {
             setIsEditingName(false);
             return;
         }
 
         invoke('rename_container', {
-            name: selectedContainer?.Names[0].replace("/", ""),
+            name: selectedContainer?.getName(),
             newName: newContainerName
         })
             .then((res: unknown) => {
@@ -39,12 +39,12 @@ export default function ContainerNameWidget(): JSX.Element {
     };
 
     const startEditing = (): void => {
-        setNewContainerName(selectedContainer?.Names[0].replace("/", ""));
+        setNewContainerName(selectedContainer?.getName() ?? '');
         setIsEditingName(true);
     };
 
     const cancelEditing = (): void => {
-        setNewContainerName(selectedContainer?.Names[0].replace("/", ""));
+        setNewContainerName(selectedContainer?.getName() ?? '');
         setIsEditingName(false);
     };
 
@@ -61,7 +61,7 @@ export default function ContainerNameWidget(): JSX.Element {
                 />
             ) : (
                 <h1 className="text-lg font-bold">
-                    {selectedContainer?.Names[0].replace("/", "")}
+                    {selectedContainer?.getName()}
                 </h1>
             )}
             {!isEditingName && (

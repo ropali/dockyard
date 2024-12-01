@@ -1,7 +1,6 @@
 import React, {FC} from 'react';
 import {formatDate, formatSize} from "../../utils";
-// @ts-ignore
-import { Docker } from "../../types/docker";
+import type { Docker } from "../../types/docker";
 
 interface ImageCardProps {
     image: Docker.ImageInfo;

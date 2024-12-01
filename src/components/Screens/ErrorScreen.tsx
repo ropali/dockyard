@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { IconBxErrorCircle } from "../../Icons/index.tsx";
 
 interface ErrorScreenProps {
-    location: {
+    location?: {
         state?: {
             message: string
         }
@@ -12,7 +12,7 @@ interface ErrorScreenProps {
 
 const ErrorScreen: React.FC<ErrorScreenProps> = ({ location }) => {
     const navigate = useNavigate();
-    const errorMessage = location.state?.message
+    const errorMessage = location?.state?.message
 
     return (
         <div className="flex items-center justify-center h-screen w-screen bg-base-400">

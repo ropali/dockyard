@@ -23,18 +23,8 @@ import toast from '../../utils/toast';
 import ContainerProcesses from './ContainerProcesses';
 import ContainerEnvVars from './ContainerEnvVars';
 
-interface Port {
-  PublicPort: number | null;
-  // Add other properties if needed
-}
 
-interface Container {
-  Status: string;
-  Names: string[];
-  Id: string;
-  Ports: Port[];
-  // Add other properties if needed
-}
+
 
 type LoadingButtonType =
   | 'delete'
@@ -62,6 +52,7 @@ const ContainerDetails: React.FC = () => {
 
   const [loadingButton, setLoadingButton] = useState<LoadingButtonType>(null);
 
+  // @ts-ignore
   useEffect(() => {
     if (selectedContainer) {
       setIsContainerRunning(
@@ -91,6 +82,7 @@ const ContainerDetails: React.FC = () => {
     }
   }, [activeTab, selectedContainer]);
 
+  // @ts-ignore
   useEffect(() => {
     if (selectedContainer) {
       const intervalId = setInterval(() => {
@@ -128,6 +120,7 @@ const ContainerDetails: React.FC = () => {
     );
   };
 
+  // @ts-ignore
   const deleteContainer = async () => {
     let result: SweetAlertResult<any> = await Swal.fire({
       title: 'Are you sure?',

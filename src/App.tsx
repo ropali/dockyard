@@ -1,19 +1,15 @@
 import React, {useEffect, useRef} from 'react';
 import {Route, Routes, useLocation, useNavigate} from 'react-router-dom';
 import Sidebar from './components/Sidebar';
-import ContainersScreen from './components/Screens/ContainersScreen';
-import ImagesScreen from './components/Screens/ImagesScreen';
-import VolumesScreen from './components/Screens/VolumesScreen';
-import NetworkScreen from './components/Screens/NetworkScreen';
-import SettingsScreen from './components/Screens/SettingsScreen';
 import {useSettings} from './state/SettingsContext';
 import {DEFAULT_THEME, DOCKER_SERVICE_PING_INTERVAL} from './constants';
 import {invoke} from "@tauri-apps/api/tauri";
 import ErrorScreen from "./components/Screens/ErrorScreen";
-
-interface Settings {
-    theme?: string;
-}
+import ContainersScreen from './components/Screens/ContainersScreen';
+import ImagesScreen from "./components/Screens/ImagesScreen";
+import VolumesScreen from "./components/Screens/VolumesScreen";
+import NetworkScreen from "./components/Screens/NetworkScreen";
+import SettingsScreen from "./components/Screens/SettingsScreen";
 
 const App: React.FC = () => {
     const {settings} = useSettings();
@@ -64,7 +60,7 @@ const App: React.FC = () => {
                         <Route path="/volumes" element={<VolumesScreen/>}/>
                         <Route path="/networks" element={<NetworkScreen/>}/>
                         <Route path="/settings" element={<SettingsScreen/>}/>
-                        <Route path="/error" element={<ErrorScreen/>}/>
+                        <Route path="/error" element={<ErrorScreen location={{state: {message: "An unexpected error occurred"}}}/>}/>
                     </Routes>
                 </main>
             </div>

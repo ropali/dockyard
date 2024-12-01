@@ -1,10 +1,10 @@
-declare namespace Docker {
-  interface ImageInfo {
-    id: string;
-    name: string;
-    tag: string;
-    created: string;
-    size: number;
-    // Add any other properties you use in your application
+export declare namespace Docker {
+  export interface ImageInfo {
+    Id: string;
+    Name: string;
+    Tag: string;
+    Created: string;
+    Size: number;
+    RepoTags: string[];
   }
 }

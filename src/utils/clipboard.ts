@@ -1,4 +1,4 @@
-import toast from "./toast.js";
+import toast from "./toast";
 
 export const copyToClipboard = (text: string): Promise<void> => {
     return navigator.clipboard.writeText(text).then(() => {

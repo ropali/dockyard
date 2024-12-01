@@ -78,3 +78,5 @@ const ImageHistory: React.FC<ImageHistoryProps> = () => {
         </div>
     );
 };
+
+export default ImageHistory;

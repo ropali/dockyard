@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
     "daisyui": "^4.12.10",

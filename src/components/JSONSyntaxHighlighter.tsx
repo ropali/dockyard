@@ -10,7 +10,7 @@ export interface JSONSyntaxHighlighterProps {
   json: string;
 }
 
-export default function JSONSyntaxHighlighter({ id, json }: JSONSyntaxHighlighterProps) {
+export default function JSONSyntaxHighlighter({json }: JSONSyntaxHighlighterProps) {
   return (
     <div className={`h-full flex flex-col h-full`}>
       <SyntaxHighlighter

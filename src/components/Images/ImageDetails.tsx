@@ -3,10 +3,10 @@ import React, {useEffect, useState} from 'react';
 import toast from '../../utils/toast';
 import {useImages} from "../../state/ImagesContext";
 import {IconBxExport, IconBxTrashAlt, IconCopy} from '../../Icons/index';
-import ImageHistory from './ImageHistory.js';
 import {copyToClipboard, formatSize} from '../../utils';
 import LogoScreen from '../LogoScreen';
 import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
+import ImageHistory from "./ImageHistory";
 
 function ImageDetails() {
     const {selectedImage, setSelectedImage, loadImages} = useImages();

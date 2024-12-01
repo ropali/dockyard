@@ -1,4 +1,11 @@
-function ContainersTopBar({ searchQuery, setSearchQuery, onFilterChange }) {
+import React from 'react';
+
+interface ImagesTopBarProps {
+    searchQuery: string;
+    setSearchQuery: (searchQuery: string) => void;
+}
+
+function ImagesTopBar({ searchQuery, setSearchQuery }: ImagesTopBarProps) {
     return (
         <div className="flex flex-row items-center space-x-2 w-full overflow-hidden">
             <div className="flex flex-grow space-x-2">
@@ -23,16 +30,9 @@ function ContainersTopBar({ searchQuery, setSearchQuery, onFilterChange }) {
                     </svg>
                 </label>
 
-                <select className="select select-bordered select-sm flex-shrink-0 flex-grow"
-                    onChange={(e) => { onFilterChange(e.target.value) }}
-                >
-                    <option defaultValue={"All"}>All</option>
-                    <option>Running</option>
-                    <option>Stopped</option>
-                </select>
             </div>
         </div>
     );
 }
 
-export default ContainersTopBar;
+export default ImagesTopBar;

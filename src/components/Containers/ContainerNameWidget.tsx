@@ -1,48 +1,50 @@
-import {IconCancel, IconEdit, IconTick} from "../../Icons/index.tsx";
+import {IconCancel, IconEdit, IconTick} from "../../Icons/index";
 import React, {useState} from "react";
 import {invoke} from "@tauri-apps/api";
-import {useContainers} from "../../state/ContainerContext.tsx";
-import toast from "../../utils/toast.ts";
+import {useContainers} from "../../state/ContainerContext";
+import toast from "../../utils/toast";
 
-export default function ContainerNameWidget() {
+
+
+export default function ContainerNameWidget(): JSX.Element {
     const {selectedContainer, refreshSelectedContainer} = useContainers();
 
     const [isEditingName, setIsEditingName] = useState(false);
-    const [newContainerName, setNewContainerName] = useState(
-        selectedContainer.Names[0].replace("/", "")
+    const [newContainerName, setNewContainerName] = useState<string>(
+        selectedContainer?.Names[0].replace("/", "")
     );
 
-    const handleNameUpdate = () => {
+    const handleNameUpdate = (): void => {
 
         // If the new name is the same as the old name, do nothing
-        if (newContainerName === selectedContainer.Names[0].replace("/", "")) {
+        if (newContainerName === selectedContainer?.Names[0].replace("/", "")) {
             setIsEditingName(false);
             return;
         }
 
         invoke('rename_container', {
-            name: selectedContainer.Names[0].replace("/", ""),
+            name: selectedContainer?.Names[0].replace("/", ""),
             newName: newContainerName
         })
-            .then((res) => {
+            .then((res: unknown) => {
                 refreshSelectedContainer();
                 setIsEditingName(false);
-                toast.success(res);
+                toast.success(res as string);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
                 toast.error('Failed to update container name');
                 console.error(error);
             })
             .finally(() => setIsEditingName(false));
     };
 
-    const startEditing = () => {
-        setNewContainerName(selectedContainer.Names[0].replace("/", ""));
+    const startEditing = (): void => {
+        setNewContainerName(selectedContainer?.Names[0].replace("/", ""));
         setIsEditingName(true);
     };
 
-    const cancelEditing = () => {
-        setNewContainerName(selectedContainer.Names[0].replace("/", ""));
+    const cancelEditing = (): void => {
+        setNewContainerName(selectedContainer?.Names[0].replace("/", ""));
         setIsEditingName(false);
     };
 
@@ -52,14 +54,14 @@ export default function ContainerNameWidget() {
                 <input
                     type="text"
                     value={newContainerName}
-                    onChange={(e) => setNewContainerName(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewContainerName(e.target.value)}
                     className="text-lg font-bold bg-transparent border-b border-gray-300 focus:outline-none focus:border-gray-600"
                     autoFocus
                     onBlur={() => setTimeout(() => setIsEditingName(false), 100)}
                 />
             ) : (
                 <h1 className="text-lg font-bold">
-                    {selectedContainer.Names[0].replace("/", "")}
+                    {selectedContainer?.Names[0].replace("/", "")}
                 </h1>
             )}
             {!isEditingName && (

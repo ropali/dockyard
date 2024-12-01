@@ -2,14 +2,34 @@ import React, { useEffect, useState } from 'react';
 import { listen } from '@tauri-apps/api/event';
 import { invoke } from '@tauri-apps/api';
 import StatsChart from '../StatsChart';
+import { Chart as ChartJS, ChartData, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
-function ContainerStats({ selectedContainer }) {
-  const [stats, setStats] = useState([]);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+
+interface ContainerStats {
+  read: string;
+  cpu_stats: any;
+  memory_stats: any;
+  blkio_stats: any;
+  networks: any;
+}
+
+interface ContainerInfo {
+  Id: string;
+}
+
+interface ContainerStatsProps {
+  selectedContainer: ContainerInfo | null;
+}
+
+function ContainerStats({ selectedContainer }: ContainerStatsProps) {
+  const [stats, setStats] = useState<ContainerStats[]>([]);
 
   useEffect(() => {
     if (selectedContainer) {
       const unlistenStats = listen('stats', (event) => {
-        setStats((prevStats) => [...prevStats, event.payload]);
+        // Type assertion to ensure payload is ContainerStats
+        setStats((prevStats) => [...prevStats, event.payload as ContainerStats]);
       });
 
       invoke('container_stats', { cId: selectedContainer.Id });
@@ -27,7 +47,7 @@ function ContainerStats({ selectedContainer }) {
     </div>;
   }
 
-  const cpuData = {
+  const cpuData: ChartData = {
     labels: stats.map((stat) => new Date(stat.read).toLocaleTimeString()),
     datasets: [
       {
@@ -39,7 +59,7 @@ function ContainerStats({ selectedContainer }) {
     ],
   };
 
-  const memoryData = {
+  const memoryData: ChartData = {
     labels: stats.map((stat) => new Date(stat.read).toLocaleTimeString()),
     datasets: [
       {
@@ -51,7 +71,7 @@ function ContainerStats({ selectedContainer }) {
     ],
   };
 
-  const blockIOData = {
+  const blockIOData: ChartData = {
     labels: stats.map((stat) => new Date(stat.read).toLocaleTimeString()),
     datasets: [
       {
@@ -69,7 +89,7 @@ function ContainerStats({ selectedContainer }) {
     ],
   };
 
-  const networkData = {
+  const networkData: ChartData = {
     labels: stats.map((stat) => new Date(stat.read).toLocaleTimeString()),
     datasets: [
       {

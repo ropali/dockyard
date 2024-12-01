@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 
 // Add Network interface definition
-interface Network {
+export interface Network {
     id: string;
     name: string;
     // Add other properties as needed based on your backend's list_networks response

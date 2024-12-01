@@ -4,7 +4,7 @@ import VolumesList from '../Volumes/VolumesList';
 import VolumeDetails from '../Volumes/VolumeDetails';
 
 
-export default function VolumesScreen() {
+export default function VolumesScreen(): JSX.Element {
     const { selectedVolume } = useVolumes();
 
     return (
@@ -18,10 +18,3 @@ export default function VolumesScreen() {
         </div>
     );
 }
-
-
-
-
-
-
-

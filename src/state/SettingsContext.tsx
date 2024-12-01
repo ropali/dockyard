@@ -2,16 +2,21 @@ import React, { createContext, useState, useContext, useCallback, useEffect } fr
 import { reteriveValue, storeValue } from '../utils/storage';
 
 
-const SettingsContext = createContext();
+export interface SettingsContextType {
+  settings: {[key: string]: any} | null;
+  setSettingsValue: (key: string, value: any) => void;
+}
 
-export function SettingsProvider({ children }) {
-  const [settings, setSettings] = useState(null);
+const SettingsContext = createContext<SettingsContextType | null>(null);
+
+export function SettingsProvider({ children }: { children: React.ReactNode }) {
+  const [settings, setSettings] = useState<{[key: string]: any} | null>(null);
 
   const loadSettings = async () => {
     setSettings(await reteriveValue("settings"));
   };
 
-  const setSettingsValue = (key, value) => {
+  const setSettingsValue = (key: string, value: any) => {
     let updatedSettings = {...settings, [key]: value}
     setSettings(updatedSettings)
     storeValue("settings", updatedSettings)
@@ -32,5 +37,9 @@ export function SettingsProvider({ children }) {
 }
 
 export function useSettings() {
-  return useContext(SettingsContext);
+  const context = useContext(SettingsContext);
+  if (context === null) {
+    throw new Error('useSettings must be used within a SettingsProvider');
+  }
+  return context;
 }

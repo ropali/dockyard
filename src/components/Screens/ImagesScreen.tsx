@@ -1,13 +1,12 @@
-
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { useImages } from '../../state/ImagesContext';
 import ImagesList from '../Images/ImageList';
 import ImageDetails from '../Images/ImageDetails';
 
 
-export default function ImagesScreen() {
+export default function ImagesScreen(): JSX.Element {
 
-    const {selectedImage } = useImages();
+    const { selectedImage } = useImages();
     
     return (
         <div className="h-full w-full mt-4 flex rounded-lg overflow-hidden">

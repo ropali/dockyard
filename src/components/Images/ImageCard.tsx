@@ -1,8 +1,15 @@
-import React from 'react';
-import { formatDate, formatSize } from "../../utils"
+import React, {FC} from 'react';
+import {formatDate, formatSize} from "../../utils";
+// @ts-ignore
+import { Docker } from "../../types/docker";
 
-const ImageCard = ({ image, onClick, isSelected }) => {
+interface ImageCardProps {
+    image: Docker.ImageInfo;
+    onClick: () => void;
+    isSelected: boolean;
+}
 
+const ImageCard: FC<ImageCardProps> = ({image, onClick, isSelected}) => {
 
     return (
         <div

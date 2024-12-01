@@ -1,4 +1,11 @@
-function ImagesTopBar({ searchQuery, setSearchQuery }) {
+import React from 'react';
+
+interface NetworkTopBarProps {
+    searchQuery: string;
+    setSearchQuery: (query: string) => void;
+}
+
+function NetworkTopBar({ searchQuery, setSearchQuery }: NetworkTopBarProps) {
     return (
         <div className="flex flex-row items-center space-x-2 w-full overflow-hidden">
             <div className="flex flex-grow space-x-2">
@@ -23,16 +30,10 @@ function ImagesTopBar({ searchQuery, setSearchQuery }) {
                     </svg>
                 </label>
 
-                {/* <select className="select select-bordered select-sm flex-shrink-0 flex-grow"
-                    onChange={(e) => { onFilterChange(e.target.value) }}
-                >
-                    <option defaultValue={"All"}>All</option>
-                    <option>Running</option>
-                    <option>Stopped</option>
-                </select> */}
+
             </div>
         </div>
     );
 }
 
-export default ImagesTopBar;
+export default NetworkTopBar;

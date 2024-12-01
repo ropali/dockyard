@@ -1,7 +1,8 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 
-export type ContainerSummary = {
+export type Container = {
+    [x: string]: any;
     Id: string;
     Name: string;
     Image: string;
@@ -10,21 +11,21 @@ export type ContainerSummary = {
 };
 
 export type ContainerContextType = {
-    containers: ContainerSummary[];
-    selectedContainer: ContainerSummary | null;
+    containers: Container[];
+    selectedContainer: Container | null;
     loadContainers: () => void;
-    setSelectedContainer: (container: ContainerSummary | null) => void;
+    setSelectedContainer: (container: Container | null) => void;
     refreshSelectedContainer: () => void;
 };
 
 const ContainerContext = createContext<ContainerContextType | null>(null);
 
 export function ContainerProvider({ children }: { children: React.ReactNode }): JSX.Element {
-    const [containers, setContainers] = useState<ContainerSummary[]>([]);
-    const [selectedContainer, setSelectedContainer] = useState<ContainerSummary | null>(null);
+    const [containers, setContainers] = useState<Container[]>([]);
+    const [selectedContainer, setSelectedContainer] = useState<Container | null>(null);
 
     const loadContainers = useCallback(() => {
-        invoke<ContainerSummary[]>('fetch_containers').then((newContainers) => {
+        invoke<Container[]>('fetch_containers').then((newContainers) => {
             setContainers(newContainers);
         });
     }, []);
@@ -34,7 +35,7 @@ export function ContainerProvider({ children }: { children: React.ReactNode }): 
             return;
         }
 
-        invoke<ContainerSummary>('get_container', { cId: selectedContainer.Id }).then((res) => {
+        invoke<Container>('get_container', { cId: selectedContainer.Id }).then((res) => {
             if (res) {
                 setSelectedContainer(res);
             }

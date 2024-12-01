@@ -4,7 +4,7 @@ import NetworkList from '../networks/NetworkList';
 import NetworkDetails from '../networks/NetworkDetails';
 
 
-export default function NetworkScreen() {
+export default function NetworkScreen(): JSX.Element {
     const { selectedVolume } = useVolumes();
 
     return (
@@ -18,10 +18,3 @@ export default function NetworkScreen() {
         </div>
     );
 }
-
-
-
-
-
-
-

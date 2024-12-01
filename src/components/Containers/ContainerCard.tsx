@@ -1,7 +1,9 @@
-import { ContainerSummary } from '../../state/ContainerContext';
+import React from 'react';
+
+import { Container } from '../../state/ContainerContext';
 
 interface ContainerCardProps {
-    container: ContainerSummary;
+    container: Container;
     onClick: () => void;
     isSelected: boolean;
 }

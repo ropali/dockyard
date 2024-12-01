@@ -3,11 +3,12 @@ import React, { createContext, useState, useContext, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 
 interface ImageInfo {
-  id: string;
+  Id: string;
   name: string;
   tag: string;
   created: string;
   size: number;
+  RepoTags: string[];
 }
 
 interface ImageContextType {

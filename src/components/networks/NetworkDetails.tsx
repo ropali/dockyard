@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState, useEffect} from "react";
 import {IconCopy} from "../../Icons/index";
 import LogoScreen from "../LogoScreen";
 import {copyToClipboard} from "../../utils";
@@ -7,9 +7,13 @@ import {invoke} from "@tauri-apps/api";
 import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
 
 
-export default function NetworkDetails() {
+interface NetworkDetailsProps {
+
+}
+
+export default function NetworkDetails(props: NetworkDetailsProps) {
     const {selectedNetwork, setSelectedNetwork} = useNetworks();
-    const [activeTab, setActiveTab] = useState('INSPECT');
+    const [activeTab, setActiveTab] = useState<'INSPECT'>('INSPECT');
 
     const inspectNetwork = () => {
         if (selectedNetwork) {

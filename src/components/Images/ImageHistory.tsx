@@ -2,34 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { useImages } from '../../state/ImagesContext'
 import { formatSize, formatDate } from '../../utils';
 import { invoke } from '@tauri-apps/api';
-import toast from '../../utils/toast.ts';
+import toast from '../../utils/toast';
 
+interface ImageHistory {
+    Created: number;
+    CreatedBy: string;
+    Size: number;
+    Tags?: string[];
+}
 
+interface ImageHistoryProps {
 
-const ImageHistory = () => {
+}
+
+const ImageHistory: React.FC<ImageHistoryProps> = () => {
 
     const { selectedImage } = useImages();
 
-    const [history, setHistory] = useState([])
+    const [history, setHistory] = useState<Array<ImageHistory>>([])
 
-
-    function getHistory() {
-        invoke('image_history', { name: selectedImage.RepoTags[0] }).then((history) => {
-            setHistory(history);
-
-        }).catch((error) => {
-            toast.error("Failed to fetch image history.")
-            console.error("Error fetching image history:", error);
-        });
+    const getHistory = () => {
+        if (selectedImage) {
+            invoke('image_history', { name: selectedImage.RepoTags[0] }).then((history: unknown) => {
+                setHistory(history as Array<ImageHistory>);
+            }).catch((error) => {
+                toast.error("Failed to fetch image history.")
+                console.error("Error fetching image history:", error);
+            });
+        }
     }
-
 
     useEffect(() => {
         getHistory()
 
     }, [selectedImage])
-
-   
 
     return (
         <div className="overflow-x-auto h-full">
@@ -72,5 +78,3 @@ const ImageHistory = () => {
         </div>
     );
 };
-
-export default ImageHistory;

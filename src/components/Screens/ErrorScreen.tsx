@@ -1,10 +1,17 @@
 import React from 'react';
-import {useLocation, useNavigate} from "react-router-dom";
-import {IconBxErrorCircle} from "../../Icons/index.tsx";
+import { useLocation, useNavigate } from "react-router-dom";
+import { IconBxErrorCircle } from "../../Icons/index.tsx";
 
-const ErrorScreen = () => {
+interface ErrorScreenProps {
+    location: {
+        state?: {
+            message: string
+        }
+    }
+}
+
+const ErrorScreen: React.FC<ErrorScreenProps> = ({ location }) => {
     const navigate = useNavigate();
-    const location = useLocation();
     const errorMessage = location.state?.message
 
     return (

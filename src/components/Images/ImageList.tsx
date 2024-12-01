@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 
-import { useImages } from '../../state/ImagesContext'
-import ImagesTopBar from './ImagesTopBar'
-import ImageCard from './ImageCard'
+import { useImages } from '../../state/ImagesContext';
+import ImagesTopBar from './ImagesTopBar';
+import ImageCard from './ImageCard';
 
-function ImagesList() {
+interface ImageListProps {
+
+}
+
+function ImagesList(props: ImageListProps) {
 
     const { images, loadImages, setSelectedImage, selectedImage } = useImages();
 
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     const filteredImages = images.filter(image => {
         return image.RepoTags[0]?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -36,7 +40,7 @@ function ImagesList() {
                         key={image.Id}
                         image={image}
                         onClick={() => setSelectedImage(image)}
-                        isSelected={selectedImage && selectedImage.Id === image.Id}
+                        isSelected={selectedImage?.Id === image.Id}
                     />
                 ))}
             </div>

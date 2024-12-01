@@ -1,24 +1,34 @@
-import React, {useEffect, useState} from 'react';
-import {invoke} from "@tauri-apps/api";
-import toast from "../../utils/toast.ts";
-import {useContainers} from "../../state/ContainerContext.tsx";
-import LogoScreen from "../LogoScreen.tsx";
+import React, { useEffect, useState } from 'react';
+import { invoke } from '@tauri-apps/api';
+import toast from '../../utils/toast';
+import { useContainers } from '../../state/ContainerContext';
+import LogoScreen from '../LogoScreen';
+
+interface Process {
+    uuid: string;
+    pid: string;
+    ppid: string;
+    c: string;
+    tty: string;
+    time: string;
+    cmd: string;
+}
 
 const ContainerProcesses = () => {
-    const {selectedContainer} = useContainers();
-    const [processes, setProcess] = useState([]);
+    const { selectedContainer } = useContainers();
+    const [processes, setProcess] = useState<Process[]>([]);
 
     const isContainerRunning = () => {
         return (
             selectedContainer != null &&
-            selectedContainer?.Status.toLowerCase().includes("up")
+            selectedContainer?.Status.toLowerCase().includes('up')
         );
     };
 
     const getProcesses = async () => {
         try {
-            const response = await invoke("get_container_processes", {
-                container: selectedContainer.Names[0].replace("/", ""),
+            const response: Process[] = await invoke('get_container_processes', {
+                container: selectedContainer?.Names[0].replace('/', '') || '',
             });
             setProcess(response);
         } catch (error) {
@@ -27,11 +37,11 @@ const ContainerProcesses = () => {
     };
 
     useEffect(() => {
-        let intervalId;
+        let intervalId: number | undefined;
 
         if (isContainerRunning()) {
             getProcesses();
-            intervalId = setInterval(() => {
+            intervalId = window.setInterval(() => {
                 getProcesses();
             }, 10000); // Calls getProcesses every 10 seconds
         }
@@ -44,7 +54,7 @@ const ContainerProcesses = () => {
     }, [selectedContainer]);
 
     if (!isContainerRunning()) {
-        return <LogoScreen message={"Container is not running!"}/>;
+        return <LogoScreen message="Container is not running!"/>;
     }
 
     return (
@@ -62,15 +72,15 @@ const ContainerProcesses = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {processes?.map((process, index) => (
+                {processes.map((process, index) => (
                     <tr key={index} className="text-base-content">
-                        <td>{process[0]}</td>
-                        <td>{process[1]}</td>
-                        <td>{process[2]}</td>
-                        <td>{process[3]}</td>
-                        <td>{process[4]}</td>
-                        <td>{process[5]}</td>
-                        <td>{process[6]}</td>
+                        <td>{process.uuid}</td>
+                        <td>{process.pid}</td>
+                        <td>{process.ppid}</td>
+                        <td>{process.c}</td>
+                        <td>{process.tty}</td>
+                        <td>{process.time}</td>
+                        <td>{process.cmd}</td>
                     </tr>
                 ))}
                 </tbody>

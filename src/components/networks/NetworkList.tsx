@@ -7,7 +7,7 @@ import NetworkCard from "./NetworkCard";
 
 export default function NetworkList() {
     const { networks, loadNetworks, setSelectedNetwork, selectedNetwork } = useNetworks();
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState<string>('');
     
     const filteredNetworks = networks.filter(network =>
         network.Name.toLowerCase().includes(searchQuery.toLowerCase())

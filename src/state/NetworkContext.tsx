@@ -1,12 +1,8 @@
 import React, { createContext, useState, useContext, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 
-// Add Network interface definition
-export interface Network {
-    id: string;
-    name: string;
-    // Add other properties as needed based on your backend's list_networks response
-}
+import { Network } from '../models/Network';
+
 
 interface NetworkContextType {
     networks: Network[];
@@ -22,8 +18,9 @@ export function NetworksProvider({ children }: { children: React.ReactNode }): J
     const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
 
     const loadNetworks = useCallback(async (): Promise<void> => {
-        const networks = await invoke<Network[]>('list_networks');
-        setNetworks(networks);
+        const networkData = await invoke<any[]>('list_networks');
+        const networkInstances = networkData.map(data => new Network(data));
+        setNetworks(networkInstances);
     }, []);
 
     return (

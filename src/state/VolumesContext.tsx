@@ -1,15 +1,6 @@
 import React, { createContext, useState, useContext, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
-
-interface Volume {
-    Name: string;
-    Driver: string;
-    Mountpoint: string;
-    CreatedAt: string;
-    Labels: Record<string, string>;
-    Scope: string;
-    Options: Record<string, string>;
-}
+import { Volume } from '../models/Volume';
 
 interface VolumesContextType {
     volumes: Volume[];
@@ -25,8 +16,9 @@ export function VolumesProvider({ children }: { children: React.ReactNode }): JS
     const [selectedVolume, setSelectedVolume] = useState<Volume | null>(null);
 
     const loadVolumes = useCallback(async (): Promise<void> => {
-        const volumes = await invoke<Volume[]>('list_volumes');
-        setVolumes(volumes || []);
+        const data = await invoke<Volume[]>('list_volumes');
+        console.log(data);
+        setVolumes(data["Volumes"] || []);
     }, []);
 
     return (

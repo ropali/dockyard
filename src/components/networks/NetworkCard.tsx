@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Network } from '../../state/NetworkContext';
+import { Network } from '../../models/Network';
 
 interface NetworkCardProps {
     network: Network;
@@ -14,9 +14,9 @@ const NetworkCard: FC<NetworkCardProps> = ({ network, onClick, isSelected }) => 
                 ${isSelected ? 'border-l-4 border-base-content' : ''}`}
             onClick={onClick}
         >
-            <h2 className="text-sm font-semibold mb-1 truncate pr-6">{network.name}</h2>
+            <h2 className="text-sm font-semibold mb-1 truncate pr-6">{network.Name}</h2>
             <div className="text-xs  space-y-0.5">
-                <p><span className="font-medium">ID:</span> {network.id}</p>
+                <p><span className="font-medium">ID:</span> {network?.getShortId()}</p>
             </div>
             <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                 <svg className="w-5 h-5 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

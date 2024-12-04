@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useContainers } from '../../state/ContainerContext';
 import { useVolumes } from '../../state/VolumesContext';
 
+import { Container } from '../../models/Container';
+import { Volume } from '../../models/Volume';
 
 const VolumeAttachedContainers = () => {
 
     const { selectedVolume } = useVolumes();
 
-    const [containerList, setContainerList] = useState([])
+    const [containerList, setContainerList] = useState<Container[]>([])
 
     const { containers, loadContainers } = useContainers()
 
@@ -19,7 +21,7 @@ const VolumeAttachedContainers = () => {
             if (container && container.Mounts) {
 
                 container.Mounts.forEach((mount) => {
-                    if (mount.Name === selectedVolume.Name) {
+                    if (mount.Name === selectedVolume?.Name) {
                         matched = true
                     }
                 })

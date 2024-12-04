@@ -8,4 +8,8 @@ export class Network implements Docker.Network {
         this.Id = data.Id || '';
         this.Name = data.Name || '';
     }
+
+    getShortId(): string {
+        return this.Id.substring(0, 12);
+    }
 }

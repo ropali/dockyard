@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {useVolumes} from "../../state/VolumesContext"
 import VolumesTopBar from "./VolumesTopBar";
 import VolumeCard from "./VolumeCard";
@@ -8,9 +8,9 @@ export default function VolumesList() {
     const { volumes, loadVolumes, setSelectedVolume, selectedVolume } = useVolumes();
     const [searchQuery, setSearchQuery] = useState('');
 
-    const filteredVolumes = volumes.filter(volume =>
+    const filteredVolumes = Array.isArray(volumes) ? volumes.filter(volume =>
         volume.Name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    ) : [];
 
     useEffect(() => {
         loadVolumes();

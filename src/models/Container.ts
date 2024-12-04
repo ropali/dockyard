@@ -7,6 +7,7 @@ export class Container implements Docker.Container {
     Status: string;
     State: string;
     Ports: { PublicPort: number; PrivatePort: number; }[];
+    Mounts: { Name: string; }[];
 
     constructor(data: Partial<Docker.Container>) {
         this.Id = data.Id || '';
@@ -14,6 +15,8 @@ export class Container implements Docker.Container {
         this.Image = data.Image || '';
         this.Status = data.Status || '';
         this.State = data.State || '';
+        this.Ports = data.Ports || [];
+        this.Mounts = data.Mounts || [];
     }
 
     getName(): string {

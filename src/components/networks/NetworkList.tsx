@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { useNetworks } from "../../state/NetworkContext";
 import NetworkTopBar from "./NetworkTopBar";

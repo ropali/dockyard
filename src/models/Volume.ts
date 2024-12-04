@@ -18,4 +18,8 @@ export class Volume implements Docker.Volume {
         this.Scope = data.Scope || '';
         this.Options = data.Options || {};
     }
+
+    toString() {
+        return JSON.stringify(this);
+    }
 }

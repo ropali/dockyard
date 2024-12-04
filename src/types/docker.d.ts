@@ -9,6 +9,9 @@ export declare namespace Docker {
       PublicPort: number;
       PrivatePort: number;
     }[];
+    Mounts: {
+      Name: string;
+    }[];
 
     getName(): string;
 

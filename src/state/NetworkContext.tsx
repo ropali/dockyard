@@ -30,10 +30,12 @@ export function NetworksProvider({ children }: { children: React.ReactNode }): J
     );
 }
 
-export function useNetworks(): NetworkContextType {
+const useNetworks = (): NetworkContextType => {
     const context = useContext(NetworksContext);
     if (!context) {
         throw new Error('useNetworks must be used within a NetworksProvider');
     }
     return context;
 }
+
+export { useNetworks };

@@ -1,5 +1,5 @@
-import { formatSize } from '../utils';
-import { Docker } from '../types/docker';
+import {formatSize} from '../utils';
+import {Docker} from '../types/docker';
 
 export class Image implements Docker.Image {
     Id: string;
@@ -23,7 +23,7 @@ export class Image implements Docker.Image {
     }
 
     getShortId(): string {
-        return this.Id.slice(7, 19);
+        return this.Id.split(':')[1].slice(0, 12);
     }
 }
 

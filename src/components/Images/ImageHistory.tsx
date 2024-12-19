@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useImages } from '../../state/ImagesContext'
-import { formatSize, formatDate } from '../../utils';
-import { invoke } from '@tauri-apps/api';
+import React, {useEffect, useState} from 'react';
+import {useImages} from '../../state/ImagesContext'
+import {formatDate} from '../../utils';
+import {invoke} from '@tauri-apps/api';
 import toast from '../../utils/toast';
-import { ImageHistory as ImageHistoryModel } from '../../models/Image';
+import {ImageHistory as ImageHistoryModel} from '../../models/Image';
 
 
 interface ImageHistoryProps {}
@@ -44,13 +44,14 @@ const ImageHistory: React.FC<ImageHistoryProps> = () => {
                 </thead>
                 <tbody>
                     {history.map((layer, idx) => (
+                        console.log('layer:', layer),
                         <tr key={idx + 1} className="text-base-content">
                             <td className="text-base">{idx + 1}</td>
                             <td className="whitespace-nowrap text-base">{formatDate(layer.Created)}</td>
                             <td className="max-w-md truncate text-base" title={layer.CreatedBy}>
                                 {layer.CreatedBy || 'N/A'}
                             </td>
-                            <td className='min-w-12 text-base'>{layer.getFormattedSize()}</td>
+                            <td className='min-w-12 text-base'>{layer?.getFormattedSize()}</td>
                             <td>
                                 {layer.Tags && layer.Tags.length > 0 ? (
                                     <div className="flex flex-wrap gap-1">

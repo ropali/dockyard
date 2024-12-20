@@ -34,6 +34,12 @@ export class ImageHistory implements Docker.ImageHistory {
     Size: number;
     Tags?: string[];
 
+    constructor(data: Partial<Docker.ImageHistory>) {
+        this.Created = data.Created || 0;
+        this.CreatedBy = data.CreatedBy || '';
+        this.Size = data.Size || 0;
+        this.Tags = data.Tags || [];
+    }
 
     getCreatedDate(): string {
         return new Date(this.Created * 1000).toLocaleDateString();
@@ -42,5 +48,4 @@ export class ImageHistory implements Docker.ImageHistory {
     getFormattedSize(): string {
         return formatSize(this.Size);
     }
-    
 }

@@ -57,7 +57,7 @@ const ImageHistory: React.FC<ImageHistoryProps> = () => {
                             <td className="max-w-md truncate text-base" title={layer.CreatedBy}>
                                 {layer.CreatedBy || 'N/A'}
                             </td>
-                            <td className='min-w-12 text-base'>{layer?.getFormattedSize()}</td>
+                            <td className='min-w-12 text-base'>{layer?.c()}</td>
                             <td>
                                 {layer.Tags && layer.Tags.length > 0 ? (
                                     <div className="flex flex-wrap gap-1">

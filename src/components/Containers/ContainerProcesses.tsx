@@ -1,22 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api';
+import React, {useEffect, useState} from 'react';
+import {invoke} from '@tauri-apps/api';
 import toast from '../../utils/toast';
-import { useContainers } from '../../state/ContainerContext';
+import {useContainers} from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';
+import {ContainerProcess} from "../../models";
 
-interface Process {
-    uuid: string;
-    pid: string;
-    ppid: string;
-    c: string;
-    tty: string;
-    time: string;
-    cmd: string;
-}
 
 const ContainerProcesses = () => {
-    const { selectedContainer } = useContainers();
-    const [processes, setProcess] = useState<Process[]>([]);
+    const {selectedContainer} = useContainers();
+    const [processes, setProcess] = useState<ContainerProcess[]>([]);
 
     const isContainerRunning = () => {
         return (
@@ -27,21 +19,27 @@ const ContainerProcesses = () => {
 
     const getProcesses = async () => {
         try {
-            const response: Process[] = await invoke('get_container_processes', {
+            const response: string[][] = await invoke('get_container_processes', {
                 container: selectedContainer?.getName() || '',
             });
-            
-            setProcess(response.map((process) => ({
-                uuid: process[0],
-                pid: process[1],
-                ppid: process[2],
-                c: process[3],
-                tty: process[4],
-                time: process[5],
-                cmd: process[6],
-            })));
 
-            
+            setProcess(response.map((process: string[]) => {
+
+                return new ContainerProcess(
+                    {
+                        uuid: process[0],
+                        pid: process[1],
+                        ppid: process[2],
+                        c: process[3],
+                        tty: process[4],
+                        time: process[5],
+                        cmd: process[6],
+                    }
+                )
+
+            }));
+
+
         } catch (error) {
             toast.error(error);
         }

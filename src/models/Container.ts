@@ -1,4 +1,4 @@
-import { Docker } from '../types/docker';
+import {Docker} from '../types/docker';
 
 export class Container implements Docker.Container {
     Id: string;
@@ -25,5 +25,26 @@ export class Container implements Docker.Container {
 
     isRunning(): boolean {
         return this.State.toLowerCase() === 'running';
+    }
+}
+
+
+export class ContainerProcess implements Docker.ContainerProcess {
+    uuid: string;
+    pid: string;
+    ppid: string;
+    c: string;
+    tty: string;
+    time: string;
+    cmd: string;
+
+    constructor(data: Partial<Docker.ContainerProcess>) {
+        this.uuid = data.uuid || '';
+        this.pid = data.pid || '';
+        this.ppid = data.ppid || '';
+        this.c = data.c || '';
+        this.tty = data.tty || '';
+        this.time = data.time || '';
+        this.cmd = data.cmd || '';
     }
 }

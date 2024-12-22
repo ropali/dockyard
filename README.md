@@ -122,6 +122,7 @@ cd dockyard
 npm install
 
 # Build the Rust backend
+cd src-tauri
 cargo build --release
 
 # Run the app in development mode

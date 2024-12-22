@@ -2,17 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.0] - 2024-11-29
+## [0.4.0] - 2024-12-22
 
 ### 🚀 Features
 
-- Added container processes tab
-- Container env vars tab
+- Migration to typescript (#30)
 
 ### 🐛 Bug Fixes
 
-- Update fail message & modal UI theme issue
-- Make the ping interval tighter
+- Container process correct datatype and mapping
+- Image delete confirmation dialog box replaced with sweetalert popup
+- Image export functionality
 
 
 

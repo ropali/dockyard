@@ -66,11 +66,16 @@ pub async fn delete_image(
 }
 
 #[tauri::command]
-pub async fn export_image(state: tauri::State<'_, AppState>, image_name: String) -> Result<String, String> {
+pub async fn export_image(
+    state: tauri::State<'_, AppState>,
+    image_name: String,
+) -> Result<String, String> {
     let home_dir = get_user_home_dir().unwrap();
 
-    let path = format!("{home_dir}/{image_name}.tar.gz");
+    // Image name can contain slashes, which are not allowed in file names
+    let cleaned_img_name = image_name.clone().replace("/", "_");
 
+    let path = format!("{home_dir}/Downloads/{cleaned_img_name}.tar.gz");
 
     let file_result = File::create_new::<&str>(path.as_ref()).await;
     match file_result {
@@ -86,9 +91,13 @@ pub async fn export_image(state: tauri::State<'_, AppState>, image_name: String)
             // Handle the error: log it, return an error message, etc.
             let kind = err.kind();
             match kind {
-                ErrorKind::PermissionDenied => Err(String::from(format!("Permission denied to open target file: {path}"))),
-                ErrorKind::AlreadyExists => Err(String::from(format!("Target file already exist at {path}"))),
-                _ => Err(String::from(format!("Failed to open target file: {path}")))
+                ErrorKind::PermissionDenied => Err(String::from(format!(
+                    "Permission denied to open target file: {path}"
+                ))),
+                ErrorKind::AlreadyExists => {
+                    Err(String::from(format!("Target file already exist at {path}")))
+                }
+                _ => Err(String::from(format!("Failed to open target file: {path}"))),
             }
         }
     }

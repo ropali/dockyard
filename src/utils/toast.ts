@@ -27,7 +27,7 @@ const toast = (() => {
                 timer: duration,
                 timerProgressBar: true,
                 icon: type,
-                title: message,
+                text: message,
                 background: 'oklch(var(--b2))',
                 customClass: {
                     popup: 'text-base-content',

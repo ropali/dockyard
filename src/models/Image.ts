@@ -16,11 +16,10 @@ export class Image implements Docker.Image {
         this.RepoTags = data.RepoTags || [];
     }
 
-    
-
     getName(): string {
         return this.RepoTags[0];
     }
+
 
     getShortId(): string {
         return this.Id.split(':')[1].slice(0, 12);

@@ -104,7 +104,7 @@ function ImageDetails() {
         //@ts-ignore
         setLoadingButton("export-btn");
 
-        invoke("export_image", {imageName: selectedImage?.getName}).then((res) => {
+        invoke("export_image", {imageName: selectedImage?.getName()}).then((res) => {
             toast.success(res as string);
         }).catch((err) => {
             toast.error(err);

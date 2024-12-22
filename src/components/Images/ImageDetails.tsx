@@ -2,11 +2,12 @@ import {invoke} from '@tauri-apps/api';
 import React, {useEffect, useState} from 'react';
 import toast from '../../utils/toast';
 import {useImages} from "../../state/ImagesContext";
-import {IconBxExport, IconBxTrashAlt, IconCopy} from '../../Icons/index';
+import {IconBxExport, IconBxTrashAlt, IconCopy} from '../../Icons';
 import {copyToClipboard, formatSize} from '../../utils';
 import LogoScreen from '../LogoScreen';
 import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
 import ImageHistory from "./ImageHistory";
+import Swal, {SweetAlertResult} from "sweetalert2";
 
 function ImageDetails() {
     const {selectedImage, setSelectedImage, loadImages} = useImages();
@@ -40,26 +41,53 @@ function ImageDetails() {
         }
     };
 
-    function handleDelete(event) {
+    const handleDelete = async (event: React.MouseEvent<HTMLButtonElement>): Promise<void> => {
         event.preventDefault();
-        const modal = document.getElementById('delete_image_modal');
+        let result: SweetAlertResult = await Swal.fire({
+            title: 'Are you sure?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            icon: 'warning',
+            html: `
+            <div class="form-control">
+              <label class="label cursor-pointer">
+                <span class="font-bold">Force</span>
+                <input type="checkbox" checked="checked" class="checkbox" id="force-delete" />
+              </label>
+            </div>
+            <div class="form-control">
+              <label class="label cursor-pointer">
+                <span class="font-bold">Prune</span>
+                <input type="checkbox" checked="checked" class="checkbox" id="prune"/>
+              </label>
+          </div>
+        `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    (document.getElementById('force-delete') as HTMLInputElement).checked,
+                    (document.getElementById('prune') as HTMLInputElement).checked,
+                ];
+            },
+            background: 'oklch(var(--b2))',
+            customClass: {
+                popup: 'text-base-content',
+            },
+        });
 
-        //@ts-ignore
-        const forceDelete = modal?.querySelector('input[name="forceDelete"]')?.checked; 
-        //@ts-ignore
-        const noPrune = modal?.querySelector('input[name="noPrune"]')?.checked;
+        if (result.isDenied || result.isDismissed) {
+            setLoadingButton(null);
+            return;
+        }
 
         //@ts-ignore
         setLoadingButton("delete-btn");
 
-        //@ts-ignore
-        modal?.close();
-
         invoke("delete_image", {
             imageName: selectedImage?.getName(),
-            force: forceDelete,
-            noPrune: noPrune
-        }).then((res) => {
+            force: result.value[0],
+            noPrune: result.value[1],
+        }).then((_: unknown) => {
             toast.success('Image successfully deleted!');
             setSelectedImage(null);
             loadImages();
@@ -70,12 +98,12 @@ function ImageDetails() {
 
         });
 
-    }
+    };
 
     const exportImage = () => {
         //@ts-ignore
         setLoadingButton("export-btn");
-        
+
         invoke("export_image", {imageName: selectedImage?.getName}).then((res) => {
             toast.success(res as string);
         }).catch((err) => {
@@ -85,40 +113,13 @@ function ImageDetails() {
         });
     }
 
+
     if (selectedImage == null) {
         return <LogoScreen message={"Select an image to see more details"}/>;
     }
 
     return (
         <>
-            <dialog id="delete_image_modal" className="modal">
-                <div className="modal-box">
-                    <h3 className="font-bold text-lg">Confirm Delete</h3>
-                    <p className="py-4">Are you sure you want to delete this image?</p>
-                    <div className="py-2">
-                        <label className="flex items-center">
-                            <input type="checkbox" name="forceDelete" className="checkbox checkbox-primary mr-2"
-                                   defaultChecked/>
-                            Force
-                        </label>
-                    </div>
-                    <div className="py-2">
-                        <label className="flex items-center">
-                            <input type="checkbox" name="noPrune" className="checkbox checkbox-primary mr-2"/>
-                            Prune
-                        </label>
-                    </div>
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <button className="btn btn-ghost mr-2"
-                                    onClick={(e) => document.getElementById('delete_image_modal')?.closeModal()}>Cancel
-                            </button>
-                            <button className="btn btn-error" onClick={handleDelete}>Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </dialog>
-
             <div className="dark p-4 bg-base-100 shadow-sm rounded-md h-full overflow-x-hidden flex flex-col">
                 <div className="flex items-center">
                     <h1 className="text-lg font-bold mr-2">{selectedImage?.getName()}</h1>
@@ -149,7 +150,7 @@ function ImageDetails() {
                     <div className="tooltip tooltip-bottom hover:tooltip-open" data-tip="Delete">
                         <button
                             className="btn btn-square btn-sm hover:btn-error mr-3"
-                            onClick={() => document.getElementById('delete_image_modal')?.showModal()}
+                            onClick={handleDelete}
                             disabled={loadingButton == "delete-btn"}
                         >
                             {loadingButton == "delete-btn" ? <span className="loading loading-bars loading-xs"></span> :

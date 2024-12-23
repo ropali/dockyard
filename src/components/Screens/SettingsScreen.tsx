@@ -1,14 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { capitalizeFirstLetter } from '../../utils';
-import { ALL_THEMES, DEFAULT_THEME, DOCKER_TERMINAL, Theme } from '../../constants';
-import { useSettings } from '../../state/SettingsContext';
-import { getVersion } from '@tauri-apps/api/app';
-import { checkUpdate, installUpdate } from '@tauri-apps/api/updater';
-import { relaunch } from '@tauri-apps/api/process';
-import { IconGithub } from '../../Icons/index';
+import React, {useCallback, useEffect, useState} from 'react';
+import {capitalizeFirstLetter} from '../../utils';
+import {ALL_THEMES, DEFAULT_THEME, DOCKER_TERMINAL, Theme} from '../../constants';
+import {useSettings} from '../../state/SettingsContext';
+import {getVersion} from '@tauri-apps/api/app';
+import {checkUpdate, installUpdate} from '@tauri-apps/api/updater';
+import {relaunch} from '@tauri-apps/api/process';
+import {IconGithub} from '../../Icons/index';
 import Swal from 'sweetalert2';
-import { invoke } from '@tauri-apps/api';
-import { reteriveValue, storeValue } from '../../utils/storage';
+import {invoke} from '@tauri-apps/api';
+import {reteriveValue, storeValue} from '../../utils/storage';
 import toast from '../../utils/toast';
 
 interface SettingsItemProps {
@@ -163,7 +163,7 @@ const SettingsScreen = () => {
     const updater = useCallback(async () => {
         setIsCheckingUpdate(true);
         try {
-            const { shouldUpdate, manifest } = await checkUpdate();
+            const {shouldUpdate} = await checkUpdate();
             if (!shouldUpdate) {
                 toast.success('Your app is up to date.');
                 return;

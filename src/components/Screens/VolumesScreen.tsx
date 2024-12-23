@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useVolumes } from '../../state/VolumesContext';
+import React from 'react';
+import {useVolumes} from '../../state/VolumesContext';
 import VolumesList from '../Volumes/VolumesList';
 import VolumeDetails from '../Volumes/VolumeDetails';
 

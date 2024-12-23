@@ -1,6 +1,6 @@
 import React from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
-import { IconBxErrorCircle } from "../../Icons/index.tsx";
+import {useNavigate} from "react-router-dom";
+import {IconBxErrorCircle} from "../../Icons";
 
 interface ErrorScreenProps {
     location?: {

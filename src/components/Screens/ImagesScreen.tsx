@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useImages } from '../../state/ImagesContext';
+import React from 'react';
+import {useImages} from '../../state/ImagesContext';
 import ImagesList from '../Images/ImageList';
 import ImageDetails from '../Images/ImageDetails';
 

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 import "@patternfly/react-core/dist/styles/base.css";
-import { IconTextWrap, IconArrowDownCircle, IconArrowUpCircle } from "../Icons/index.tsx";
+import {IconArrowDownCircle, IconArrowUpCircle, IconTextWrap} from "../Icons";
 
-import { LogViewer, LogViewerSearch } from '@patternfly/react-log-viewer';
-import { Toolbar, ToolbarContent, ToolbarItem, ToolbarGroup } from '@patternfly/react-core';
+import {LogViewer, LogViewerSearch} from '@patternfly/react-log-viewer';
+import {Toolbar, ToolbarContent, ToolbarGroup, ToolbarItem} from '@patternfly/react-core';
 
 interface LogsViewerProps {
     logs: string[];
@@ -15,10 +15,11 @@ const LogsViewer = ({ logs }: LogsViewerProps) => {
     const [scrollTo, setScrollTo] = useState(0);
 
 
+
     const rightAlignedToolbarGroup = (
         <React.Fragment>
             <ToolbarGroup variant="icon-button-group" className='bg-base-100'>
-                <ToolbarItem alignSelf='center' spacer="spacerLg">
+                <ToolbarItem alignSelf='center'>
                     <div className="join">
                         <button
                             className="btn btn-sm join-item tooltip tooltip-left hover:tooltip-open" data-tip="Scroll To Bottom"
@@ -58,7 +59,9 @@ const LogsViewer = ({ logs }: LogsViewerProps) => {
                 <Toolbar>
                     <ToolbarContent className='bg-base-100'>
                         <ToolbarItem className='border-base-content'>
-                            <LogViewerSearch placeholder="Search" className="text-base-content bg-base-100 border-base-content" />
+                            <LogViewerSearch placeholder="Search"
+                                             className="text-base-content bg-base-100 border-base-content"
+                                             minSearchChars={3}/>
                         </ToolbarItem>
                         <ToolbarGroup align={{ default: 'alignRight' }}>{rightAlignedToolbarGroup}</ToolbarGroup>
 

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {IconCopy} from "../../Icons/index";
 import LogoScreen from "../LogoScreen";
 import {copyToClipboard} from "../../utils";
@@ -11,13 +11,14 @@ interface NetworkDetailsProps {
 
 }
 
-export default function NetworkDetails(props: NetworkDetailsProps) {
+export default function NetworkDetails(_: NetworkDetailsProps) {
     const {selectedNetwork, setSelectedNetwork} = useNetworks();
     const [activeTab, setActiveTab] = useState<'INSPECT'>('INSPECT');
 
     const inspectNetwork = () => {
         if (selectedNetwork) {
             invoke('inspect_network', {name: selectedNetwork.Name}).then((info) => {
+                // @ts-ignore
                 setSelectedNetwork(info)
             });
         }
@@ -37,6 +38,7 @@ export default function NetworkDetails(props: NetworkDetailsProps) {
     const renderContent = () => {
         switch (activeTab) {
             case 'INSPECT':
+                // @ts-ignore
                 return <JSONSyntaxHighlighter id="json-pretty" json={selectedNetwork}></JSONSyntaxHighlighter>;
 
             default:

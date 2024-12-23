@@ -1,6 +1,11 @@
 import React from 'react';
+import {Docker} from "../../types/docker";
 
-function VolumeCard({ volume, onClick, isSelected }) {
+function VolumeCard({volume, onClick, isSelected}: {
+    volume: Docker.Volume,
+    onClick: () => void,
+    isSelected: boolean
+}) {
     return (
         <div
             className={`bg-base-100 shadow-sm rounded-md p-4 mb-4 cursor-pointer hover:bg-base-200 transition-colors duration-200 relative

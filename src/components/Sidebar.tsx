@@ -4,7 +4,6 @@ import {
     IconBxCog,
     IconContainerTwentyFour,
     IconDatabaseCheckOutline,
-    IconDocker,
     IconServerNetworkAlt,
     IconStack2
 } from "../Icons/index";
@@ -14,7 +13,7 @@ interface SidebarProps {
 
 }
 
-function Sidebar(props: SidebarProps) {
+function Sidebar(_: SidebarProps) {
     const location = useLocation();
 
     return (

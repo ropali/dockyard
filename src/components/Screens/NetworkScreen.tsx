@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useVolumes } from '../../state/VolumesContext';
+import React from 'react';
+import {useVolumes} from '../../state/VolumesContext';
 import NetworkList from '../networks/NetworkList';
 import NetworkDetails from '../networks/NetworkDetails';
 

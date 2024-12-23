@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
-import { Volume } from '../models/Volume';
+import React, {createContext, useCallback, useContext, useState} from 'react';
+import {invoke} from '@tauri-apps/api/tauri';
+import {Volume} from '../models/Volume';
 
 interface VolumesContextType {
     volumes: Volume[];
@@ -17,7 +17,7 @@ export function VolumesProvider({ children }: { children: React.ReactNode }): JS
 
     const loadVolumes = useCallback(async (): Promise<void> => {
         const data = await invoke<Volume[]>('list_volumes');
-        console.log(data);
+        // @ts-ignore
         setVolumes(data["Volumes"] || []);
     }, []);
 

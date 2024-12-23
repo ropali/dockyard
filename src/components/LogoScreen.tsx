@@ -1,5 +1,5 @@
 import React from 'react'
-import { IconDocker } from '../Icons/index.tsx'
+import {IconDocker} from '../Icons'
 
 export interface LogoScreenProps {
     message?: string

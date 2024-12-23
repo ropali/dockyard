@@ -1,4 +1,4 @@
-import {IconDocker} from "../Icons/index.tsx";
+import {IconDocker} from "../Icons";
 import React, {useEffect, useState} from "react";
 import {invoke} from "@tauri-apps/api";
 
@@ -8,6 +8,7 @@ export default function Version(): JSX.Element {
 
     useEffect(() => {
         invoke<string>('get_version').then((res) => {
+            // @ts-ignore
             setVersion(`Version ${res["Version"]}`);
         });
     }, []);

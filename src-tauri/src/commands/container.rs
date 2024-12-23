@@ -1,7 +1,10 @@
 use crate::state::AppState;
 use crate::utils::storage::get_user_download_dir;
 use crate::utils::terminal::{get_terminal, open_terminal};
-use bollard::container::{ListContainersOptions, LogsOptions, RemoveContainerOptions, RenameContainerOptions, StatsOptions, TopOptions};
+use bollard::container::{
+    ListContainersOptions, LogsOptions, RemoveContainerOptions, RenameContainerOptions,
+    StatsOptions, TopOptions,
+};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
 use std::collections::HashMap;
@@ -111,10 +114,12 @@ pub async fn delete_container(
         link: false,
     };
 
-    match state.docker.remove_container(&container_name, Option::from(opts)).await {
-        Ok(_) => {
-            Ok("Deleted container".to_string())
-        }
+    match state
+        .docker
+        .remove_container(&container_name, Option::from(opts))
+        .await
+    {
+        Ok(_) => Ok("Deleted container".to_string()),
         Err(e) => Err(format!("Failed to delete container: {}", e.to_string())),
     }
 }
@@ -245,7 +250,10 @@ pub async fn rename_container(
 }
 
 #[tauri::command]
-pub async fn export_container(state: tauri::State<'_, AppState>, name: String) -> Result<String, String> {
+pub async fn export_container(
+    state: tauri::State<'_, AppState>,
+    name: String,
+) -> Result<String, String> {
     let download_dir = get_user_download_dir()?;
 
     let path = format!("{download_dir}/{name}.tar.gz");
@@ -262,44 +270,31 @@ pub async fn export_container(state: tauri::State<'_, AppState>, name: String) -
         Err(err) => {
             let kind = err.kind();
             match kind {
-                ErrorKind::PermissionDenied => Err(String::from(format!("Permission denied to open target file: {path}"))),
-                ErrorKind::AlreadyExists => Err(String::from(format!("Target file already exist at {path}"))),
-                _ => Err(String::from(format!("Failed to open target file: {path}")))
+                ErrorKind::PermissionDenied => Err(String::from(format!(
+                    "Permission denied to open target file: {path}"
+                ))),
+                ErrorKind::AlreadyExists => {
+                    Err(String::from(format!("Target file already exist at {path}")))
+                }
+                _ => Err(String::from(format!("Failed to open target file: {path}"))),
             }
         }
     }
 }
 
-
 #[tauri::command]
-pub async fn get_container_processes(state: tauri::State<'_, AppState>, container: String) -> Result<Vec<Vec<String>>, String> {
-    let options = Some(TopOptions {
-        ps_args: "aux",
-    });
+pub async fn get_container_processes(
+    state: tauri::State<'_, AppState>,
+    container: String,
+) -> Result<Vec<Vec<String>>, String> {
+    let options = Some(TopOptions { ps_args: "aux" });
 
     let result = state.docker.top_processes(&container, options).await;
 
     match result {
-        Ok(processes) => {
-            Ok(processes.processes.expect("Failed to get processes from docker container"))
-        },
-        Err(e) => return Err(e.to_string()),
-    }
-}
-
-
-#[tauri::command]
-pub async fn get_container_env_vars(state: tauri::State<'_, AppState>, container: String) -> Result<Vec<Vec<String>>, String> {
-    let options = Some(TopOptions {
-        ps_args: "aux",
-    });
-
-    let result = state.docker.top_processes(&container, options).await;
-
-    match result {
-        Ok(processes) => {
-            Ok(processes.processes.expect("Failed to get processes from docker container"))
-        },
+        Ok(processes) => Ok(processes
+            .processes
+            .expect("Failed to get processes from docker container")),
         Err(e) => return Err(e.to_string()),
     }
 }

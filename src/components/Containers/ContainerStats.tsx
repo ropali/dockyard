@@ -1,8 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api';
+import React, {useEffect, useState} from 'react';
+import {listen} from '@tauri-apps/api/event';
+import {invoke} from '@tauri-apps/api';
 import StatsChart from '../StatsChart';
-import { Chart as ChartJS, ChartData, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import {
+  CategoryScale,
+  Chart as ChartJS,
+  ChartData,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip
+} from 'chart.js';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -25,6 +35,7 @@ interface ContainerStatsProps {
 function ContainerStats({ selectedContainer }: ContainerStatsProps) {
   const [stats, setStats] = useState<ContainerStats[]>([]);
 
+  // @ts-ignore
   useEffect(() => {
     if (selectedContainer) {
       const unlistenStats = listen('stats', (event) => {
@@ -76,13 +87,17 @@ function ContainerStats({ selectedContainer }: ContainerStatsProps) {
     datasets: [
       {
         label: 'Block Write (MB)',
-        data: stats.map((stat) => stat.blkio_stats.io_service_bytes_recursive?.find(io => io.op === 'write').value / (1024 * 1024)),
+        data: stats.map((stat) => stat.blkio_stats.io_service_bytes_recursive?.find((io: {
+          op: string;
+        }) => io.op === 'write').value / (1024 * 1024)),
         borderColor: 'rgb(54, 162, 235)',
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
       },
       {
         label: 'Block Read (MB)',
-        data: stats.map((stat) => stat.blkio_stats.io_service_bytes_recursive?.find(io => io.op === 'read').value / (1024 * 1024)),
+        data: stats.map((stat) => stat.blkio_stats.io_service_bytes_recursive?.find((io: {
+          op: string;
+        }) => io.op === 'read').value / (1024 * 1024)),
         borderColor: 'rgb(255, 206, 86)',
         backgroundColor: 'rgba(255, 206, 86, 0.2)',
       },

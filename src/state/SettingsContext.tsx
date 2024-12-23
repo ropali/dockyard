@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext, useCallback, useEffect } from 'react';
-import { reteriveValue, storeValue } from '../utils/storage';
+import React, {createContext, useContext, useEffect, useState} from 'react';
+import {reteriveValue, storeValue} from '../utils/storage';
 
 
 export interface SettingsContextType {

@@ -357,7 +357,7 @@ export function IconDatabase(props: IconProps) {
     );
 }
 
-export function IconArrowDownCircle(props) {
+export function IconArrowDownCircle(props: IconProps) {
     return (
         <svg
             fill="currentColor"
@@ -374,7 +374,7 @@ export function IconArrowDownCircle(props) {
     );
 }
 
-export function IconArrowUpCircle(props) {
+export function IconArrowUpCircle(props: IconProps) {
     return (
         <svg
             fill="currentColor"
@@ -392,7 +392,7 @@ export function IconArrowUpCircle(props) {
 }
 
 
-export function IconBxExport(props) {
+export function IconBxExport(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -408,7 +408,7 @@ export function IconBxExport(props) {
     );
 }
 
-export function IconBxErrorCircle(props) {
+export function IconBxErrorCircle(props: IconProps) {
     return (
         <svg
             viewBox="0 0 24 24"
@@ -424,7 +424,7 @@ export function IconBxErrorCircle(props) {
     );
 }
 
-export function IconGithub(props) {
+export function IconGithub(props: IconProps) {
     return (
         <svg
             viewBox="0 0 1024 1024"
@@ -440,7 +440,7 @@ export function IconGithub(props) {
 }
 
 
-export function IconEdit(props) {
+export function IconEdit(props: IconProps) {
     return (
         <svg
             fill="none"
@@ -460,7 +460,7 @@ export function IconEdit(props) {
 }
 
 
-export function IconTick(props) {
+export function IconTick(props: IconProps) {
     return (
         <svg fill="none" viewBox="0 0 15 15" height="1em" width="1em" {...props}>
             <path
@@ -473,7 +473,7 @@ export function IconTick(props) {
 }
 
 
-export function IconCancel(props) {
+export function IconCancel(props: IconProps) {
     return (
         <svg
             viewBox="0 0 16 16"
@@ -495,7 +495,7 @@ export function IconCancel(props) {
 }
 
 
-export function IconThreeDots(props) {
+export function IconThreeDots(props: IconProps) {
     return (
         <svg
             fill="currentColor"

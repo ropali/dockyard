@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
-import { useContainers } from '../../state/ContainerContext';
-import { useVolumes } from '../../state/VolumesContext';
+import {useContainers} from '../../state/ContainerContext';
+import {useVolumes} from '../../state/VolumesContext';
 
-import { Container } from '../../models/Container';
-import { Volume } from '../../models/Volume';
+import {Container} from '../../models';
 
 const VolumeAttachedContainers = () => {
 

@@ -1,4 +1,9 @@
-function VolumesTopBar({ searchQuery, setSearchQuery }) {
+import React from "react";
+
+function VolumesTopBar({searchQuery, setSearchQuery}: {
+    searchQuery: string,
+    setSearchQuery: (query: string) => void
+}) {
     return (
         <div className="flex flex-row items-center space-x-2 w-full overflow-hidden">
             <div className="flex flex-grow space-x-2">

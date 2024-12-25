@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+const daisyui = require('daisyui');
+
 export default {
   content: [
     "./src/index.html",
@@ -8,7 +11,7 @@ export default {
     extend: {},
   },
   plugins: [
-    require('daisyui'),
+    daisyui
   ],
   darkMode: ['selector', '[data-theme="night"]', '[data-theme="sunset"]', '[data-theme="dark"]'],
   safelist: ["dark", "sunset"],

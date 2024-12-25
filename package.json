@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --project tsconfig.json && vite build -d",
+    "build": "vite build",
+    "type-check": "tsc --noEmit",
     "preview": "vite preview",
     "tauri": "tauri"
   },
@@ -14,9 +15,6 @@
     "@patternfly/react-log-viewer": "^5.2.0",
     "@sweetalert2/theme-dark": "^5.0.18",
     "@tauri-apps/api": "^1",
-    "@types/node": "^22.10.1",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
     "chart.js": "^4.4.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
@@ -29,6 +27,9 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",
+    "@types/node": "^22.10.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",

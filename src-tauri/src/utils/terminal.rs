@@ -2,12 +2,8 @@ use crate::constants::DOCKER_TERMINAL;
 use crate::constants::{LINUX_COMMAND_TEMPLATE, MACOS_COMMAND_TEMPLATE, WINDOWS_COMMAND_TEMPLATE};
 use crate::utils::storage::get_storage_path;
 use std::process::Command;
-use serde_json::{json, Value};
-use tauri::Manager;
 use tauri::{AppHandle, Wry};
-use tauri_plugin_store::with_store;
-use tauri_plugin_store::Error;
-use tauri_plugin_store::StoreCollection;
+use tauri_plugin_store::StoreExt;
 
 macro_rules! define_terminals {
     ($($name:ident => $app_name:expr, $template:expr, $os:expr),*) => {
@@ -78,27 +74,27 @@ pub fn find_default_terminal() -> Option<Terminal> {
 }
 
 pub async fn get_terminal(app: &AppHandle<Wry>) -> Result<Terminal, String> {
-    let stores = app.state::<StoreCollection<Wry>>();
     let path = get_storage_path();
+    let path = path.as_path();
 
-    let terminal_str = with_store(app.clone(), stores, path.clone(), |store| {
+    let store = app.store(path)
+        .map_err(|e| format!("Failed to access store path: {}", e))?;
+    let terminal_str = 
         match store.get(DOCKER_TERMINAL) {
             Some(value) => Ok(value.clone()),
             None => {
                 // Find the terminal if not found in storage
                 if let Some(terminal) = find_default_terminal() {
                     let terminal_app_name = terminal.app_name().to_string();
-                    store.insert(DOCKER_TERMINAL.parse().unwrap(), terminal_app_name.clone().into())
-                        .map_err(|e| format!("Failed to store terminal: {}", e)).unwrap();
+                    store.set(DOCKER_TERMINAL, terminal_app_name.clone());
 
                     // Return the found terminal app name
                     Ok(terminal_app_name.into())
                 } else {
-                    Err(Error::NotFound(path.clone()))
+                    Err(format!("Store \"{:?}\" not found", path))
                 }
             }
         }
-    })
         .map_err(|e| format!("Failed to retrieve terminal from storage: {}", e))?;
 
     let terminal_str = terminal_str.as_str().unwrap_or_default().to_string();

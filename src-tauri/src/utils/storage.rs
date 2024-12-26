@@ -1,8 +1,7 @@
 use std::env;
-use std::env::VarError;
 use std::path::{Path, PathBuf};
-use tauri::{App, Manager, Wry};
-use tauri_plugin_store::{with_store, StoreCollection};
+use tauri::App;
+use tauri_plugin_store::StoreExt;
 
 use crate::constants::STORAGE_NAME;
 
@@ -45,10 +44,6 @@ pub fn get_storage_path() -> PathBuf {
 }
 
 pub fn setup_storage(app: &mut App) {
-    let stores = app.state::<StoreCollection<Wry>>();
-
-    // TODO: handle case for other OS types
     let path = get_storage_path();
-
-    with_store(app.handle(), stores, path, |_| { Ok(()) }).expect("Failed to initialize store");
+    app.store(path).expect("Failed to initialize store");
 }

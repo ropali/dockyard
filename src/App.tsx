@@ -3,7 +3,7 @@ import {Route, Routes, useLocation, useNavigate} from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import {useSettings} from './state/SettingsContext';
 import {DEFAULT_THEME, DOCKER_SERVICE_PING_INTERVAL} from './constants';
-import {invoke} from "@tauri-apps/api/tauri";
+import {invoke} from "@tauri-apps/api/core";
 import ErrorScreen from "./components/Screens/ErrorScreen";
 import ContainersScreen from './components/Screens/ContainersScreen';
 import ImagesScreen from "./components/Screens/ImagesScreen";

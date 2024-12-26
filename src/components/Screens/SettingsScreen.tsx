@@ -3,11 +3,11 @@ import {capitalizeFirstLetter} from '../../utils';
 import {ALL_THEMES, DEFAULT_THEME, DOCKER_TERMINAL, Theme} from '../../constants';
 import {useSettings} from '../../state/SettingsContext';
 import {getVersion} from '@tauri-apps/api/app';
-import {checkUpdate, installUpdate} from '@tauri-apps/api/updater';
-import {relaunch} from '@tauri-apps/api/process';
+import {check, type Update} from '@tauri-apps/plugin-updater';
+import {relaunch} from '@tauri-apps/plugin-process';
 import {IconGithub} from '../../Icons/index';
 import Swal from 'sweetalert2';
-import {invoke} from '@tauri-apps/api';
+import {invoke} from '@tauri-apps/api/core';
 import {reteriveValue, storeValue} from '../../utils/storage';
 import toast from '../../utils/toast';
 
@@ -133,6 +133,26 @@ const SettingsGroup: React.FC<SettingsGroupProps> = ({ title, children }) => (
     </div>
 );
 
+const installUpdate = async (update: Update) => {
+    let downloaded = 0;
+    let contentLength: number | undefined = 0;
+    await update.downloadAndInstall((event) => {
+        switch (event.event) {
+        case 'Started':
+            contentLength = event.data.contentLength;
+            console.debug(`started downloading ${event.data.contentLength} bytes`);
+            break;
+        case 'Progress':
+            downloaded += event.data.chunkLength;
+            console.debug(`downloaded ${downloaded} from ${contentLength}`);
+            break;
+        case 'Finished':
+            console.debug('download finished');
+            break;
+        }
+    });
+}
+
 const SettingsScreen = () => {
     const [theme, setTheme] = useState(DEFAULT_THEME);
     const [appVersion, setAppVersion] = useState<string | null>(null);
@@ -163,12 +183,12 @@ const SettingsScreen = () => {
     const updater = useCallback(async () => {
         setIsCheckingUpdate(true);
         try {
-            const {shouldUpdate} = await checkUpdate();
-            if (!shouldUpdate) {
+            const update = await check();
+            if (!update) {
                 toast.success('Your app is up to date.');
                 return;
             }
-            await installUpdate();
+            await installUpdate(update);
             await relaunch();
         } catch (error) {
             console.error(error);

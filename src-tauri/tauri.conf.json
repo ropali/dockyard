@@ -2,56 +2,51 @@
   "build": {
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
-    "devPath": "http://localhost:1420",
-    "distDir": "../dist"
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1420"
   },
-  "package": {
-    "productName": "dockyard",
-    "version": "0.4.1"
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "createUpdaterArtifacts": "v1Compatible"
   },
-  "tauri": {
-    "allowlist": {
-      "all": false,
-      "app": {
-        "all": true
-      },
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "fs": {
-        "all": true
-      }
+  "productName": "dockyard",
+  "mainBinaryName": "dockyard",
+  "version": "0.4.1",
+  "identifier": "ropali.dockyard.dev",
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc1RjkxM0Y1NTQ1RjY2RkMKUldUOFpsOVU5UlA1ZGVydXRQMERJUjk5dnA3eUt1WU5YUGx1WDFHV2RhWjR1MkV6TWhqRzBLTWQK",
+      "endpoints": [
+        "https://github.com/ropali/dockyard/releases/latest/download/latest.json"
+      ]
+    }
+  },
+  "app": {
+    "security": {
+      "csp": null,
+      "capabilities": [
+        "desktop-core-capabilities",
+        "desktop-fs-capabilities",
+        "desktop-shell-capabilities",
+        "desktop-store-capabilities",
+        "desktop-updater-capabilities"
+      ]
     },
     "windows": [
       {
         "title": "Dockyard",
         "width": 1200,
-        "height": 800
+        "height": 800,
+        "useHttpsScheme": true
       }
-    ],
-    "security": {
-      "csp": null
-    },
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "ropali.dockyard.dev",
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ]
-    },
-    "updater": {
-      "active": true,
-      "endpoints": [
-        "https://github.com/ropali/dockyard/releases/latest/download/latest.json"
-      ],
-      "dialog": false,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDc1RjkxM0Y1NTQ1RjY2RkMKUldUOFpsOVU5UlA1ZGVydXRQMERJUjk5dnA3eUt1WU5YUGx1WDFHV2RhWjR1MkV6TWhqRzBLTWQK"
-    }
+    ]
   }
 }

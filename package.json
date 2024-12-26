@@ -14,7 +14,12 @@
     "@headlessui/react": "^2.1.2",
     "@patternfly/react-log-viewer": "^5.2.0",
     "@sweetalert2/theme-dark": "^5.0.18",
-    "@tauri-apps/api": "^1",
+    "@tauri-apps/api": "^2.1.1",
+    "@tauri-apps/plugin-fs": "^2.2.0",
+    "@tauri-apps/plugin-process": "^2.2.0",
+    "@tauri-apps/plugin-shell": "^2.2.0",
+    "@tauri-apps/plugin-store": "^2.2.0",
+    "@tauri-apps/plugin-updater": "^2.3.0",
     "chart.js": "^4.4.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
@@ -22,11 +27,10 @@
     "react-icons": "^5.2.1",
     "react-router-dom": "^6.25.1",
     "react-syntax-highlighter": "^15.5.0",
-    "sweetalert2": "^11.14.0",
-    "tauri-plugin-store-api": "https://github.com/tauri-apps/tauri-plugin-store#v1"
+    "sweetalert2": "^11.14.0"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1",
+    "@tauri-apps/cli": "^2.1.0",
     "@types/node": "^22.10.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

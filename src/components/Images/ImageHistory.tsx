@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useImages} from '../../state/ImagesContext'
-import {invoke} from '@tauri-apps/api';
+import {invoke} from '@tauri-apps/api/core';
 import toast from '../../utils/toast';
 import {ImageHistory as ImageHistoryModel} from '../../models/Image';
 

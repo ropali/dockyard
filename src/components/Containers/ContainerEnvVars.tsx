@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { useContainers } from '../../state/ContainerContext';
 
 interface EnvVars {

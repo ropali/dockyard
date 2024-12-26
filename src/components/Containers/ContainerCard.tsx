@@ -23,12 +23,12 @@ const ContainerCard = ({ container, onClick, isSelected }: ContainerCardProps) =
                 <div className={`w-3 h-3 rounded-full ${statusColor} mr-2`}></div>
                 <h1 className="text-sm font-semibold">{container.getName()}</h1>
             </div>
-            <div className="mb-1">
+            <div className="mb-1 mr-4">
                 <p className="text-xs ">
                     <span className="font-medium">ID:</span> {container.Id.slice(0, 7)}
                 </p>
-                <p className="text-xs ">
-                    <span className="font-medium">Image:</span> {container.Image.split(':')[0]}
+                <p className="text-xs truncate" title={container.getImageName()}>
+                    <span className="font-medium">Image:</span> {container.getImageName()}
                 </p>
             </div>
             <div className="flex justify-between items-center">

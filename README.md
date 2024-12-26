@@ -155,7 +155,7 @@ To set up a development environment:
 2. Navigate to the project directory: `cd dockyard`
 3. Install Node.js dependencies: `yarn install`
 4. Build the Rust backend: `cargo build --release`
-5. Run the app in development mode: `cargo tauri dev`
+5. Run the app in development mode: `npm run tauri dev`
 
 ## Roadmap
 

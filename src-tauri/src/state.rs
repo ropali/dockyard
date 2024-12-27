@@ -10,7 +10,7 @@ pub struct AppState {
 
 impl AppState {
     pub fn default() -> Self {
-        let docker = match Docker::connect_with_socket_defaults() {
+        let docker = match Docker::connect_with_defaults() {
             Ok(docker) => docker,
             Err(e) => {
                 panic!("Failed To Connect: {}", e);

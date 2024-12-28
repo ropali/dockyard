@@ -23,6 +23,10 @@ export class Container implements Docker.Container {
         return this.Names[0].slice(1);
     }
 
+    getImageName(): string {
+        return this.Image.split(':')[0];
+    }
+
     isRunning(): boolean {
         return this.State.toLowerCase() === 'running';
     }

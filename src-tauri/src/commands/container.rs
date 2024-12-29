@@ -3,10 +3,12 @@ use crate::utils::storage::get_user_download_dir;
 use crate::utils::terminal::{get_terminal, open_terminal};
 use bollard::container::{
     ListContainersOptions, LogsOptions, RemoveContainerOptions, RenameContainerOptions,
-    StatsOptions, TopOptions,
+    ResizeContainerTtyOptions, StatsOptions, TopOptions,
 };
+use bollard::exec::{CreateExecOptions, StartExecResults};
 use bollard::models::{ContainerInspectResponse, ContainerSummary};
 use futures_util::StreamExt;
+use shellish_parse::{parse as parse_shellish, ParseOptions};
 use std::collections::HashMap;
 use std::io::ErrorKind;
 use std::sync::atomic::Ordering;
@@ -297,4 +299,83 @@ pub async fn get_container_processes(
             .expect("Failed to get processes from docker container")),
         Err(e) => return Err(e.to_string()),
     }
+}
+
+#[tauri::command]
+pub async fn exec(
+    state: tauri::State<'_, AppState>,
+    app_handle: tauri::AppHandle,
+    c_name: String,
+    command: String,
+) -> Result<(), String> {
+    let shellish_opts = ParseOptions::new().allow_comments_within_elements();
+
+    println!("parsed command: {}", command);
+
+    let parsed_cmd = match parse_shellish(&command, shellish_opts) {
+        Ok(res) => res,
+        Err(e) => panic!("Failed to parse command: {}", e),
+    };
+
+    let config = CreateExecOptions {
+        cmd: Some(parsed_cmd),
+        attach_stdout: Some(true),
+        attach_stdin: Some(true),
+        tty: Some(true),
+        ..Default::default()
+    };
+
+    let options = ResizeContainerTtyOptions {
+        width: 24,
+        height: 80,
+    };
+
+    state
+        .docker
+        .resize_container_tty(&c_name, options)
+        .await
+        .expect("Failed to resize container tty");
+
+    let exec = state
+        .docker
+        .create_exec(c_name.as_str(), config)
+        .await
+        .expect("Failed to create exec");
+
+    let exec_result = state
+        .docker
+        .start_exec(&exec.id, None)
+        .await
+        .expect("Failed to start exec");
+
+    // Start the Exec command
+    if let StartExecResults::Attached { mut output, .. } = exec_result {
+        // Capture the output stream
+        while let Some(chunk) = output.next().await {
+            println!("Chunk Recv: {:#?}", chunk);
+            match chunk {
+                Ok(output_chunk) => {
+                    app_handle
+                        .emit_all(
+                            "terminal_stdout",
+                            String::from_utf8_lossy(&output_chunk.into_bytes()).to_owned(),
+                        )
+                        .expect("Failed to emit terminal_stdout data");
+                }
+                Err(e) => {
+                    eprintln!("Error while receiving output: {}", e);
+                    break;
+                }
+            }
+        }
+
+        // Send chars to end the output stream
+        app_handle
+            .emit_all("terminal_stdout", "\n#$")
+            .expect("Failed to emit terminal_stdout data");
+    } else {
+        eprintln!("Failed to attach to the exec instance.");
+    }
+
+    Ok(())
 }

@@ -22,7 +22,7 @@ bollard = "0.17.0"
 futures-util = "0.3.30"
 
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-
+shellish_parse = "2.2"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

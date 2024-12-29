@@ -1,7 +1,11 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use crate::commands::container::{container_operation, container_stats, delete_container, export_container, fetch_container_info, fetch_containers, get_container, get_container_processes, rename_container, stream_docker_logs};
+use crate::commands::container::{
+    container_operation, container_stats, delete_container, exec, export_container,
+    fetch_container_info, fetch_containers, get_container, get_container_processes,
+    rename_container, stream_docker_logs,
+};
 use crate::commands::extra::{cancel_stream, get_version, ping};
 use crate::commands::image::{delete_image, export_image, image_history, image_info, list_images};
 use crate::commands::network::{inspect_network, list_networks};
@@ -51,7 +55,8 @@ fn main() {
             rename_container,
             export_container,
             delete_container,
-            get_container_processes
+            get_container_processes,
+            exec
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

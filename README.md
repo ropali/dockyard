@@ -52,7 +52,7 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 ### Prerequisites
 
 - Linux/Mac
-- [Tauri](https://v1.tauri.app/v1/guides/getting-started/prerequisites) (for development and building from source)
+- [Tauri](https://tauri.app/start/prerequisites/) (for development and building from source)
 - Docker >=27.1.1 installed and running
 - Node.js >= v20.11.1 (for development and building from source)
 - Rust >= 1.79.0 (for building from source)

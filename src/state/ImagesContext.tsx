@@ -1,6 +1,6 @@
 // @ts-ignore
 import React, { createContext, useState, useContext, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { Image } from '../models/Image';
 
 interface ImageContextType {

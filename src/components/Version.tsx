@@ -1,6 +1,6 @@
 import {IconDocker} from "../Icons";
 import React, {useEffect, useState} from "react";
-import {invoke} from "@tauri-apps/api";
+import {invoke} from "@tauri-apps/api/core";
 
 export default function Version(): JSX.Element {
 

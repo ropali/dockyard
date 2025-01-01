@@ -3,7 +3,7 @@ import {IconCopy} from "../../Icons/index";
 import LogoScreen from "../LogoScreen";
 import {copyToClipboard} from "../../utils";
 import {useNetworks} from "../../state/NetworkContext";
-import {invoke} from "@tauri-apps/api";
+import {invoke} from "@tauri-apps/api/core";
 import JSONSyntaxHighlighter from "../JSONSyntaxHighlighter";
 
 

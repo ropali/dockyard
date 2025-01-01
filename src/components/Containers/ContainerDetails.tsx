@@ -1,4 +1,4 @@
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import React, { useEffect, useState } from 'react';
 import { listen, Event } from '@tauri-apps/api/event';
 

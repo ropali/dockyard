@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {invoke} from '@tauri-apps/api';
+import {invoke} from '@tauri-apps/api/core';
 import toast from '../../utils/toast';
 import {useContainers} from '../../state/ContainerContext';
 import LogoScreen from '../LogoScreen';

@@ -10,7 +10,7 @@ use futures_util::StreamExt;
 use std::collections::HashMap;
 use std::io::ErrorKind;
 use std::sync::atomic::Ordering;
-use tauri::Manager;
+use tauri::Emitter;
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 
@@ -94,7 +94,7 @@ pub async fn stream_docker_logs(
         let log = msg.unwrap().to_string();
 
         app_handle
-            .emit_all("log_chunk", log)
+            .emit("log_chunk", log)
             .expect("Failed to emit log chunk");
     }
 
@@ -222,7 +222,7 @@ pub async fn container_stats(
         }
 
         app_handle
-            .emit_all("stats", stats)
+            .emit("stats", stats)
             .expect("Failed to emit stats data");
     }
 

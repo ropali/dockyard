@@ -1,6 +1,6 @@
 import {IconCancel, IconEdit, IconTick} from "../../Icons/index";
 import React, {useState} from "react";
-import {invoke} from "@tauri-apps/api";
+import {invoke} from "@tauri-apps/api/core";
 import {useContainers} from "../../state/ContainerContext";
 import toast from "../../utils/toast";
 

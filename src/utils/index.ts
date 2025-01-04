@@ -12,3 +12,14 @@ export const formatDate = (timestamp: number): string => {
 export function capitalizeFirstLetter(str: string): string {
     return str[0].toUpperCase() + str.slice(1);
 }
+
+
+export function debounce(func: () => Promise<void>, wait: number) {
+    let timeout: NodeJS.Timeout | null = null;
+    return () => {
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func();
+        }, wait);
+    };
+}

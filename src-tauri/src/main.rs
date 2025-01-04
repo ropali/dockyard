@@ -4,7 +4,7 @@
 use crate::commands::container::{
     container_operation, container_stats, delete_container, exec, export_container,
     fetch_container_info, fetch_containers, get_container, get_container_processes,
-    rename_container, stream_docker_logs,
+    rename_container, stream_docker_logs, resize_tty
 };
 use crate::commands::extra::{cancel_stream, get_version, ping};
 use crate::commands::image::{delete_image, export_image, image_history, image_info, list_images};
@@ -56,7 +56,8 @@ fn main() {
             export_container,
             delete_container,
             get_container_processes,
-            exec
+            exec,
+            resize_tty
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -352,7 +352,7 @@ pub async fn exec(
     if let StartExecResults::Attached { mut output, .. } = exec_result {
         // Capture the output stream
         while let Some(chunk) = output.next().await {
-            println!("Chunk Recv: {:#?}", chunk);
+            
             match chunk {
                 Ok(output_chunk) => {
                     app_handle
@@ -378,4 +378,21 @@ pub async fn exec(
     }
 
     Ok(())
+}
+
+
+#[tauri::command]
+pub async fn resize_tty(
+    state: tauri::State<'_, AppState>,
+    container_name: String,
+    width: u16,
+    height: u16,
+) -> Result<(), String> {
+    let options = ResizeContainerTtyOptions { width, height };
+
+    state
+        .docker
+        .resize_container_tty(&container_name, options)
+        .await
+        .map_err(|e| e.to_string())
 }

@@ -644,7 +644,7 @@ dependencies = [
  "open 5.3.0",
  "serde",
  "serde_json",
-    "shellish_parse",
+ "shellish_parse",
  "tauri",
  "tauri-build",
  "tauri-plugin-store",

@@ -6,6 +6,7 @@ pub struct AppState {
     pub docker: Docker,
     pub cancel_stats: Arc<AtomicBool>,
     pub cancel_logs: Arc<AtomicBool>,
+    pub cancel_terminal_stream: Arc<AtomicBool>,
 }
 
 impl AppState {
@@ -19,7 +20,8 @@ impl AppState {
         AppState {
             docker,
             cancel_stats: Arc::new(AtomicBool::new(false)),
-            cancel_logs: Arc::new(AtomicBool::new(false))
+            cancel_logs: Arc::new(AtomicBool::new(false)),
+            cancel_terminal_stream: Arc::new(AtomicBool::new(false)),
         }
     }
 }

@@ -325,17 +325,6 @@ pub async fn exec(
         ..Default::default()
     };
 
-    let options = ResizeContainerTtyOptions {
-        width: 24,
-        height: 80,
-    };
-
-    state
-        .docker
-        .resize_container_tty(&c_name, options)
-        .await
-        .expect("Failed to resize container tty");
-
     let exec = state
         .docker
         .create_exec(c_name.as_str(), config)
@@ -352,7 +341,11 @@ pub async fn exec(
     if let StartExecResults::Attached { mut output, .. } = exec_result {
         // Capture the output stream
         while let Some(chunk) = output.next().await {
-            
+            if state.cancel_terminal_stream.load(Ordering::Relaxed) {
+                println!("Cancelling terminal stream");
+                break;
+            }
+
             match chunk {
                 Ok(output_chunk) => {
                     app_handle
@@ -379,7 +372,6 @@ pub async fn exec(
 
     Ok(())
 }
-
 
 #[tauri::command]
 pub async fn resize_tty(

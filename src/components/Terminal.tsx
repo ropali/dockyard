@@ -5,7 +5,7 @@ import '@xterm/xterm/css/xterm.css';
 import {invoke} from "@tauri-apps/api";
 import {useContainers} from "../state/ContainerContext";
 import {listen} from "@tauri-apps/api/event";
-import { debounce } from '../utils';
+import {debounce} from '../utils';
 
 interface TerminalState {
     initialized: boolean;
@@ -40,7 +40,8 @@ const ESCAPE_SEQUENCES = {
     HOME: ['\x1b[H', '\x1bOH'],
     END: ['\x1b[F', '\x1bOF'],
     CTRL_RIGHT: '\x1b[1;5C',
-    CTRL_LEFT: '\x1b[1;5D'
+    CTRL_LEFT: '\x1b[1;5D',
+    CTRL_C: '\x03'
 };
 
 const TerminalComponent: React.FC = () => {
@@ -60,9 +61,9 @@ const TerminalComponent: React.FC = () => {
         unsubscribeCallbacks: [],
         expectingOutput: false,
     });
-    
 
-    
+
+
     const showPrompt = useCallback(() => {
         if (!xterm.current) return;
         xterm.current.write(`\r\n${promptSymbol}`);
@@ -99,7 +100,7 @@ const TerminalComponent: React.FC = () => {
         }
     }, []);
 
-    
+
 
     /**
      * Finds the boundary of a word in the given text based on the current position and direction.
@@ -164,7 +165,7 @@ const TerminalComponent: React.FC = () => {
      */
     const executeCommand = useCallback(async (cmd: string) => {
         if (!xterm.current || !selectedContainer) return;
-        console.log("X", cmd)
+
         try {
             if (cmd.trim() && (terminalState.current.history.length === 0 ||
                 terminalState.current.history[terminalState.current.history.length - 1] !== cmd)) {
@@ -244,6 +245,18 @@ const TerminalComponent: React.FC = () => {
         const handleData = async (data: string) => {
             const code = data.charCodeAt(0);
 
+            // Add Ctrl+C handler at the start
+            if (data === ESCAPE_SEQUENCES.CTRL_C) {
+                console.log("cancel stream")
+                if (terminalState.current.expectingOutput) {
+                    xterm.current!.write('\n^C');
+                    await cancelTerminalStream();
+                    terminalState.current.expectingOutput = false;
+                    showPrompt();
+                }
+                return;
+            }
+
             // Handle escape sequences for arrow keys and other special keys
             if (data.length > 1) {
                 switch (data) {
@@ -304,7 +317,7 @@ const TerminalComponent: React.FC = () => {
                 } else {
                     showPrompt();
                 }
-            // Handle Backspace key press
+                // Handle Backspace key press
             } else if (code === KEY_CODES.BACKSPACE) {
                 if (terminalState.current.cursorPosition > 0) {
                     const start = terminalState.current.buffer.slice(0, terminalState.current.cursorPosition - 1);
@@ -313,7 +326,7 @@ const TerminalComponent: React.FC = () => {
                     terminalState.current.cursorPosition--;
                     redrawLine();
                 }
-            // Handle regular character input
+                // Handle regular character input
             } else if (data.length === 1) {
                 const start = terminalState.current.buffer.slice(0, terminalState.current.cursorPosition);
                 const end = terminalState.current.buffer.slice(terminalState.current.cursorPosition);
@@ -343,7 +356,7 @@ const TerminalComponent: React.FC = () => {
         const { cols, rows } = xterm.current;
 
         console.log("RESIZE", cols, rows)
-        
+
         await invoke('resize_tty', {
             containerName: selectedContainer.getName(),
             width: rows,
@@ -387,7 +400,7 @@ const TerminalComponent: React.FC = () => {
             xterm.current.write('\r\n');
             // Replace newlines with carriage return + newline for proper display
             const output = event.payload.replace(/\n/g, '\r\n');
-
+            console.log(output);
             // If the output includes the end marker, stop expecting output
             if (output.includes('\n#$')) {
                 terminalState.current.expectingOutput = false;
@@ -399,6 +412,10 @@ const TerminalComponent: React.FC = () => {
         // Add the unlisten function to the unsubscribe callbacks
         terminalState.current.unsubscribeCallbacks.push(() => unlistenTerm());
     };
+
+    const cancelTerminalStream = async () => {
+        invoke('cancel_stream', {streamType: 'terminal'});
+    }
 
     useEffect(() => {
         if (selectedContainer && xterm.current) {

@@ -27,13 +27,22 @@ const toast = (() => {
                 timer: duration,
                 timerProgressBar: true,
                 icon: type,
-                text: message,
                 background: 'oklch(var(--b2))',
+                html: `<span class="text-base-content">${message}</span>`,
                 customClass: {
-                    popup: 'text-base-content',
+                    popup: 'toast-popup',
                     timerProgressBar: timerProgressColors[type]
                 },
-            });
+                didOpen: (toast) => {
+                    // Thi s is the workaround to change the text color
+                    // on Windows system as the text color was not working
+                    // properly for light themes
+                    const toastContent = toast.querySelector('.swal2-html-container');
+                    if (toastContent) {
+                        toastContent.style.color = 'inherit';
+                    }
+                }
+            })
         } else if (currentLibrary === 'react-toast') {
             console.log(`React-toast: ${type} - ${message}`);
         }

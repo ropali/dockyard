@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Web server (Nginx)
+  web:
+    image: nginx:alpine
+    container_name: my-web-server
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    restart: unless-stopped
+
+  # Application server (Node.js)
+  app:
+    image: node:18-alpine
+    container_name: my-app-server
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    restart: unless-stopped
+    depends_on:
+      - redis
+
+  # Redis cache
+  redis:
+    image: redis:alpine
+    container_name: my-redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+volumes:
+  redis_data:

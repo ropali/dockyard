@@ -37,6 +37,7 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 - **Intuitive UI**: A clean and simple interface designed for both beginners and advanced users.
 - **Real-time Stats**: Monitor container stats in real-time with beautiful charts and graphs.
 - **Container Management**: Easily start, stop, and remove containers with just a few clicks.
+- **Docker Compose Integration**: Containers created with Docker Compose are automatically grouped by project and displayed in collapsible dropdowns.
 - **Terminal inside container**: Open shell inside the docker container using your favourite terminal app.
 - **Log Viewer**: Integrated log viewer for real-time container logs with PatternFly support.
 - **Fast Performance**: Built with Rust for speed and reliability.
@@ -132,7 +133,25 @@ npm run tauri dev
 
 ## Usage
 
-Dockyard is designed to be simple and intuitive. Once installed, launch the application and start managing your Docker containers, volumes, and networks. 
+Dockyard is designed to be simple and intuitive. Once installed, launch the application and start managing your Docker containers, volumes, and networks.
+
+### Docker Compose Support
+
+Dockyard automatically detects containers created with Docker Compose and provides enhanced management features:
+
+- **Project Grouping**: Containers from the same Docker Compose project are grouped together
+- **Service Information**: Each container shows its service name from the docker-compose.yml file
+- **Collapsible Groups**: Click on a project group to expand/collapse and view individual containers
+- **Bulk Operations**: Use the "Compose" button in the top bar to expand/collapse all Docker Compose groups at once
+- **Status Overview**: Each group shows the number of running containers vs total containers
+
+#### How it Works
+
+Dockyard identifies Docker Compose containers by looking for the `com.docker.compose.project` label that Docker Compose automatically adds to containers. This allows for:
+
+- Automatic project detection without manual configuration
+- Support for multiple Docker Compose projects
+- Proper service name display using the `com.docker.compose.service` label 
 
 
 

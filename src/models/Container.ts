@@ -8,6 +8,7 @@ export class Container implements Docker.Container {
     State: string;
     Ports: { PublicPort: number; PrivatePort: number; }[];
     Mounts: { Name: string; }[];
+    Labels: Record<string, string>;
 
     constructor(data: Partial<Docker.Container>) {
         this.Id = data.Id || '';
@@ -17,6 +18,7 @@ export class Container implements Docker.Container {
         this.State = data.State || '';
         this.Ports = data.Ports || [];
         this.Mounts = data.Mounts || [];
+        this.Labels = data.Labels || {};
     }
 
     getName(): string {
@@ -29,6 +31,18 @@ export class Container implements Docker.Container {
 
     isRunning(): boolean {
         return this.State.toLowerCase() === 'running';
+    }
+
+    isDockerComposeContainer(): boolean {
+        return this.Labels['com.docker.compose.project'] !== undefined;
+    }
+
+    getDockerComposeProject(): string | null {
+        return this.Labels['com.docker.compose.project'] || null;
+    }
+
+    getDockerComposeService(): string | null {
+        return this.Labels['com.docker.compose.service'] || null;
     }
 }
 

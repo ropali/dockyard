@@ -12,6 +12,7 @@ export declare namespace Docker {
         Mounts: {
             Name: string;
         }[];
+        Labels: Record<string, string>;
 
         getName(): string;
 

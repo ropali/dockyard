@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import ContainersTopBar from './ContainersTopBar';
 import ContainerCard from './ContainerCard';
+import ComposeContainerGroup from './ComposeContainerGroup';
 import { useContainers } from '../../state/ContainerContext';
+import { groupContainersByComposeProject } from '../../utils/docker-compose';
 
 enum ContainerFilterType {
     All = 'All',
@@ -30,6 +32,10 @@ const ContainersList = () => {
             return matchesSearchQuery && matchesFilter;
         });
     }, [containers, searchQuery, containerFilter]);
+
+    const { composeProjects, standaloneContainers } = useMemo(() => {
+        return groupContainersByComposeProject(filteredContainers);
+    }, [filteredContainers]);
 
     useEffect(() => {
         loadContainers();
@@ -66,14 +72,31 @@ const ContainersList = () => {
                         {searchQuery && <p className="mt-2">Try adjusting your search or filter</p>}
                     </div>
                 ) : (
-                    filteredContainers.map((container) => (
-                        <ContainerCard
-                            key={container.Id}
-                            container={container}
-                            onClick={() => setSelectedContainer(container)}
-                            isSelected={selectedContainer?.Id === container.Id}
-                        />
-                    ))
+                    <div>
+                        {/* Docker Compose Groups */}
+                        {composeProjects.map((project) => (
+                            <ComposeContainerGroup
+                                key={project.name}
+                                project={project}
+                                onContainerSelect={setSelectedContainer}
+                                selectedContainer={selectedContainer}
+                            />
+                        ))}
+                        
+                        {/* Standalone Containers */}
+                        {standaloneContainers.length > 0 && (
+                            <div className="space-y-2">
+                                {standaloneContainers.map((container) => (
+                                    <ContainerCard
+                                        key={container.Id}
+                                        container={container}
+                                        onClick={() => setSelectedContainer(container)}
+                                        isSelected={selectedContainer?.Id === container.Id}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 )}
             </div>
         </div>

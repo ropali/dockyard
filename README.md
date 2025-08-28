@@ -45,7 +45,7 @@ Dockyard is a modern, fast, and user-friendly Docker client designed to simplify
 
 ## Screenshots
 
-![Containers](https://i.ibb.co/3vCXjW5/Screenshot-from-2024-11-14-17-36-47.png)
+![Containers](https://i.ibb.co/sp6rbCML/image.png)
 ![Stats](https://i.ibb.co/hX6PSnz/Screenshot-from-2024-11-14-17-37-20.png)
 ![Different Theme](https://i.ibb.co/5hCsgc9/Screenshot-from-2024-11-14-17-40-09.png)
 

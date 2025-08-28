@@ -2,10 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.5.0] - 2025-03-06
+## [0.6.0] - 2025-08-28
 
 ### 🚀 Features
 
-- Windows support (#41)
+- Enhance Docker Compose support in container management
 
+### ⚙️ Miscellaneous Tasks
 
+- Updated README with latest screenshot

@@ -4,9 +4,19 @@ interface ContainersTopBarProps {
     searchQuery: string;
     setSearchQuery: (query: string) => void;
     onFilterChange: (filter: string) => void;
+    onToggleComposeGroups?: () => void;
+    composeGroupsExpanded?: boolean;
+    hasComposeGroups?: boolean;
 }
 
-function ContainersTopBar({ searchQuery, setSearchQuery, onFilterChange }: ContainersTopBarProps) {
+function ContainersTopBar({ 
+    searchQuery, 
+    setSearchQuery, 
+    onFilterChange, 
+    onToggleComposeGroups,
+    composeGroupsExpanded = false,
+    hasComposeGroups = false
+}: ContainersTopBarProps) {
     return (
         <div className="flex flex-row items-center space-x-2 w-full overflow-hidden">
             <div className="flex flex-grow space-x-2">

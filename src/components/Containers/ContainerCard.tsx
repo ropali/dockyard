@@ -10,6 +10,8 @@ interface ContainerCardProps {
 
 const ContainerCard = ({ container, onClick, isSelected }: ContainerCardProps) => {
     const statusColor = !container.isRunning() ? 'bg-red-500' : 'bg-green-500';
+    const isComposeContainer = container.isDockerComposeContainer();
+    const composeService = container.getDockerComposeService();
 
     return (
         <div
@@ -21,7 +23,12 @@ const ContainerCard = ({ container, onClick, isSelected }: ContainerCardProps) =
         >
             <div className="flex items-center mb-1">
                 <div className={`w-3 h-3 rounded-full ${statusColor} mr-2`}></div>
-                <h1 className="text-sm font-semibold">{container.getName()}</h1>
+                <div className="flex-1">
+                    <h1 className="text-sm font-semibold">{container.getName()}</h1>
+                    {isComposeContainer && composeService && (
+                        <p className="text-xs text-blue-600 font-medium">{composeService}</p>
+                    )}
+                </div>
             </div>
             <div className="mb-1 mr-4">
                 <p className="text-xs ">
